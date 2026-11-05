@@ -1,0 +1,22 @@
+{
+  "name": "grama-dexter-acres",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "build": "vite build",
+    "preview": "node server.mjs --production",
+    "verify": "node scripts/verify.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "gsap": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "sharp": "latest"
+  }
+}
