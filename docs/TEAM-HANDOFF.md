@@ -1,46 +1,45 @@
 # Developer team handoff — November 10, 2026
 
-## Start here
+## Verified live website
 
 - Repository: https://github.com/Anatoli-2021/grama-construction-website (private).
-- Working setup branch: `feature/unified-development`.
-- Website preview source: PR #1. Unified deployment/tooling: PR #2, based on PR #1. Review and merge #1 first; then retarget #2 to `main` for review. Neither is automatically merged.
-- Setup: Node 24, `npm ci`, `npm run check`. Website: `npm run dev` (5173). OS: `npm run dev:os` (5180).
-- Full developer steps and permissions: [ONBOARDING.md](ONBOARDING.md).
+- Railway website: https://grama-construction-website-production.up.railway.app/.
+- Connected branch: `feature/investor-showcase-polish`. Running source: `e2dca4de464e663a9facc5b91aa29f1495fd4e00`, deployed by `axmatea`.
+- Active deployment: `1f2b9373-162f-429a-9fd0-b52af5ef3abb`. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
+- Anonymous checks: website, health and hero media HTTP 200; OS, `.data` and `.env` paths HTTP 404. Loaded website console contained no errors.
+- Preserve the team's newer investor showcase, family story, project portfolio and browser-only enquiry draft. Do not deploy the older setup branch over it.
+- Company domain/DNS is unchanged. Railway labels this environment `production`; the Railway address remains the current development/review website.
 
-## What is ready
+## Tony's standing website deployment instruction
 
-The original website and assets remain intact. A website-only Dockerfile and static host are ready for Railway; the runtime excludes the OS and local enquiry records. Existing source paths are unchanged. The reusable blank OS launch tool is shared and tested, including common/subdivision tasks, stable IDs, Draft status and access boundaries.
+On November 10, Tony instructed: finish requested website changes, run relevant checks, commit and push them, then deploy to the existing Railway website and verify the result. Another release confirmation is not needed for each requested website edit to this target.
 
-GitHub Actions ran successfully on the clean Linux runner after correcting build-before-test order. Local checks also passed, including the existing nine website API/media checks. The browser downloaded a real synthetic 29-task Draft export without console errors. Desktop source HTML and JSON hashes remained unchanged.
+This covers requested website work through deployment. It does not create a background job or authorize unrelated changes. Keep branches and PR review for stable `main`; never force-push shared history. Company-domain/DNS changes, new spending, access grants and private OS publication remain separate decisions.
+
+Railway currently displays **Auto deploy unavailable / Could not load branches** despite the connected GitHub source. Until the integration is repaired and a push-to-deploy test succeeds, explicitly deploy the intended commit through authenticated Railway controls, wait for success and verify the public result. Record the source SHA and deployment ID. A successful push alone does not prove deployment; report access failures honestly.
+
+## Team source and setup
+
+- `main` was verified at `af3faf5b924865f898bb32f022ef84ab7e4aca94` before this documentation update. PR #1 and #6 are merged.
+- PR #7 contains the current showcase branch and remains open. PR #2 is an older setup PR; reconcile already-included changes before merging it. Do not blindly reintroduce old source.
+- `axmatea` has approved GitHub write access and authored the running Railway deployment. Check current access before sending duplicate invitations.
+- Node 24; `npm ci`; `npm run check`. Website: `npm run dev` at port 5173. Blank OS tool: `npm run dev:os` at port 5180.
+- Fetch the latest shared source before editing. Follow [ONBOARDING.md](ONBOARDING.md) for branches, PRs and safe synchronization.
 
 ## Existing Railway target
 
-- Project: `earnest-wisdom`, ID `ffb7baed-e751-41be-9874-c4eb4c4ae290`.
-- Service: `grama-construction-website`, ID `875425ae-8bb5-4d47-a026-49a9df71dc22`.
-- Environment: Railway labels it `production`, ID `15058afa-2401-4d42-83a7-5e807d7d1258`; its intended use here is a temporary website preview, not replacement of the company site.
-- Observed state before configuration: online initial GitHub deployment, `main` source, no public domain, private `*.railway.internal` endpoint. GitHub branch loading reported an error.
-- Existing Railway trial shows 30 days / $5 credit remaining at inspection; no paid upgrade was purchased. This is a point-in-time UI observation, not a permanent hosting allowance.
-- A project invitation already existed. Verify the recipient and acceptance in Railway before creating another invitation. Do not publish invite links, auth codes or tokens in GitHub.
+Project `earnest-wisdom`: `ffb7baed-e751-41be-9874-c4eb4c4ae290`.
+Service `grama-construction-website`: `875425ae-8bb5-4d47-a026-49a9df71dc22`.
+Environment `production`: `15058afa-2401-4d42-83a7-5e807d7d1258`.
 
-## Immediate deployment work
+The root Dockerfile serves only the website; OS source and private enquiry records are excluded from its runtime. See the [settings guide](../infra/website/README.md). No paid upgrade or company-domain change was made during this verification. Do not publish credentials or invite links.
 
-Tony authorized this temporary Railway website deployment and keeping the company domain unchanged. Browser connectivity stopped before settings/domain changes could be applied. Restore the existing browser connection or authorize the Railway connector, then:
+## Remaining work
 
-1. Confirm this exact project/service; do not create another repository or service.
-2. Select the reviewed deployment commit/branch without replacing stable `main`. Refresh/repair the GitHub repository integration if branches cannot load.
-3. Use the root Dockerfile, service PORT and `/healthz`; remove conflicting old build/start overrides. See [Railway settings](../infra/website/README.md).
-4. Generate a temporary Railway HTTPS domain. Do not edit company DNS or add a custom company domain.
-5. Wait for the deployment, record its source SHA and deployment ID, then verify anonymous HTTP 200, actual images/video, mobile contact, console errors and blocked private/OS/API paths.
-6. Update this handoff with the verified URL and result. A running container or private internal hostname alone is not public deployment completion.
+- Repair and verify GitHub automatic deployment with the account owner; use explicit deployment verification meanwhile.
+- Reconcile/review the PRs and eventually use `main` as the stable deployment branch, preserving the approved design.
+- `main` is unprotected under the current GitHub plan; issue #4 tracks enforced owner review.
+- The OS stays local with blank templates. Real dashboards, finances and pilot evidence remain private; issue #3 tracks authentication before hosting.
+- Hosted enquiry drafts send nothing to a server or CRM. Keep this wording until actual delivery is implemented and verified.
 
-The working Sites review URL remains available: https://grama-dexter-acres-preview.anatoli-gram-1564.chatgpt.site.
-
-## Remaining gates and owners
-
-- Tony: review PRs, confirm Railway team invitation recipient/acceptance, approve future paid hosting or GitHub plan changes, and approve any eventual company-domain release.
-- Developers: complete/verify Railway preview after connection restoration; keep all OS records private. Issues #3 and #4 track OS authentication and enforceable owner review.
-- OS: no hosted service, database, live connector or company-data migration exists. Follow [SECURITY.md](SECURITY.md) before connecting private records.
-- GitHub: `main` is unprotected under the current plan. CI and documented owner review exist; enforced review/production gates require further setup.
-
-Source details: [SOURCE-INVENTORY.md](SOURCE-INVENTORY.md). Platform decision: [HOSTING.md](HOSTING.md). Approval and rollback: [RELEASES.md](RELEASES.md).
+References: [release steps](RELEASES.md), [security](SECURITY.md), [roadmap](WEBSITE-ROADMAP.md), [source inventory](SOURCE-INVENTORY.md), [hosting](HOSTING.md).

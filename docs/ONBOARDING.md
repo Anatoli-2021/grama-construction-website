@@ -13,13 +13,13 @@ Approved developer: Nail, verified GitHub `axmatea` (display name AI); write per
 ```powershell
 git clone https://github.com/Anatoli-2021/grama-construction-website.git
 cd grama-construction-website
-git switch feature/unified-development
+git switch feature/investor-showcase-polish
 npm ci
 npm run check
 npm run dev
 ```
 
-Visit http://localhost:5173. In a second terminal, run `npm run dev:os` and visit http://localhost:5180. Both servers remain local. After the setup PR is merged, use `main` as the starting branch.
+Visit http://localhost:5173. In a second terminal, run `npm run dev:os` and visit http://localhost:5180. Both servers remain local. The branch above contains the current Railway showcase; use stable `main` for new work after the team reviews/reconciles the PRs. Check `TEAM-HANDOFF.md` for the latest source before starting.
 
 ## Make one focused change
 
@@ -59,4 +59,4 @@ Owner path for future invitations: repository **Settings → Collaborators → A
 
 GitHub rejected branch protection for this private repository under the current plan (403: Pro or public repository required). `main` is currently unprotected. Owner review and passing CI are documented conventions, not enforced merge gates. Keep the repository private. Tony may approve a plan/organization change later to enforce protection; no upgrade was purchased.
 
-CI has no production credentials. Hosting integration and deployment approval gates are not yet connected. See `RELEASES.md` before enabling automatic deployments.
+CI has no deployment credentials. The website is running on Railway, but its settings currently report automatic deployment unavailable. Follow the standing authorization and explicit deployment verification in `RELEASES.md`; a push alone is not proof that the website updated.

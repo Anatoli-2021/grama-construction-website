@@ -2,7 +2,7 @@
 
 ## Current state
 
-The company production domain is unchanged. The public Sites review preview is tied to web source commit `a339806ee240c4546a5b3c2b75f0276136f6b108`; its hosted contact section does not collect personal data. PR #1 contains that source. The unified-workspace PR builds on PR #1, without merging either change into `main` automatically.
+The website is live at https://grama-construction-website-production.up.railway.app/. Railway currently follows `feature/investor-showcase-polish`; release `e2dca4d` is verified running. See `TEAM-HANDOFF.md` for the deployment ID and checks. Company domain/DNS remains unchanged. PR #1 and #6 are merged; PR #7 contains newer showcase work. Reconcile the older setup PR before merging it.
 
 The Development OS demonstration remains local and contains only blank templates. No OS production deployment, company data migration or live connector was made.
 
@@ -11,12 +11,12 @@ The Development OS demonstration remains local and contains only blank templates
 1. Link one issue; create a `feature/*` branch and use synthetic records.
 2. Run `npm ci` and `npm run check`; test website API/media with `npm run dev` plus `npm run verify` when relevant. Inspect the staged diff and media for private content.
 3. Push and open a PR. GitHub Actions runs tests/build/data-boundary checks. Tony reviews the result, visible changes and remaining limitations.
-4. Preview the website only. Use existing Sites review deployment or an approved hosting PR preview. OS previews stay local until authentication and access tests are implemented.
+4. Verify the website on the existing Railway review address. OS previews stay local until authentication and access tests are implemented.
 5. Merge after owner approval. `main` protection is not technically enforced under the current GitHub plan; this is a material limitation. Do not equate a green check with permission to deploy.
-6. Record the approved release SHA, build result, target, previous version and rollback route. Obtain Tony’s explicit approval for the production target and cost before activation.
+6. Record the release SHA, build result, target, previous version and rollback route. Tony's November 10 standing instruction authorizes deployment of requested, checked website changes to the existing Railway address without another release confirmation. New company-domain targets, spending, access grants and OS publication are separate decisions.
 7. Deploy the approved commit to the approved environment. Verify HTML/media, mobile contact, links, anonymous access and no private artifacts; record deployment ID and SHA.
 
-The prepared CI does not deploy. Once the selected platform is approved, connect branch previews and gate production promotion with supported environment approval controls. If the account cannot enforce that gate, retain manual owner promotion; do not allow every push to update company production.
+CI checks the code; it does not itself deploy. Railway's source is connected, but the UI currently reports automatic deployment unavailable. Until a push-to-deploy test succeeds, explicitly deploy the intended commit and verify it after each requested website change. Do not assume GitHub push success means Railway success. Preserve PR review for stable `main`; this standing Railway approval does not authorize company DNS cutover.
 
 ## Domain cutover plan — approval required
 
@@ -33,4 +33,4 @@ Inventory current registrar/DNS, hosting and mail records read-only. Save a DNS 
 
 - Website: existing hosted-contact adjustment is in PR #1 and the functioning public review preview; current website source/layout is preserved.
 - OS: the shared launch tool rejects whitespace/unsafe Project IDs, preserves common/subdivision task counts and dependencies, and exports Draft records. Automated tests cover this behavior and local/public access boundaries.
-- Pending: independent human review, merge and approved hosting integration; a hosted OS demonstration is deliberately deferred until its access controls exist.
+- Current Railway verification: public HTML, health and hero media return HTTP 200; private/OS paths return 404; the loaded site has no console errors. Future changes must be checked against their actual deployed commit. A hosted OS demonstration remains deferred until access controls exist.
