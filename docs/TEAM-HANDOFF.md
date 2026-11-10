@@ -4,9 +4,11 @@
 
 - Repository: https://github.com/Anatoli-2021/grama-construction-website (currently public, verified through GitHub). Private business and investor data remain excluded.
 - Railway website: https://grama-construction-website-production.up.railway.app/.
-- Last verified source branch: `feature/multipage-website`, without a commit pin. New candidate: `feature/private-investor-presentation`, incorporating that latest shared source; a branch push alone is not deployment evidence.
-- Latest verified live release before this integration: `a73c0172f378f6706166dd76b383a883f0c3a1a6`, deployment `6db6d542-245d-4000-92f0-c90dff4baadf`, published by Nail. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
-- Anonymous checks: website, health and hero media HTTP 200; OS, `.data` and `.env` paths HTTP 404. Loaded website console contained no errors.
+- Connected source: `feature/private-investor-presentation`, without a commit pin; incorporates Nail's latest multipage source.
+- Verified application release: `9f6b6d0156e84ddb845086afd71c6bc7490c1862`, Railway deployment `f3bcd2d4-dce2-4756-ad98-e2c424dc5dd7`, SUCCESS on November 10 at 22:59 UTC. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
+- Live checks: all fourteen public pages HTTP 200; five served JS/CSS assets match the checked local build byte for byte; health HTTP 200; OS, `.data`, `.env` and unknown URLs HTTP 404. `/presentation` is a no-store login shell; anonymous deck access is HTTP 401 and unconfigured login is HTTP 503. Actual financial data/accounts are not hosted.
+- Previous recoverable release: Nail's `a73c0172f378f6706166dd76b383a883f0c3a1a6`, deployment `6db6d542-245d-4000-92f0-c90dff4baadf`. Its pages and case studies are preserved in this release.
+- [PR #10](https://github.com/Anatoli-2021/grama-construction-website/pull/10) records current deployment evidence; [CI run 42919270661](https://github.com/Anatoli-2021/grama-construction-website/actions/runs/42919270661) passed for the application release.
 - Preserve the team's newer investor showcase, family story, project portfolio and browser-only enquiry draft. Do not deploy the older setup branch over it.
 - Company domain/DNS is unchanged. Railway labels this environment `production`; the Railway address remains the current development/review website.
 
@@ -16,7 +18,7 @@ On November 10, Tony instructed: finish requested website changes, run relevant 
 
 This covers requested website work through deployment. It does not create a background job or authorize unrelated changes. Keep branches and PR review for stable `main`; never force-push shared history. Company-domain/DNS changes, new spending, access grants and private OS publication remain separate decisions.
 
-The Railway connector is authenticated. Its source inspection revealed an explicit pin to `e2dca4d`. Reconnecting without a pin successfully deployed `6dda772` as deployment `7123ccec-ad4b-4c0b-b979-f4885ee53367`. However, the next GitHub push did not automatically trigger a deployment and the dashboard could not load branches. Automatic deployment remains unverified. Explicitly deploy and verify intended commits until the GitHub trigger is repaired. See `IMPLEMENTATION-QUEUE.md` for the ordered presentation and public-design work now in progress.
+The Railway connector is authenticated. Earlier, a commit pin was removed but a later push did not deploy automatically. Nail subsequently connected the multipage branch. For this release, switching the existing service to the genuinely new integrated branch without a commit pin built and deployed `9f6b6d0` successfully. Do not infer push-trigger behavior from a source switch: verify the deployment created by each subsequent push and record its SHA/ID in PR #10. See `IMPLEMENTATION-QUEUE.md` for ordered work and pending inputs.
 
 Run relevant local checks before pushing to the connected branch: Railway may deploy while GitHub CI runs. Stable `main` keeps its PR review convention; server-enforced review and CI-before-deploy gates are not claimed.
 
@@ -24,7 +26,7 @@ Run relevant local checks before pushing to the connected branch: Railway may de
 
 - `main` was verified at `af3faf5b924865f898bb32f022ef84ab7e4aca94` before this documentation update. PR #1 and #6 are merged.
 - PR #7 contains the earlier showcase branch; PR #9 adds the multipage website. The new private-presentation branch integrates both. PR #2 is an older setup PR; reconcile already-included changes before merging it. Do not blindly reintroduce old source.
-- `axmatea` has approved GitHub write access and authored the running Railway deployment. Check current access before sending duplicate invitations.
+- `axmatea` has approved GitHub write access and authored the prior multipage Railway release. Check current access before sending duplicate invitations.
 - Node 24; `npm ci`; `npm run check`. Website: `npm run dev` at port 5173. Blank OS tool: `npm run dev:os` at port 5180.
 - Fetch the latest shared source before editing. Follow [ONBOARDING.md](ONBOARDING.md) for branches, PRs and safe synchronization.
 
@@ -36,7 +38,7 @@ Environment `production`: `15058afa-2401-4d42-83a7-5e807d7d1258`.
 
 The root Dockerfile serves the website and the separate presentation authorization API; OS source, private data files and local enquiry records are excluded from its runtime. Real presentation data/accounts must be supplied through private runtime configuration. Without it the portal stays closed. See the [settings guide](../infra/website/README.md). No paid upgrade or company-domain change was made during this verification. Do not publish credentials or invite links.
 
-## Private presentation and public refinement candidate
+## Private presentation and public refinement
 
 The `feature/private-investor-presentation` branch preserves Nail's newer multipage website, including fourteen prerendered public pages, eight completed case studies, filters, galleries, contextual contact links and a genuine 404 page. Routes are in `src/site-routes.js`; public project records are in `src/data/projects.js`. The build runs Vite and `scripts/build-pages.mjs`; Docker includes both build inputs and the separate presentation entry.
 
@@ -44,7 +46,7 @@ The refinement adds sans-serif typography across those pages, quieter captions, 
 
 Local private working review: `npm run build`, then `npm run dev:presentation`, http://localhost:5190/presentation. The owner-machine working deck and source snapshot are under ignored `.data/investor-presentation/`; they are intentionally absent from this public repository. Use individually authorized source connections for financial research. Never copy private figures or transcripts into issues, PRs, fixtures or public assets.
 
-The integrated candidate passed build, 91 tests (including all fourteen prerendered public routes, metadata, true 404s, local preview and private-access behavior), repository policy and a separate scan against private local values. Browser checks confirmed sans-serif headings on company/project pages, completed-project filtering, case gallery, mobile navigation, cinematic neighborhood view, Lot 8 context carried into Contact, browser-only draft mode and the authenticated private working deck. No console errors or mobile overflow were observed. Earlier checks also covered chapter navigation after resize and motion-off fallback. Deployment evidence is recorded after publishing; no deployment is claimed from a Git push alone.
+The integrated release passed build, 91 tests (including all fourteen prerendered public routes, metadata, true 404s, local preview and private-access behavior), repository policy and a separate scan against private local values. Browser checks confirmed sans-serif headings on company/project pages, completed-project filtering, case gallery, mobile navigation, cinematic neighborhood view, Lot 8 context carried into Contact, browser-only draft mode and the authenticated private working deck. No console errors or mobile overflow were observed. Earlier checks also covered chapter navigation after resize and motion-off fallback. The exact application release and live checks are recorded above.
 
 Pending owner inputs: actual investor names/emails for recipient-specific access; approval for Wispr owner-account sign-in if full transcripts are required. Both shared summaries were read. No real investor invitations or hosted financial data have been issued.
 

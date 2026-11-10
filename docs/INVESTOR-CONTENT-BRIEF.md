@@ -12,7 +12,7 @@ Existing approved assets are in `public/assets/`. The current cinematic module r
 
 ## Source-backed portfolio
 
-The official completed-project gallery lists eight entries. Three expanded case studies in the new website are 1847 Dexter Lane, 1906 Lee Street and 1171 Prospect Lane. The other five retain links to their official case pages. A gallery entry is not evidence of a sale price, realized return, number of homes sold or company revenue.
+The official completed-project gallery lists eight entries. Nail's integrated multipage work now gives all eight their own project pages, sourced photographs, details and original-source links. The private base deck selects 1847 Dexter Lane, 1906 Lee Street and 1171 Prospect Lane as three examples. A gallery entry is not evidence of a sale price, realized return, number of homes sold or company revenue.
 
 Public references:
 
@@ -35,7 +35,7 @@ The two supplied Wispr summaries were read. Full transcripts require owner acces
 | Area | Current company domain | New website / presentation work |
 | --- | --- | --- |
 | Investor story | General marketing copy and contact form | Private, customizable proposal structure with evidence, underwriting basis and a concrete next conversation |
-| Portfolio | Eight gallery entries | Three expanded cases, five original links and separate proposed development context |
+| Portfolio | Eight gallery entries | Eight individual completed-project pages, filters/galleries, original-source links and separate proposed development context |
 | Typography | Existing mixed editorial styling | Consistent General Sans headlines, normal emphasis, fewer small tracked captions and clearer hierarchy |
 | Motion | Existing company-site presentation | Scroll-driven residence/detail/neighborhood sequence on desktop and mobile, plus motion-off fallback |
 | Investor access | Public investor-information page | Individual account/assigned-deck access, server-side private data, expiry and revocation |

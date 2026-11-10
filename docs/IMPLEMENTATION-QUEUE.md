@@ -8,7 +8,7 @@ New messages add requirements to this queue. They do not replace unfinished work
 - Done: preserved Nail's newer investor showcase, portraits, completed portfolio and lot map. Company DNS remains unchanged.
 - Done: Nail's concurrent multipage release `a73c017` on PR #9 is integrated into the private-presentation candidate. Its new pages, project cases and direct-route behavior are preserved and passed combined checks.
 - Done: authenticated Railway connector, removed the explicit source commit pin and deployed documentation commit `6dda772` successfully.
-- Open: a later GitHub push did not automatically create a deployment. Branch loading is unavailable in the dashboard. Treat GitHub webhook deployment as unverified; explicitly deploy and verify intended commits until repaired.
+- Release: integrated application `9f6b6d0` deployed successfully by switching the existing service to `feature/private-investor-presentation` without a pin. A previous branch push had not deployed automatically; verify each later push and its actual deployment rather than assuming automation works.
 - Boundary: the repository is currently public, verified through GitHub. Keep confidential material outside Git and the public build regardless of visibility.
 
 ## 2. Research for investor presentation
@@ -42,3 +42,4 @@ New messages add requirements to this queue. They do not replace unfinished work
 - Commit and push the requested changes. Deploy the intended public website commit through Railway and record its exact SHA/deployment ID/public result.
 - Deploy private presentation data only behind verified access controls and for approved recipients. No company-domain cutover or new paid subscription is included.
 - Update the team handoff with completed, pending and blocked items so Nail's agent can continue without chat history. Do not claim an incomplete stage is finished.
+- Done for the application release: GitHub PR #10 and green CI; Railway deployment `f3bcd2d4-dce2-4756-ad98-e2c424dc5dd7` for `9f6b6d0`; all fourteen public pages and exact JS/CSS build verified live, private paths blocked, anonymous private deck denied. Shared handoff and setup instructions are in the repository. Actual investor accounts/data and full transcripts remain pending the inputs listed above.
