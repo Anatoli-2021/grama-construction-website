@@ -35,6 +35,7 @@
 .experience .cinema__progress{height:2px}
 .experience .cinema__panel--1{background:#eeeeF1}
 .experience .cinema__panel--1 .cinema__body{color:#67676d}
+.experience .cinema__panel--1 :is(.cinema__eyebrow,.cinema__title em){color:#536159}
 @media(max-width:1000px){.experience .hero h1{font-size:clamp(55px,7.6vw,78px)}}
 @media(max-width:899px){
   .experience .cinema--enhanced{height:350svh}

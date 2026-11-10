@@ -48,6 +48,8 @@ Local private working review: `npm run build`, then `npm run dev:presentation`, 
 
 The integrated release passed build, 91 tests (including all fourteen prerendered public routes, metadata, true 404s, local preview and private-access behavior), repository policy and a separate scan against private local values. Browser checks confirmed sans-serif headings on company/project pages, completed-project filtering, case gallery, mobile navigation, cinematic neighborhood view, Lot 8 context carried into Contact, browser-only draft mode and the authenticated private working deck. No console errors or mobile overflow were observed. Earlier checks also covered chapter navigation after resize and motion-off fallback. The exact application release and live checks are recorded above.
 
+Final live review found pale emphasis/caption text on the light motion-off detail panel. The follow-up stylesheet correction restores dark, readable text; browser inspection, rebuild and privacy checks passed. PR #10 records the final follow-up SHA/CI/deployment proof. A documentation push did not create a new Railway deployment, so push-trigger automation remains unverified; use an explicit latest-commit deployment and verify its actual source.
+
 Pending owner inputs: actual investor names/emails for recipient-specific access; approval for Wispr owner-account sign-in if full transcripts are required. Both shared summaries were read. No real investor invitations or hosted financial data have been issued.
 
 ## Remaining work
