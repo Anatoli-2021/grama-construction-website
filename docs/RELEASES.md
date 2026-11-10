@@ -1,36 +1,21 @@
-# Review, preview, release and rollback
+# Website review and release guide
 
-## Current state
+The multipage implementation is `6fb4308`, proposed in [PR9](https://github.com/Anatoli-2021/grama-construction-website/pull/9), branch `feature/multipage-website`.
 
-The website is live at https://grama-construction-website-production.up.railway.app/. Railway currently follows `feature/investor-showcase-polish`; release `e2dca4d` is verified running. See `TEAM-HANDOFF.md` for the deployment ID and checks. Company domain/DNS remains unchanged. PR #1 and #6 are merged; PR #7 contains newer showcase work. Reconcile the older setup PR before merging it.
+Public review: [Grama Construction preview](https://grama-construction-website-production.up.railway.app/). The PR records the deployed source version and verification result. Company-domain publication is a separate decision.
 
-The Development OS demonstration remains local and contains only blank templates. No OS production deployment, company data migration or live connector was made.
+## Verify a candidate
 
-## Workflow and release gate
+Use the committed lockfile and Node.js24. Run `npm ci` and `npm run check`. The current website builds fourteen page documents plus404; the83 tests cover route HTML, metadata, request boundaries and enquiry context. Inspect desktop/mobile navigation, all case links, galleries, the Dexter Acres cinematic sequence and14-lot plan. Check the resulting static output before publishing.
 
-1. Link one issue; create a `feature/*` branch and use synthetic records.
-2. Run `npm ci` and `npm run check`; test website API/media with `npm run dev` plus `npm run verify` when relevant. Inspect the staged diff and media for private content.
-3. Push and open a PR. GitHub Actions runs tests/build/data-boundary checks. Tony reviews the result, visible changes and remaining limitations.
-4. Verify the website on the existing Railway review address. OS previews stay local until authentication and access tests are implemented.
-5. Merge after owner approval. `main` protection is not technically enforced under the current GitHub plan; this is a material limitation. Do not equate a green check with permission to deploy.
-6. Record the release SHA, build result, target, previous version and rollback route. Tony's November 10 standing instruction authorizes deployment of requested, checked website changes to the existing Railway address without another release confirmation. New company-domain targets, spending, access grants and OS publication are separate decisions.
-7. Deploy the approved commit to the approved environment. Verify HTML/media, mobile contact, links, anonymous access and no private artifacts; record deployment ID and SHA.
+Hosted enquiries remain browser-only drafts until a delivery destination is connected and tested. Unknown URLs must return404. Source, private-data, OS and API paths must stay unavailable through the public website host. Preview pages remain noindex.
 
-CI checks the code; Railway deploys pushes to `feature/investor-showcase-polish`. The old explicit commit pin was removed by reconnecting the same GitHub source without `commitSha`. Run relevant local checks before pushing: CI and Railway may run concurrently. Verify the exact resulting deployment and public website after each requested change. A green push alone does not prove a successful deployment. Preserve PR review for stable `main`; this standing Railway approval does not authorize company DNS cutover.
+## Collaborate and publish
 
-## Domain cutover plan — approval required
+Use a focused feature branch and a reviewable PR. Preserve unfinished work, inspect diffs and stage only intended files. Obtain owner review before merging to main; do not push directly to main or force-push shared history.
 
-Inventory current registrar/DNS, hosting and mail records read-only. Save a DNS export and prior target. Verify the chosen platform’s exact hostname/certificate instructions on its temporary address. Present Tony the precise DNS record changes, website release SHA, test result and rollback target. Change only approved web records; preserve email records. Verify TLS, www/apex routing and contact flow after cutover. No domain records have been edited in this task.
+Deploy checked website changes only to an authorized review target. Verify the actual resulting source version, public page content, media, direct links and mobile behavior. Record the outcome in the PR. Administrative account details and platform identifiers are maintained privately, outside this repository.
 
-## Rollback and backups
+## Company launch and rollback
 
-- Code: keep commits/PRs; use a reviewed `git revert` PR for a bad merge. Do not reset/force-push shared `main`.
-- Website: redeploy a known-good approved commit/version, verify media and contact behavior, and record the rollback. On Sites, redeploy the saved previous version; on Vercel use its documented rollback when available. This preparation does not prove an account-specific rollback until it is exercised there.
-- DNS: restore only the previously saved, approved web record if cutover fails. Certificate/cache propagation may take time; check the actual provider behavior.
-- OS: application rollback does not roll back database schema/data. Require reversible migrations or a tested forward fix, encrypted snapshots and a restore drill. Backups must live outside Git and the public website.
-
-## Demonstrations in this change
-
-- Website: existing hosted-contact adjustment is in PR #1 and the functioning public review preview; current website source/layout is preserved.
-- OS: the shared launch tool rejects whitespace/unsafe Project IDs, preserves common/subdivision task counts and dependencies, and exports Draft records. Automated tests cover this behavior and local/public access boundaries.
-- Current Railway verification: public HTML, health and hero media return HTTP 200; private/OS paths return 404; the loaded site has no console errors. Future changes must be checked against their actual deployed commit. A hosted OS demonstration remains deferred until access controls exist.
+Company-domain changes require a separate release decision. Preserve mail records and verify the approved website target after any cutover. Keep the previous working source version available for rollback; use reviewed revert changes rather than rewriting shared history. An OS service, authentication, live-data import or enquiry integration does not follow automatically from a website release.
