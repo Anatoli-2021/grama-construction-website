@@ -12,7 +12,7 @@
     "test": "node --test apps/development-os/test/*.test.mjs scripts/test/*.test.mjs",
     "start:web": "node scripts/serve-website.mjs --hosted",
     "check:repository": "node scripts/check-repository.mjs",
-    "check": "npm test && npm run build && npm run check:repository"
+    "check": "npm run build && npm test && npm run check:repository"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
