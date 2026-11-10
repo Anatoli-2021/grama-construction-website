@@ -16,7 +16,7 @@ Public review preview: [Grama / Dexter Acres](https://grama-dexter-acres-preview
 
 For the prepared OS work, check out `feature/unified-development` until its PR is approved and merged. For the existing web preview work, see PR #1. `main` remains the stable starting version.
 
-Read [current source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
+Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
 
 ## Start on another computer
 

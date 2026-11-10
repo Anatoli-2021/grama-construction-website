@@ -1,6 +1,6 @@
 # Hosting decision and prepared configurations
 
-Verified against official documentation November 10, 2026. Prices are USD before tax and usage overages. No Railway/Vercel subscription or account connection was purchased or enabled.
+Verified against official documentation November 10, 2026. Prices are USD before tax and usage overages. An existing Railway trial project and GitHub-linked service were verified in the user’s browser. No subscription upgrade or Vercel connection was purchased or enabled.
 
 **Recommendation: use Railway Pro as the future unified runtime, with separate website and authenticated OS services. Keep the working Sites review preview during preparation.** This is an architectural recommendation, not authorization to publish the OS.
 

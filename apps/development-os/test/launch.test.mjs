@@ -49,6 +49,15 @@ test('whitespace-only and unsafe Project IDs cannot produce unusable row keys', 
   assert.equal(draft.planRows[0]['Task ID'], 'DEMO-ONLY-T01');
 });
 
+test('browser Project ID constraint is valid under modern HTML pattern rules', async () => {
+  const html = await readFile(new URL('../launch.html', import.meta.url), 'utf8');
+  const pattern = html.match(/id="project_id"[^>]*pattern="([^"]+)"/)[1];
+  const constraint = new RegExp(`^(?:${pattern})$`, 'v');
+  assert.ok(constraint.test('DEMO-ONLY_2'));
+  assert.ok(!constraint.test('   '));
+  assert.ok(!constraint.test('../secret'));
+});
+
 test('required fields, opportunity type and manager email are validated before export', () => {
   for (const field of tpl.requiredForReview.filter(f => f !== 'project_id')) assert.throws(() => buildLaunch(tpl, { ...input, [field]: ' ' }));
   assert.throws(() => buildLaunch(tpl, { ...input, project_type: 'Unknown' }));
