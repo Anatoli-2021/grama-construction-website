@@ -1,46 +1,13 @@
 import { useRef, useState } from 'react';
 import './BrandSections.css';
+import { projects as projectCases } from '../data/projects.js';
 
 function Arrow({ down = false }) {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d={down ? 'M12 3v17m-6-6 6 6 6-6' : 'M5 19 19 5M5 5h14v14'} stroke="currentColor" strokeWidth="1.3" /></svg>;
 }
 
-const projects = [
-  {
-    name: '1847 Dexter Lane',
-    image: 'portfolio-dexter.webp',
-    detail: 'Garden terrace & outdoor fireplace',
-    description: 'Garden terrace and outdoor fireplace at 1847 Dexter Lane, Des Plaines.',
-    alt: 'Garden terrace and outdoor fireplace at 1847 Dexter Lane at dusk',
-    source: 'https://www.gramaconstruction.com/projects/1847-dexter-des-plaines',
-  },
-  {
-    name: '1906 Lee Street',
-    image: 'portfolio-lee.webp',
-    gallery: [{ image: 'portfolio-lee-bath.webp', alt: '1906 Lee Street bathroom with a double vanity and veined stone' }],
-    detail: 'Custom kitchen & interior finishes',
-    description: 'Wood cabinetry and a veined stone island in the kitchen at 1906 Lee Street, Des Plaines.',
-    alt: '1906 Lee Street kitchen with wood cabinetry and a veined stone island',
-    source: 'https://www.gramaconstruction.com/projects/1906-lee-st-des-plaines-il',
-  },
-  {
-    name: '1171 Prospect Lane',
-    image: 'portfolio-prospect.webp',
-    gallery: [{ image: 'portfolio-prospect-interior.webp', alt: 'Prospect Lane kitchen with white cabinetry, a wood island and pendant lights' }],
-    detail: 'Masonry exterior & residential interiors',
-    description: 'Masonry exterior, turret and paired garage doors at 1171 Prospect Lane, Des Plaines.',
-    alt: '1171 Prospect Lane residence with gray masonry, a turret and paired garage doors',
-    source: 'https://www.gramaconstruction.com/projects/prospect-ln-des-plaines-il-60018',
-  },
-];
-
-const archive = [
-  { name: 'Chicago, IL 60618', location: 'Avondale / Chicago', source: 'https://www.gramaconstruction.com/projects/chicago-il-60618' },
-  { name: 'Burr Ridge', location: 'Burr Ridge, Illinois', source: 'https://www.gramaconstruction.com/projects/burr-ridge-il-60527' },
-  { name: 'South Barrington', location: 'South Barrington, Illinois', source: 'https://www.gramaconstruction.com/projects/south-barrington-il-60010' },
-  { name: 'W Foster Avenue, Unit 1E', location: 'Chicago, IL 60640', source: 'https://www.gramaconstruction.com/projects/w-foster-ave-unit-1e-chicago-il-60640' },
-  { name: 'N Sedgwick Street', location: 'Chicago, IL 60614', source: 'https://www.gramaconstruction.com/projects/n-sedgwick-st-chicago-il-60614' },
-];
+const projects = projectCases.slice(0, 3);
+const archive = projectCases.slice(3);
 
 const partners = [
   ['Floor & Decor', 'floor-decor'],
@@ -80,12 +47,12 @@ export function AboutGrama({ onConsultation }) {
           </figure>
         </div>
       </div>
-      <div className="about-philosophy"><span className="eyebrow">OUR WORK</span><p>Custom residential projects.<br />Construction & renovation.<br /><em>Development partnerships.</em></p><span className="philosophy-note">Explore the<br />completed portfolio.</span><a href="#properties" aria-label="Explore our properties"><Arrow down /></a></div>
+      <div className="about-philosophy"><span className="eyebrow">OUR WORK</span><p>Custom residential projects.<br />Construction & renovation.<br /><em>Development partnerships.</em></p><span className="philosophy-note">Explore the<br />completed portfolio.</span><a href="/projects" aria-label="Explore our projects"><Arrow down /></a></div>
     </section>
   );
 }
 
-export function PropertyCollection({ onView, motion }) {
+export function PropertyCollection({ motion }) {
   const [category, setCategory] = useState('all');
   const filters = useRef([]);
   const completedCount = projects.length + archive.length;
@@ -111,10 +78,10 @@ export function PropertyCollection({ onView, motion }) {
       </div>
       <div id="collection-panel" role="tabpanel" aria-labelledby={'collection-tab-' + category} className="collection-grid" data-motion={motion ? 'on' : 'off'}>
         {showUpcoming && <article className="collection-development"><a className="collection-image" href="#architecture"><img src="/assets/community.webp" alt="AI-generated concept aerial of Dexter Acres, a proposed fourteen-home development" width="1800" height="817" loading="lazy" /><span className="collection-image-tag">PROPOSED DEVELOPMENT</span><span className="collection-view"><Arrow /></span><span className="collection-image-note">ARCHITECTURAL CONCEPT</span></a><div className="collection-caption"><div><span>WEBSTER–DEXTER / DES PLAINES</span><h3>Dexter Acres</h3></div><p>14 planned homes<br />Des Plaines, Illinois</p></div><div className="development-line"><p>A proposed residential neighborhood at Webster and Dexter Lanes. Explore the architectural concept and fourteen-lot plan.</p><a className="text-link light-link" href="#community">Explore Dexter Acres <Arrow /></a></div></article>}
-        {completed.map((project, index) => <article className={'collection-project ' + (index === 0 ? 'collection-project-wide' : '')} key={project.name}><button className="collection-image" aria-label={'View ' + project.name + ' project'} onClick={() => onView({ image: project.image, images: [{ image: project.image, alt: project.alt }, ...(project.gallery || [])], title: project.name, caption: project.description, source: project.source })}><img src={'/assets/' + project.image} alt={project.alt} width="1800" height="1200" loading="lazy" /><span className="collection-view"><Arrow /></span></button><div className="collection-caption"><div><span>COMPLETED PROJECT / DES PLAINES</span><h3>{project.name}</h3></div><p>{project.detail}</p></div></article>)}
-        {category !== 'upcoming' && <div className="collection-archive"><div className="collection-archive-heading"><p className="eyebrow light">MORE COMPLETED PROJECTS</p><a href="https://www.gramaconstruction.com/completed-projects" target="_blank" rel="noreferrer">View the original portfolio <Arrow /></a></div><div className="collection-archive-list">{archive.map(project => <a href={project.source} target="_blank" rel="noreferrer" key={project.name}><div><h3>{project.name}</h3><p>{project.location}</p></div><span>Completed project</span><Arrow /></a>)}</div></div>}
+        {completed.map((project, index) => <article className={'collection-project ' + (index === 0 ? 'collection-project-wide' : '')} key={project.name}><a className="collection-image" aria-label={'View ' + project.name + ' case study'} href={'/projects/' + project.slug}><img src={'/assets/' + project.image} alt={project.alt} width="1800" height="1200" loading="lazy" /><span className="collection-view"><Arrow /></span></a><div className="collection-caption"><div><span>COMPLETED PROJECT / DES PLAINES</span><h3>{project.name}</h3></div><p>{project.location}</p></div></article>)}
+        {category !== 'upcoming' && <div className="collection-archive"><div className="collection-archive-heading"><p className="eyebrow light">MORE COMPLETED PROJECTS</p><a href="https://www.gramaconstruction.com/completed-projects" target="_blank" rel="noreferrer">View the original portfolio <Arrow /></a></div><div className="collection-archive-list">{archive.map(project => <a href={'/projects/' + project.slug} key={project.name}><div><h3>{project.name}</h3><p>{project.location}</p></div><span>Completed project</span><Arrow /></a>)}</div></div>}
       </div>
-      <div className="collection-current"><div><p className="eyebrow light">CURRENT LISTINGS</p><h3>Ask about current availability.</h3><p>No current listings are published on the company website. Contact Grama for the latest property information.</p></div><a className="text-link light-link" href="#interest">Discuss an opportunity <Arrow /></a></div>
+      <div className="collection-current"><div><p className="eyebrow light">CURRENT LISTINGS</p><h3>Ask about current availability.</h3><p>No current listings are published on the company website. Contact Grama for the latest property information.</p></div><a className="text-link light-link" href="/contact">Discuss an opportunity <Arrow /></a></div>
     </section>
   );
 }

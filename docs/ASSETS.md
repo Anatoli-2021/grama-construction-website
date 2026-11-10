@@ -42,7 +42,7 @@ The source also has a [second crop of the same realtor](https://cdn.prod.website
 
 ### Complete official portfolio
 
-The [official completed-project index](https://www.gramaconstruction.com/completed-projects) lists eight entries. Three featured photographic projects retain their existing galleries; five additional entries link to their source pages:
+The [official completed-project index](https://www.gramaconstruction.com/completed-projects) lists eight entries. All eight now have individual case pages under `/projects/`, with a shared factual record in `src/data/projects.js`. The first three retain their existing photographs; the following five also have selected original exterior and interior photographs, with direct source attribution on each case page:
 
 - [Chicago / Avondale, IL 60618](https://www.gramaconstruction.com/projects/chicago-il-60618)
 - [Burr Ridge, IL 60527](https://www.gramaconstruction.com/projects/burr-ridge-il-60527)
@@ -52,7 +52,7 @@ The [official completed-project index](https://www.gramaconstruction.com/complet
 
 “Completed project” follows the official index category. It does not mean sold, currently available, or independently verified project scope. The [current-listings page](https://www.gramaconstruction.com/current-listings) showed no published entries during this pass, so the review website offers an enquiry path rather than invented active inventory. No prices, sales totals, revenue or investment returns were added.
 
-Do not reuse conflicting source specifications without resolution: Prospect Lane's narrative and structured bedroom/bathroom counts disagree; South Barrington and Sedgwick have conflicting floor areas. The Foster detail page was subsequently verified directly in the live browser DOM, resolving the research fetcher's cache gap; the archive retains its official title and source link.
+Do not reuse conflicting source specifications without resolution: Prospect Lane's narrative and structured bedroom/bathroom counts disagree; South Barrington and Sedgwick have conflicting floor areas. The Foster detail page was subsequently verified directly in the live browser DOM and retrieved as official HTML during the case-page work, resolving the research fetcher's cache gap. Case copy uses source-supported project details and visually checked photographs, without conflicting specifications or sale prices.
 
 ### Original partner-logo section
 
@@ -71,3 +71,22 @@ The [official homepage](https://www.gramaconstruction.com/) publishes eleven log
 | partner-goodman.png | [Goodman](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734de6901cd5d448539bba_2560px-Goodman_Global_logo.svg.png) |
 | partner-abc-supply.png | [ABC Supply](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734f8d0d06de5fbb45d3fe_idrjvO-611-removebg-preview.png) |
 | partner-home-depot.png | [The Home Depot](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734fd42008534cfbbe69cd_Home-Depot-Logo.png) |
+
+## Individual project-page photographs
+
+Ten photographs were selected from the five official project pages above, visually inspected before captions were written, and optimized to WebP at no more than 1600 pixels wide. Existing photographer marks remain visible. The selected originals and their attribution are preserved here; source files remain outside the repository.
+
+| Runtime file | Direct original photograph |
+| --- | --- |
+| portfolio-sedgwick-street.webp | [sedgwick-street / exterior](https://cdn.prod.website-files.com/66117181961169ea1597a104/6631605ef030e92d7e209f3b_4d76f1992806c9b7d698284a7e60130e-uncropped_scaled_within_1536_1152.webp) |
+| portfolio-sedgwick-street-interior.webp | [sedgwick-street / interior](https://cdn.prod.website-files.com/66117181961169ea1597a104/6631605e351cca7bd826094d_a4f3d59c6c0e9b87997cf1528b013c94-uncropped_scaled_within_1536_1152.webp) |
+| portfolio-burr-ridge.webp | [burr-ridge / exterior](https://cdn.prod.website-files.com/66117181961169ea1597a104/66329f1252cc5951ff90b32f_f46317c3df3ee442fbb32cfef6ec650f-o_a.webp) |
+| portfolio-burr-ridge-interior.webp | [burr-ridge / interior](https://cdn.prod.website-files.com/66117181961169ea1597a104/66329f01e9e34250fe30be52_f5425b22beacbc3815d8a68469873fa1-o_a.webp) |
+| portfolio-chicago-avondale.webp | [chicago-avondale / exterior](https://cdn.prod.website-files.com/66117181961169ea1597a104/6632af2af307b188cf29cb9c_2ae8f86dfd41037adcc47a9f5e2fc06f-o_a.webp) |
+| portfolio-chicago-avondale-interior.webp | [chicago-avondale / interior](https://cdn.prod.website-files.com/66117181961169ea1597a104/6632af2a1d94d76bf4d367d8_5be4033c3c451c85d952f1aaf85eef34-o_a.webp) |
+| portfolio-foster-avenue.webp | [foster-avenue / exterior](https://cdn.prod.website-files.com/66117181961169ea1597a104/6632458700b1c7f4af4239ba_1.jpg) |
+| portfolio-foster-avenue-interior.webp | [foster-avenue / interior](https://cdn.prod.website-files.com/66117181961169ea1597a104/6632426f8f9bd578a9a41217_2.jpg) |
+| portfolio-south-barrington.webp | [south-barrington / exterior](https://cdn.prod.website-files.com/66117181961169ea1597a104/6632445e8f9ce038abbcafec_84f119cd8012118fb4b8785c15e79fc6-o_a.webp) |
+| portfolio-south-barrington-interior.webp | [south-barrington / interior](https://cdn.prod.website-files.com/66117181961169ea1597a104/66324457ceefd9aca6433144_0f3d6becbc6d1066c4645dff9ac58592-o_a.webp) |
+
+The project index separates the eight completed portfolio entries from the proposed Dexter Acres development. The current-listings filter has an honest empty state. Neither the completed category nor its photograph count is presented as sold inventory, sales performance or investment results.

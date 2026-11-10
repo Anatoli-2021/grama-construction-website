@@ -8,6 +8,22 @@ Website review preview: [Grama Construction on Railway](https://grama-constructi
 
 The hosted enquiry form is a browser-only draft review, clearly labelled before entry and after review. It sends nothing to a server. Localhost retains the existing local-save workflow; live email/CRM delivery needs an approved destination. Sold-home totals, closing values and company revenue are omitted until supported by approved records.
 
+## Multipage website
+
+The review website now has fourteen prerendered public pages. Normal document links and direct URL refreshes work without a catch-all homepage response. Build with `npm run build`; the build emits each page’s HTML, title, description, canonical and sharing metadata. Preview indexing remains disabled.
+
+| Page | Route |
+| --- | --- |
+| Company homepage | `/` |
+| About and family | `/about` |
+| Project index and status filters | `/projects` |
+| Eight individual completed cases | `/projects/<project-slug>` |
+| Dexter Acres cinematic and14-lot plan | `/projects/dexter-acres` |
+| Development partnerships and process | `/partnerships` |
+| Contact and contextual enquiry draft | `/contact` |
+
+Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Unknown URLs return a real404. Runtime hosting still serves only `dist`, with source/private/OS/API paths unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Hosted review stays browser-only; enquiry delivery is not connected.
+
 ## Two products, separate boundaries
 
 | Product | Source | Start locally | Data / hosting status |
