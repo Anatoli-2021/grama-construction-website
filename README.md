@@ -1,20 +1,22 @@
 # Grama Construction development workspace
 
-One private repository for the existing React/Vite/GSAP website and the reusable Development OS launch tool. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
+One shared repository for the existing React/Vite/GSAP website and the reusable Development OS launch tool. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
 
 Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Owner: **Anatoli-2021**.
 
-Public review preview: [Grama / Dexter Acres](https://grama-dexter-acres-preview.anatoli-gram-1564.chatgpt.site). The current company domain remains separate.
+Website review preview: [Grama Construction on Railway](https://grama-construction-website-production.up.railway.app/). The current company domain remains separate. The investor/developer showcase restores the official company portraits, completed-project archive and partner logos while preserving Dexter Acres motion and the 14-lot plan.
+
+The hosted enquiry form is a browser-only draft review, clearly labelled before entry and after review. It sends nothing to a server. Localhost retains the existing local-save workflow; live email/CRM delivery needs an approved destination. Sold-home totals, closing values and company revenue are omitted until supported by approved records.
 
 ## Two products, separate boundaries
 
 | Product | Source | Start locally | Data / hosting status |
 | --- | --- | --- | --- |
-| Public website | Root `src/`, `public/`, `server.mjs` | `npm run dev` → port 5173 | Public static preview; hosted enquiry delivery not connected |
+| Public website | Root `src/`, `public/`, `server.mjs` | `npm run dev` → port 5173 | Static preview with browser-only draft review; delivery not connected |
 | Development OS | `apps/development-os/` | `npm run dev:os` → port 5180 | Loopback-only blank launch tool; no live data or authentication |
 | Shared utility | `packages/shared/` | Used by OS / Node tests | Project ID validation; no company records |
 
-For the prepared OS work, check out `feature/unified-development` until its PR is approved and merged. For the existing web preview work, see PR #1. `main` remains the stable starting version.
+Current Railway source: `feature/investor-showcase-polish` (PR #7). PR #1 and #6 are merged. Keep `main` stable and reconcile the older setup PR before merging it. Tony authorizes requested website edits through checks, commit, push and deployment to the existing Railway address; see the release guide for verification and remaining boundaries.
 
 Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
 

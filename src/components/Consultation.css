@@ -3,3 +3,219 @@
 @media(max-width:700px){.consultation{padding-top:75px;padding-bottom:75px}.consultation-heading{display:block;margin-bottom:36px}.consultation-heading>.eyebrow{font-size:8px;margin-bottom:24px}.consultation-heading .display{font-size:clamp(34px,8.2vw,52px)}.consultation-heading>p:last-child{margin-top:24px;font-size:12px;max-width:360px}.consultation-layout{grid-template-columns:1fr;gap:36px}.consultation-paths{display:grid;grid-template-columns:1fr 1fr;gap:18px}.consultation-paths>button,.consultation-paths>button:nth-child(2){padding:22px 0 20px;border-bottom:1px solid #c7c4b5;gap:9px}.consultation-paths>button[aria-selected=true]{border-top:2px solid #4b5540;padding-top:21px}.consultation-paths>button strong{font-size:24px;margin-bottom:10px;line-height:1.2}.consultation-paths>button>span:nth-child(2)>span{font-size:9px;line-height:1.7}.consultation-paths>button>svg{display:none}.path-index{font-size:7px;margin-top:3px}.consultation-direct{display:none}.consultation-form-title>h3{font-size:30px}.consultation-fields{gap:20px}.consultation-panel .form-field{font-size:10px}.consultation-panel .form-field>span{font-size:8px}.consultation-panel .form-field input,.consultation-panel .form-field select,.consultation-panel textarea{font-size:13px}.consultation-panel .consent{font-size:10px}.consultation-success{min-height:300px}.consultation-panel .form-preview-note{font-size:9px}}
 @media(max-width:360px){.consultation-fields{grid-template-columns:1fr;gap:0}.consultation-paths>button strong{font-size:21px}}
 .hosted-consultation{padding:12px 0 20px;min-height:300px}.hosted-consultation>p:first-child{font-size:14px;line-height:1.9;color:#646a59;max-width:430px;margin-bottom:28px}.hosted-consultation>.button{max-width:430px}.hosted-consultation>.form-preview-note{margin-top:20px;font-size:10px;line-height:1.8}
+
+/* Editorial refinement: readable copy and deliberate consultation spacing. */
+.consultation {
+  padding-block: var(--space-section, 112px);
+  padding-inline: var(--page-gutter, 6.2vw);
+}
+.consultation-heading {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
+  gap: 24px clamp(40px, 6vw, 88px);
+  margin-bottom: clamp(44px, 5vw, 68px);
+}
+.consultation-heading > .eyebrow,
+.consultation-form-title > .eyebrow,
+.consultation-direct > .eyebrow,
+.path-index {
+  font-size: var(--type-label, 10px);
+  line-height: 1.6;
+}
+.consultation-heading > p:last-child,
+.consultation-success > p,
+.hosted-consultation > p:first-child {
+  font-size: var(--type-body, 15px);
+  line-height: 1.75;
+  max-width: 42ch;
+}
+.consultation-layout {
+  grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr);
+  gap: clamp(40px, 7vw, 112px);
+}
+.consultation-paths,
+.consultation-panel,
+.consultation-fields > .form-field {
+  min-width: 0;
+}
+.consultation-paths > button {
+  min-height: 120px;
+  gap: 18px;
+  padding-block: 28px;
+}
+.consultation-paths > button > span:nth-child(2) {
+  min-width: 0;
+}
+.consultation-paths > button > span:nth-child(2) > span {
+  font-size: var(--type-small, 12px);
+  line-height: 1.75;
+  max-width: 31ch;
+}
+.consultation-direct {
+  margin-top: 40px;
+}
+.consultation-direct > a {
+  min-height: 44px;
+  margin-top: 12px;
+  font-size: 18px;
+}
+.consultation-direct > p,
+.consultation-panel .consent,
+.consultation-panel .form-preview-note {
+  font-size: var(--type-small, 12px);
+  line-height: 1.75;
+}
+.consultation-form-title {
+  margin-bottom: 32px;
+}
+.consultation-form-title > h3 {
+  font-size: clamp(30px, 2.7vw, 40px);
+  line-height: 1.2;
+  margin-top: 16px;
+}
+.consultation-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.consultation-panel .form-field {
+  margin-bottom: 28px;
+  font-size: var(--type-label, 10px);
+  line-height: 1.65;
+}
+.consultation-panel .form-field > span {
+  font-size: var(--type-label, 10px);
+}
+.consultation-panel .form-field input,
+.consultation-panel .form-field select,
+.consultation-panel textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  font-size: 16px;
+  line-height: 1.5;
+  padding-block: 12px;
+}
+.consultation-panel textarea {
+  min-height: 120px;
+}
+.consultation-panel .consent {
+  min-height: 44px;
+  max-width: 48ch;
+  align-items: center;
+  padding-block: 8px;
+}
+.consultation-panel .button {
+  min-height: 58px;
+  font-size: var(--type-small, 12px);
+  line-height: 1.5;
+}
+.consultation-panel .form-preview-note {
+  max-width: 52ch;
+  margin-top: 22px;
+}
+.consultation-success {
+  min-height: 0;
+  padding-block: 12px 32px;
+}
+.consultation-success .text-link {
+  min-height: 44px;
+  font-size: var(--type-small, 12px);
+}
+
+/* The hosted preview's direct phone action remains the primary contact route. */
+.hosted-consultation {
+  min-height: 0;
+  padding-block: 24px 0;
+  border-top: 1px solid #bcbfb0;
+}
+.hosted-consultation > p:first-child {
+  max-width: 47ch;
+  margin-bottom: 28px;
+}
+.hosted-consultation > .button {
+  max-width: 480px;
+  min-height: 60px;
+  gap: 20px;
+  font-size: var(--type-body, 15px);
+  letter-spacing: .015em;
+}
+
+@media (max-width: 1023px) {
+  .consultation-layout {
+    grid-template-columns: minmax(210px, .8fr) minmax(0, 1.2fr);
+    gap: 40px;
+  }
+}
+@media (max-width: 899px) {
+  .consultation-heading {
+    display: block;
+  }
+  .consultation-heading > .eyebrow {
+    margin-bottom: 24px;
+  }
+  .consultation-heading > p:last-child {
+    margin-top: 24px;
+    max-width: 52ch;
+  }
+  .consultation-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .consultation-paths {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .consultation-paths > button,
+  .consultation-paths > button:nth-child(2) {
+    padding-block: 24px;
+    border-bottom: 1px solid #c7c4b5;
+  }
+  .consultation-paths > button[aria-selected=true] {
+    padding-top: 23px;
+    border-top: 2px solid #4b5540;
+  }
+  .consultation-paths > button strong {
+    font-size: clamp(24px, 3.8vw, 30px);
+  }
+  .consultation-direct {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  .consultation-fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+@media (max-width: 420px) {
+  .consultation-paths {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .consultation-paths > button,
+  .consultation-paths > button:nth-child(2) {
+    min-height: 112px;
+    gap: 16px;
+  }
+  .consultation-paths > button:nth-child(2) {
+    border-top: 0;
+  }
+  .consultation-paths > button:nth-child(2)[aria-selected=true] {
+    border-top: 2px solid #4b5540;
+  }
+  .consultation-paths > button strong {
+    font-size: 26px;
+  }
+}
+
+/* Hosted review form keeps entered details in React state only. */
+.consultation-panel .draft-notice { margin: 0 0 26px; padding: 16px 18px; background: #efede4; border-left: 2px solid #8d795a; color: #4f5949; font-size: 13px; line-height: 1.7; }
+.draft-notice a { text-decoration: underline; text-underline-offset: 3px; }
+.enquiry-draft > h4 { font-family: Georgia, serif; font-size: 30px; font-weight: 400; margin: 16px 0; }
+.enquiry-draft > p { font-size: 14px; line-height: 1.75; color: #58614f; }
+.enquiry-draft dl { margin: 26px 0; border-top: 1px solid var(--line); }
+.enquiry-draft dl > div { display: grid; grid-template-columns: 100px minmax(0,1fr); gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.6; }
+.enquiry-draft dt { color: #65705c; }
+.enquiry-draft dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.enquiry-draft .text-link { display: flex; width: fit-content; margin-top: 20px; min-height: 44px; font-size: 13px; }
+@media(max-width:600px) { .enquiry-draft dl > div { grid-template-columns: 70px minmax(0,1fr); gap: 12px; } }
