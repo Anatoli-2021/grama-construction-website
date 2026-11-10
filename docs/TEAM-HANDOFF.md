@@ -4,8 +4,8 @@
 
 - Repository: https://github.com/Anatoli-2021/grama-construction-website (currently public, verified through GitHub). Private business and investor data remain excluded.
 - Railway website: https://grama-construction-website-production.up.railway.app/.
-- Connected branch: `feature/investor-showcase-polish`, following its latest commit without a commit pin.
-- Initial release verified before reconnecting the source: `e2dca4de464e663a9facc5b91aa29f1495fd4e00`, deployment `1f2b9373-162f-429a-9fd0-b52af5ef3abb`. Later releases are identified in Railway's deployment history. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
+- Last verified source branch: `feature/investor-showcase-polish`, without a commit pin. New candidate: `feature/private-investor-presentation`, based on its latest shared source; a branch push alone is not deployment evidence.
+- Latest verified live release before this refinement: `6dda772229a856a3ca891abc850f8788e4eaf24f`, deployment `7123ccec-ad4b-4c0b-b979-f4885ee53367`. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
 - Anonymous checks: website, health and hero media HTTP 200; OS, `.data` and `.env` paths HTTP 404. Loaded website console contained no errors.
 - Preserve the team's newer investor showcase, family story, project portfolio and browser-only enquiry draft. Do not deploy the older setup branch over it.
 - Company domain/DNS is unchanged. Railway labels this environment `production`; the Railway address remains the current development/review website.
@@ -34,13 +34,23 @@ Project `earnest-wisdom`: `ffb7baed-e751-41be-9874-c4eb4c4ae290`.
 Service `grama-construction-website`: `875425ae-8bb5-4d47-a026-49a9df71dc22`.
 Environment `production`: `15058afa-2401-4d42-83a7-5e807d7d1258`.
 
-The root Dockerfile serves only the website; OS source and private enquiry records are excluded from its runtime. See the [settings guide](../infra/website/README.md). No paid upgrade or company-domain change was made during this verification. Do not publish credentials or invite links.
+The root Dockerfile serves the website and the separate presentation authorization API; OS source, private data files and local enquiry records are excluded from its runtime. Real presentation data/accounts must be supplied through private runtime configuration. Without it the portal stays closed. See the [settings guide](../infra/website/README.md). No paid upgrade or company-domain change was made during this verification. Do not publish credentials or invite links.
+
+## Private presentation and public refinement candidate
+
+The `feature/private-investor-presentation` branch preserves Nail's newer website. It adds sans-serif typography, quieter captions, responsive residence/detail/community scroll animation and reduced-motion fallback. `/presentation` is a separate generic login shell with individually assigned decks, expiring/revocable access and server-only content. See [INVESTOR-PRESENTATION.md](INVESTOR-PRESENTATION.md) and [INVESTOR-CONTENT-BRIEF.md](INVESTOR-CONTENT-BRIEF.md).
+
+Local private working review: `npm run build`, then `npm run dev:presentation`, http://localhost:5190/presentation. The owner-machine working deck and source snapshot are under ignored `.data/investor-presentation/`; they are intentionally absent from this public repository. Use individually authorized source connections for financial research. Never copy private figures or transcripts into issues, PRs, fixtures or public assets.
+
+Browser checks covered desktop/mobile typography, all three motion phases, chapter navigation after resize, motion-off fallback, mobile menu, private deck login and responsive layout. No console errors or mobile horizontal overflow were observed. The candidate passed build, 70 automated tests, repository policy, 32-frame cinematic verification and a separate scan against private local values. Deployment evidence is recorded after publishing; no deployment is claimed from a Git push alone.
+
+Pending owner inputs: actual investor names/emails for recipient-specific access; approval for Wispr owner-account sign-in if full transcripts are required. Both shared summaries were read. No real investor invitations or hosted financial data have been issued.
 
 ## Remaining work
 
 - Keep branch-following source connected without a commit pin. Verify each automatic deployment and its commit; reconnecting with a pin intentionally suspends push deployments until removed.
 - Reconcile/review the PRs and eventually use `main` as the stable deployment branch, preserving the approved design.
-- `main` is unprotected under the current GitHub plan; issue #4 tracks enforced owner review.
+- No enforced `main` protection is claimed; issue #4 tracks owner review. The old private-repository plan restriction should be reassessed now that the repository is public.
 - The OS stays local with blank templates. Real dashboards, finances and pilot evidence remain private; issue #3 tracks authentication before hosting.
 - Hosted enquiry drafts send nothing to a server or CRM. Keep this wording until actual delivery is implemented and verified.
 

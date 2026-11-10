@@ -10,7 +10,9 @@ test('website host health is available and source/private/API paths stay inacces
   assert.equal((await fetch(base + '/healthz')).status, 200);
   const page = await fetch(base + '/');
   assert.equal(page.status, 200);
-  assert.match(await page.text(), /Dexter Acres/);
+  const html = await page.text();
+  assert.match(html, /Dexter Acres/);
+  assert.match(html, /name="grama-runtime" content="static-preview"/);
   const media = await fetch(base + '/assets/residence.webp', { method: 'HEAD' });
   assert.equal(media.status, 200);
   assert.equal(media.headers.get('content-type'), 'image/webp');

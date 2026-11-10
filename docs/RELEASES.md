@@ -2,7 +2,7 @@
 
 ## Current state
 
-The website is live at https://grama-construction-website-production.up.railway.app/. Railway currently follows `feature/investor-showcase-polish`; release `e2dca4d` is verified running. See `TEAM-HANDOFF.md` for the deployment ID and checks. Company domain/DNS remains unchanged. PR #1 and #6 are merged; PR #7 contains newer showcase work. Reconcile the older setup PR before merging it.
+The website is live at https://grama-construction-website-production.up.railway.app/. Last verified release before the private-presentation refinement: `6dda772`, deployed from `feature/investor-showcase-polish`. The next candidate is `feature/private-investor-presentation`; do not assume a pushed commit is live. See `TEAM-HANDOFF.md` for exact verified deployment evidence. Company domain/DNS remains unchanged. PR #1 and #6 are merged; PR #7 contains newer showcase work. Reconcile the older setup PR before merging it.
 
 The Development OS demonstration remains local and contains only blank templates. No OS production deployment, company data migration or live connector was made.
 
@@ -12,7 +12,7 @@ The Development OS demonstration remains local and contains only blank templates
 2. Run `npm ci` and `npm run check`; test website API/media with `npm run dev` plus `npm run verify` when relevant. Inspect the staged diff and media for private content.
 3. Push and open a PR. GitHub Actions runs tests/build/data-boundary checks. Tony reviews the result, visible changes and remaining limitations.
 4. Verify the website on the existing Railway review address. OS previews stay local until authentication and access tests are implemented.
-5. Merge after owner approval. `main` protection is not technically enforced under the current GitHub plan; this is a material limitation. Do not equate a green check with permission to deploy.
+5. Merge stable `main` after owner approval. Branch protection was unavailable when the repository was private; visibility has since changed to public, so recheck current capabilities before claiming an enforced gate. No protection rule is claimed by this handoff. Do not equate a green check with permission to deploy.
 6. Record the release SHA, build result, target, previous version and rollback route. Tony's November 10 standing instruction authorizes deployment of requested, checked website changes to the existing Railway address without another release confirmation. New company-domain targets, spending, access grants and OS publication are separate decisions.
 7. Deploy the approved commit to the approved environment. Verify HTML/media, mobile contact, links, anonymous access and no private artifacts; record deployment ID and SHA.
 

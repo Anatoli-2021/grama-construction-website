@@ -144,9 +144,9 @@ function App() {
             {filmAvailable && <video ref={video} className="hero-video" src={assets + 'residence-film.mp4'} poster={assets + 'residence.webp'} autoPlay={motion} muted loop playsInline preload="metadata" aria-label="Animated architectural concept of a Dexter Acres residence" />}
           </div>
           <div className="hero-shade" />
-          <div className="hero-location"><span className="tiny-dot" /> CHICAGO & CHICAGOLAND <span className="location-line" /> GRAMA CONSTRUCTION</div>
+          <div className="hero-location"><span className="tiny-dot" /> Chicago & Chicagoland <span className="location-line" /> Grama Construction</div>
           <div className="hero-copy">
-            <p className="eyebrow light">FOR INVESTORS, DEVELOPERS & PROPERTY OWNERS</p>
+            <p className="eyebrow light">For investors, developers & property owners</p>
             <h1 id="hero-title">Luxury custom homes.<br /><em>Residential development.</em></h1>
             <p className="hero-positioning">A family business serving Chicago and Chicagoland.<br />{' '}For property owners, developers and investment partners.</p>
             <div className="hero-actions"><a className="text-link light-link" href="#interest" onClick={event => { event.preventDefault(); openConsultation({ path: 'development', topic: 'Development partnership' }); }}>Discuss a partnership <Arrow /></a><a className="text-link light-link" href="#properties">View completed projects <Arrow diagonal /></a></div>

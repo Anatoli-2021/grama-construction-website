@@ -13,9 +13,9 @@ New messages add requirements to this queue. They do not replace unfinished work
 ## 2. Research for investor presentation
 
 - Read both supplied Wispr shared summaries. Full transcript tabs require owner access; a sign-in attempt was blocked by approval review. Specific owner-account access approval is pending.
-- Research Smartsheet records for Dexter Acres, Sprucewood and completed-project evidence. Distinguish proposals, budgets, offers, actual costs and documented closed results.
+- Done: read relevant Smartsheet records for Dexter Acres, Sprucewood and completed-project evidence. The working deck separates reported inputs, projections, offers and unverified results; sampled whole-subdivision budgets are not treated as complete totals.
 - Do not promote spoken return targets, unapproved profit splits, placeholder budgets or incomplete models into promised investor returns.
-- Compare the current company website and current Railway website. Preserve project/source evidence and identify concrete improvements.
+- Done: compared the current company website and Railway showcase. The sanitized content brief records the comparison and concrete design/access improvements.
 
 ## 3. Private personalized presentation
 
@@ -24,6 +24,7 @@ New messages add requirements to this queue. They do not replace unfinished work
 - Reusable presentation/access code may be shared. Private deck data, investor records and credentials must stay server-side and outside Git, browser bundles, public assets and logs.
 - Deliver a base company/development pitch, source-labelled project numbers, completed-project case studies, proposed investment process and per-investor variants. Show material missing inputs honestly.
 - Verify anonymous denial, investor separation, expired/revoked access, secure sessions and no private-data leakage before enabling actual accounts.
+- Implemented locally: presentation shell, individual access middleware, assigned deck data, expiry/revocation, private review tooling and source-labelled base content outside Git. Desktop/mobile review completed. Actual recipient provisioning remains pending names/emails.
 
 ## 4. Public visual refinement
 
@@ -31,10 +32,12 @@ New messages add requirements to this queue. They do not replace unfinished work
 - Implement a deliberate scroll/swipe transition connecting residence, architectural detail and the larger neighborhood. Keep mobile performance, keyboard access and reduced-motion behavior.
 - Evaluate existing cinematic assets before new generation. Higgsfield may support visuals when useful; do not alter the actual house/garage alignment or fabricate project photography.
 - Preserve approved portraits, completed-project context, current portfolio, 14-lot plan and honest enquiry behavior.
+- Implemented locally: sans-serif refinement, quieter captions, mobile/desktop cinematic mode, lower mobile pixel ratio, clean contained neighborhood view, chapter refresh after resize, motion-off fallback and static-preview contact-mode correction. Browser checks confirmed mobile navigation, all three story phases, no horizontal overflow and no console errors.
 
 ## 5. Verify, release and hand off
 
 - Run relevant behavior/security checks and build, then check desktop/mobile/reduced-motion interactions.
+- Local release candidate passed build, 70 automated tests, repository policy, 32-frame cinematic verification and a separate scan against the local private financial/account values. Only a synthetic test identity overlaps existing synthetic OS fixtures; no real investor identity is configured.
 - Commit and push the requested changes. Deploy the intended public website commit through Railway and record its exact SHA/deployment ID/public result.
 - Deploy private presentation data only behind verified access controls and for approved recipients. No company-domain cutover or new paid subscription is included.
 - Update the team handoff with completed, pending and blocked items so Nail's agent can continue without chat history. Do not claim an incomplete stage is finished.
