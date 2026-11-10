@@ -1,0 +1,633 @@
+{
+  "name": "Grama New Project Launch Template",
+  "version": "1.0-pilot",
+  "status": "Reusable draft template, not a project approval",
+  "useExisting": "Map existing Project IDs, folders and sheet URLs first. Reuse the existing Source Map / Plan / Controls structure. No automatic sheets or agents.",
+  "requiredForReview": [
+    "project_id",
+    "opportunity_description",
+    "project_type",
+    "pm_name",
+    "pm_email",
+    "source_reference"
+  ],
+  "intakeFields": {
+    "project_id": "",
+    "parent_development_id": "",
+    "opportunity_description": "",
+    "address_or_site_identity": "",
+    "jurisdiction": "",
+    "project_type": "",
+    "intended_use": "",
+    "entity_and_ownership": "",
+    "source_reference": "",
+    "source_asof": "",
+    "pm_name": "",
+    "pm_email": "",
+    "interim_planning_owner_name": "",
+    "interim_planning_owner_email": "",
+    "review_start_date": "",
+    "access_audience": "",
+    "current_stage": "",
+    "area_units_and_plan_revision": "",
+    "known_constraints": "",
+    "funding_source": "",
+    "market_basis": "",
+    "existing_source_map_url": "",
+    "existing_plan_url": "",
+    "existing_controls_url": ""
+  },
+  "recordPolicy": {
+    "defaultStatus": "Draft",
+    "defaultDates": null,
+    "keys": "Project ID + Template Task Key. Re-running a launch updates existing mapped rows after approval; never blind append.",
+    "ownerPolicy": "One responsible person per action. PM coordination does not appoint counsel/engineer/field staff. Construction staffing confirmed before release.",
+    "sourceLevels": [
+      "Metadata located",
+      "Original read",
+      "Scope/revision checked",
+      "Professionally confirmed",
+      "Human approved"
+    ],
+    "sourcePolicy": "A source link or Verified live metadata is not a signed approval, paid invoice or verified scope.",
+    "activation": "Only work with confirmed owner, source, due/follow-up, resolved dependencies and appropriate authority becomes Ready. A launch draft never authorizes purchases, contracts, permits or payments."
+  },
+  "tasks": [
+    {
+      "key": "T01",
+      "phase": "00",
+      "task": "Identify opportunity and check duplicates",
+      "proposedRole": "Development lead",
+      "dependsOn": [],
+      "definitionOfDone": "Site identity, alias check, source, intended use and project ID",
+      "approvalGate": "PM intake approval",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T02",
+      "phase": "01",
+      "task": "Verify title, legal description and acquisition terms",
+      "proposedRole": "Counsel / development lead",
+      "dependsOn": [
+        "T01"
+      ],
+      "definitionOfDone": "Current title/ownership, legal description, access, contract dates and unresolved issues",
+      "approvalGate": "Acquisition decision by authorized principal",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T03",
+      "phase": "01",
+      "task": "Verify survey and site constraints",
+      "proposedRole": "Surveyor / engineer",
+      "dependsOn": [
+        "T01"
+      ],
+      "definitionOfDone": "Survey revision; easements; soils/environmental/drainage constraints and missing investigations",
+      "approvalGate": "Professional scope approval",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T04",
+      "phase": "02",
+      "task": "Test use, yield and program alternatives",
+      "proposedRole": "Development lead / architect",
+      "dependsOn": [
+        "T02",
+        "T03"
+      ],
+      "definitionOfDone": "Supported buildable area, proposed units/areas and alternatives; assumptions labeled",
+      "approvalGate": "Investment screening",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T05",
+      "phase": "02",
+      "task": "Validate sales or rental basis",
+      "proposedRole": "Broker / finance",
+      "dependsOn": [
+        "T04"
+      ],
+      "definitionOfDone": "Comparable market evidence with adjustments, dates and selling assumptions",
+      "approvalGate": "Market assumptions review",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T06",
+      "phase": "02",
+      "task": "Build cost, cash and downside feasibility",
+      "proposedRole": "Estimator / finance",
+      "dependsOn": [
+        "T04",
+        "T05"
+      ],
+      "definitionOfDone": "Acquisition-to-exit costs, funding timing, downside and missing inputs; fee counted once",
+      "approvalGate": "Go / hold / reject",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T07",
+      "phase": "03",
+      "task": "Agree entity, funding, roles and authority",
+      "proposedRole": "Principal / counsel / finance",
+      "dependsOn": [
+        "T06"
+      ],
+      "definitionOfDone": "Ownership, capital, fees/profit, draw terms and commitment authority",
+      "approvalGate": "Principal/partner approval",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T08",
+      "phase": "03",
+      "task": "Coordinate and execute required agreements",
+      "proposedRole": "Counsel / authorized signatories",
+      "dependsOn": [
+        "T07"
+      ],
+      "definitionOfDone": "Applicable executed documents and approval record before commitments",
+      "approvalGate": "Authorized signature",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T09",
+      "phase": "04",
+      "task": "Confirm zoning and entitlement path",
+      "proposedRole": "Development/permitting lead",
+      "dependsOn": [
+        "T02",
+        "T03",
+        "T04"
+      ],
+      "definitionOfDone": "Agency-backed requirements, conditions, submissions and expiry dates",
+      "approvalGate": "Agency decisions and principal review",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T10",
+      "phase": "05",
+      "task": "Set design program and drawing control",
+      "proposedRole": "Architect / PM",
+      "dependsOn": [
+        "T04",
+        "T07"
+      ],
+      "definitionOfDone": "Current program, above-grade/basement/garage units, plan revision and reference/reuse rights",
+      "approvalGate": "Owner design review; professional responsibility",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T11",
+      "phase": "05",
+      "task": "Coordinate survey, civil, structural and MEP",
+      "proposedRole": "Engaged design professionals",
+      "dependsOn": [
+        "T03",
+        "T09",
+        "T10"
+      ],
+      "definitionOfDone": "Coordinated design releases and assumptions; comment ownership",
+      "approvalGate": "Professional release for intended use",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T12",
+      "phase": "06",
+      "task": "Track permits and review comments",
+      "proposedRole": "Permitting lead",
+      "dependsOn": [
+        "T09",
+        "T11"
+      ],
+      "definitionOfDone": "Separate submission, correction, approval, expiry and inspection conditions",
+      "approvalGate": "Required agency approvals",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T13",
+      "phase": "06",
+      "task": "Track each utility and offsite requirement",
+      "proposedRole": "Permitting lead / engineer",
+      "dependsOn": [
+        "T03",
+        "T11"
+      ],
+      "definitionOfDone": "Application, design, capacity, easement, owner work, quote, installation and activation",
+      "approvalGate": "Provider/agency release; commitment approval",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T14",
+      "phase": "07",
+      "task": "Measure quantities and build cost-code estimate",
+      "proposedRole": "Estimator",
+      "dependsOn": [
+        "T10",
+        "T11",
+        "T13"
+      ],
+      "definitionOfDone": "Drawing takeoff, quantity basis, labor/material/equipment/subcontract scope and exclusions",
+      "approvalGate": "Estimator quantity check",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T15",
+      "phase": "07",
+      "task": "Level bids and reconcile complete scope",
+      "proposedRole": "Estimator / procurement",
+      "dependsOn": [
+        "T14"
+      ],
+      "definitionOfDone": "Comparable quotes, exclusions, tax/freight, validity, lead times and unpriced work",
+      "approvalGate": "Quote selection; no purchase implied",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T16",
+      "phase": "07",
+      "task": "Approve budget, contingency and funding baseline",
+      "proposedRole": "Principal / finance / PM",
+      "dependsOn": [
+        "T06",
+        "T08",
+        "T12",
+        "T15"
+      ],
+      "definitionOfDone": "Reconciled original budget and cash forecast; assumptions and approval receipt",
+      "approvalGate": "Separate budget approval",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T17",
+      "phase": "08",
+      "task": "Authorize contracts and purchase orders",
+      "proposedRole": "Procurement / PM",
+      "dependsOn": [
+        "T08",
+        "T16"
+      ],
+      "definitionOfDone": "Approved package, supplier scope, committed amount, delivery and approval",
+      "approvalGate": "Per-commitment authority",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T18",
+      "phase": "08",
+      "task": "Build master schedule and lookahead",
+      "proposedRole": "PM / superintendent",
+      "dependsOn": [
+        "T11",
+        "T12",
+        "T13",
+        "T15",
+        "T16"
+      ],
+      "definitionOfDone": "Evidence-based durations, predecessors, procurement and inspections; baseline vs forecast",
+      "approvalGate": "Schedule baseline approval",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T19",
+      "phase": "08",
+      "task": "Verify release-to-build readiness",
+      "proposedRole": "PM / superintendent",
+      "dependsOn": [
+        "T12",
+        "T13",
+        "T17",
+        "T18"
+      ],
+      "definitionOfDone": "Required permits, drawings, access, resources, inspection and safety responsibility",
+      "approvalGate": "Human release-to-build",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T20",
+      "phase": "09",
+      "task": "Track progress, quality and inspections",
+      "proposedRole": "Superintendent",
+      "dependsOn": [
+        "T19"
+      ],
+      "definitionOfDone": "Daily progress, quantities, inspection evidence, quality issues and forecast",
+      "approvalGate": "Professional/agency inspections",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T21",
+      "phase": "09",
+      "task": "Control RFIs and cost/schedule changes",
+      "proposedRole": "PM / design professionals",
+      "dependsOn": [
+        "T19"
+      ],
+      "definitionOfDone": "Issue, proposed change, impacted scope, cost and dates; decision recorded",
+      "approvalGate": "Change approval before commitment",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T22",
+      "phase": "09",
+      "task": "Reconcile incurred costs and cost-to-complete",
+      "proposedRole": "Finance / PM",
+      "dependsOn": [
+        "T16",
+        "T17"
+      ],
+      "definitionOfDone": "Actual incurred + remaining commitment + uncommitted work + unallocated risk = EAC",
+      "approvalGate": "Finance review; no posting/payment implied",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T23",
+      "phase": "09",
+      "task": "Review cash, funding and payment requests",
+      "proposedRole": "Finance / principal",
+      "dependsOn": [
+        "T07",
+        "T16"
+      ],
+      "definitionOfDone": "Capital contributions, receipts, cash paid, AP and refundable security tracked separately",
+      "approvalGate": "Authorized payment/capital decisions",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T24",
+      "phase": "10",
+      "task": "Complete inspections, punch list and turnover",
+      "proposedRole": "PM / superintendent",
+      "dependsOn": [
+        "T20",
+        "T21"
+      ],
+      "definitionOfDone": "Applicable occupancy/acceptance, punch list, manuals, releases and warranties",
+      "approvalGate": "Agency/owner acceptance",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T25",
+      "phase": "10",
+      "task": "Close sale or lease and reconcile distributions",
+      "proposedRole": "Broker / counsel / finance",
+      "dependsOn": [
+        "T08",
+        "T23",
+        "T24"
+      ],
+      "definitionOfDone": "Supported settlement, final project costs, capital return and agreed profit distribution",
+      "approvalGate": "Commercial closing/distribution approval",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T26",
+      "phase": "11",
+      "task": "Assign warranty and security-release obligations",
+      "proposedRole": "Warranty lead / PM",
+      "dependsOn": [
+        "T24"
+      ],
+      "definitionOfDone": "Issue process, remaining service obligations, security release conditions and owners",
+      "approvalGate": "Warranty/agency closure",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "T27",
+      "phase": "11",
+      "task": "Archive evidence and reusable cost lessons",
+      "proposedRole": "PM / finance",
+      "dependsOn": [
+        "T22",
+        "T25",
+        "T26"
+      ],
+      "definitionOfDone": "Final reconciliation, complete evidence links, closeout lessons and normalized historical costs",
+      "approvalGate": "Final archive verification",
+      "appliesTo": "All",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "S01",
+      "phase": "04",
+      "task": "Define shared infrastructure and lot release gates",
+      "proposedRole": "Development lead / engineer",
+      "dependsOn": [
+        "T03",
+        "T09"
+      ],
+      "definitionOfDone": "Parent development plus child lot IDs; dependencies for starts/occupancy",
+      "approvalGate": "Shared infrastructure/phasing approval",
+      "appliesTo": "Subdivision",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    },
+    {
+      "key": "S02",
+      "phase": "07",
+      "task": "Approve shared-cost allocation and portfolio elimination",
+      "proposedRole": "Finance / principal",
+      "dependsOn": [
+        "S01",
+        "T14"
+      ],
+      "definitionOfDone": "Shared-site costs assigned once; approved lot allocation and no parent/child double counting",
+      "approvalGate": "Allocation-method approval",
+      "appliesTo": "Subdivision",
+      "status": "Draft",
+      "responsible": null,
+      "dueDate": null,
+      "nextFollowUp": null,
+      "evidence": null
+    }
+  ],
+  "costLineTemplate": {
+    "projectId": "",
+    "parentOrLotId": "",
+    "sharedOrDirect": "",
+    "costCode": "",
+    "scope": "",
+    "drawingRevision": "",
+    "quantity": null,
+    "unit": "",
+    "labor": null,
+    "materials": null,
+    "equipment": null,
+    "subcontractQuote": null,
+    "taxFreightExclusions": "",
+    "source": "",
+    "sourceDate": null,
+    "quoteExpiry": null,
+    "pricingStatus": "Missing",
+    "originalApprovedBudget": null,
+    "currentApprovedBudget": null,
+    "approvedCommitment": null,
+    "actualIncurred": null,
+    "cashPaid": null,
+    "remainingCommitment": null,
+    "uncommittedForecast": null,
+    "unallocatedRiskAllowance": null,
+    "forecastFinalCost": null
+  },
+  "financeRules": [
+    "Unknown amounts remain null, not zero.",
+    "A selected subcontract price replaces its covered component calculation.",
+    "EAC = incurred actual + remaining commitments + uncommitted forecast + unallocated risk; eliminate allocated contingency from unallocated risk.",
+    "Investment contributions and capital returns are separate from project costs and revenue.",
+    "Refundable securities affect cash; expense treatment requires support.",
+    "Shared-site costs and allocated lot costs cannot both enter consolidated total."
+  ],
+  "agentTaskBrief": {
+    "projectId": "",
+    "taskId": "",
+    "objective": "",
+    "sourceLinksAndRevisions": [],
+    "humanOwner": "",
+    "requiredOutput": "",
+    "dependencies": [],
+    "authorityBoundary": "Preparation/read-only until specifically authorized",
+    "definitionOfDone": "",
+    "handoff": "Sources, decisions, result, open gaps, next action and owner"
+  },
+  "pilotAcceptance": [
+    "Use one real project package to trace takeoff, quote, budget, draft commitment, EAC and schedule.",
+    "Change a disposable test input and verify forecast changes while approved baseline stays fixed.",
+    "Launch a second project without copying pilot names, prices, terms, sources or dates.",
+    "Verify source-to-closure evidence and owner access."
+  ]
+}

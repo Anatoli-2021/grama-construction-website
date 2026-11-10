@@ -3,6 +3,7 @@ dist/
 .data/
 *.log
 .env*
+!.env.example
 /evidence/
 /project-handoff.txt
 /scripts/prepare-assets.mjs
@@ -16,3 +17,12 @@ Thumbs.db
 *.p12
 *.pfx
 coverage/
+**/private-data/
+**/exports/
+**/backups/
+*.sqlite*
+*.db
+*.sql
+*.xlsx
+*.csv
+*.jsonl

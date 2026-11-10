@@ -6,10 +6,14 @@ import CinematicStory from './components/CinematicStory.jsx';
 import { AboutGrama, PropertyCollection, Capabilities, Partnerships } from './components/BrandSections.jsx';
 import DevelopmentProcess from './components/DevelopmentProcess.jsx';
 import Consultation from './components/Consultation.jsx';
+import { isLocalPreview } from './preview-mode.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const assets = '/assets/';
+const enquiryPreviewNote = isLocalPreview
+  ? 'Local enquiries are saved only on this computer; no email or CRM delivery is connected.'
+  : 'Online enquiries are not collected; use the direct telephone link.';
 
 function Arrow({ diagonal = false, reverse = false, ...props }) {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props} style={{ transform: reverse ? 'rotate(180deg)' : undefined }}><path d={diagonal ? 'M5 19 19 5M5 5h14v14' : 'M3 12h17m-6-6 6 6-6 6'} stroke="currentColor" strokeWidth="1.3" /></svg>;
@@ -121,6 +125,7 @@ function App() {
       <a className="skip-link" href="#about">Skip to content</a>
       <header className="site-header">
         <a className="brand" href="#home" aria-label="Grama Construction — home" onClick={navigate}><img src={assets + 'logo-light.png'} alt="Grama Construction" width="1633" height="387" /></a>
+        <button type="button" className="menu-button" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
         <nav id="mobile-menu" className={menuOpen ? 'main-nav is-open' : 'main-nav'} aria-label="Main navigation">
           <a href="#about" onClick={navigate}>About Grama</a>
           <a href="#properties" onClick={navigate}>Our properties</a>
@@ -129,7 +134,6 @@ function App() {
           <a href="#architecture" onClick={navigate}>Dexter Acres</a>
           <a className="nav-cta" href="#interest" onClick={navigate}>Private consultation <Arrow diagonal /></a>
         </nav>
-        <button className="menu-button" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
         <div className="header-progress" />
       </header>
 
@@ -167,9 +171,9 @@ function App() {
         <Consultation request={consultationRequest} motion={motion} />
       </main>
 
-      <footer className="site-footer"><div className="footer-navigation"><a href="#about">About Grama</a><a href="#properties">Our properties</a><a href="#services">Services</a><a href="#process">The process</a><a href="#partnerships">Development partnerships</a><a href="#interest">Private consultation</a></div><div className="footer-main"><a className="footer-brand" href="#home"><img src={assets + 'logo-light.png'} alt="Grama Construction" width="1633" height="387" /></a><p>Signature luxury homes.<br />Full-service residential development.</p><a className="footer-phone" href="tel:+17738499634">+1 773 849 9634 <Arrow diagonal /></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Grama Construction</span><span>Chicago & the surrounding Illinois suburbs</span><button onClick={() => setModal({ title: 'About this preview', text: 'Dexter Acres is an upcoming, owner-described 14-home development. House images are architectural renderings; the aerial is an AI-generated concept. The interactive map follows the supplied C5 drawing for lot organization and numbering. Project approval status, infrastructure specifications, dates, final designs, pricing and availability have not been confirmed. Completed-project photographs are separately identified and sourced from Grama Construction’s official website. This private localhost preview sends no marketing emails and does not reserve a property.' })}>Project & image notes</button></div></footer>
+      <footer className="site-footer"><div className="footer-navigation"><a href="#about">About Grama</a><a href="#properties">Our properties</a><a href="#services">Services</a><a href="#process">The process</a><a href="#partnerships">Development partnerships</a><a href="#interest">Private consultation</a></div><div className="footer-main"><a className="footer-brand" href="#home"><img src={assets + 'logo-light.png'} alt="Grama Construction" width="1633" height="387" /></a><p>Signature luxury homes.<br />Full-service residential development.</p><a className="footer-phone" href="tel:+17738499634">+1 773 849 9634 <Arrow diagonal /></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Grama Construction</span><span>Chicago & the surrounding Illinois suburbs</span><button onClick={() => setModal({ title: 'About this preview', text: 'Dexter Acres is an upcoming, owner-described 14-home development. House images are architectural renderings; the aerial is an AI-generated concept. The interactive map follows the supplied C5 drawing for lot organization and numbering. Project approval status, infrastructure specifications, dates, final designs, pricing and availability have not been confirmed. Completed-project photographs are separately identified and sourced from Grama Construction’s official website. This preview sends no marketing emails and does not reserve a property. ' + enquiryPreviewNote })}>Project & image notes</button></div></footer>
       <div className="chapter-index" aria-hidden="true"><span>{chapter}</span><i />08</div>
-      {modal && <dialog ref={dialog} className={modal.image ? 'media-dialog' : 'notes-dialog'} onCancel={() => setModal(null)} onClick={event => { if (event.target === event.currentTarget) setModal(null); }}><div className="dialog-sticky-toolbar"><button className="dialog-close" autoFocus aria-label="Close preview" onClick={() => setModal(null)}>×</button></div>{modal.image && <><img src={assets + (modal.images?.[modal.index || 0]?.image || modal.image)} alt={modal.images?.[modal.index || 0]?.alt || modal.title} />{modal.images?.length > 1 && <div className="dialog-gallery-controls"><button aria-label="Previous project photograph" onClick={() => setModal(current => ({ ...current, index: ((current.index || 0) + current.images.length - 1) % current.images.length }))}><Arrow reverse /></button><span>{String((modal.index || 0) + 1).padStart(2, '0')} / {String(modal.images.length).padStart(2, '0')}</span><button aria-label="Next project photograph" onClick={() => setModal(current => ({ ...current, index: ((current.index || 0) + 1) % current.images.length }))}><Arrow /></button></div>}</>}<div className="dialog-caption"><h2>{modal.title}</h2><p>{modal.caption || modal.text}</p>{modal.source && <a href={modal.source} target="_blank" rel="noreferrer">Original Grama project page <Arrow diagonal /></a>}</div></dialog>}
+      {modal && <dialog ref={dialog} aria-labelledby="preview-dialog-title" className={modal.image ? 'media-dialog' : 'notes-dialog'} onCancel={() => setModal(null)} onClick={event => { if (event.target === event.currentTarget) setModal(null); }}><div className="dialog-sticky-toolbar"><button className="dialog-close" autoFocus aria-label="Close preview" onClick={() => setModal(null)}>×</button></div>{modal.image && <><img src={assets + (modal.images?.[modal.index || 0]?.image || modal.image)} alt={modal.images?.[modal.index || 0]?.alt || modal.title} />{modal.images?.length > 1 && <div className="dialog-gallery-controls"><button aria-label="Previous project photograph" onClick={() => setModal(current => ({ ...current, index: ((current.index || 0) + current.images.length - 1) % current.images.length }))}><Arrow reverse /></button><span>{String((modal.index || 0) + 1).padStart(2, '0')} / {String(modal.images.length).padStart(2, '0')}</span><button aria-label="Next project photograph" onClick={() => setModal(current => ({ ...current, index: ((current.index || 0) + 1) % current.images.length }))}><Arrow /></button></div>}</>}<div className="dialog-caption"><h2 id="preview-dialog-title">{modal.title}</h2><p>{modal.caption || modal.text}</p>{modal.source && <a href={modal.source} target="_blank" rel="noreferrer">Original Grama project page <Arrow diagonal /></a>}</div></dialog>}
     </div>
   );
 }

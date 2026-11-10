@@ -22,7 +22,8 @@ function validateInterest(input) {
   if (typeof input.name !== 'string' || input.name.trim().length < 2 || input.name.length > 100) return 'Please enter your name.';
   if (typeof input.email !== 'string' || input.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) return 'Please enter a valid email address.';
   if (input.phone && (typeof input.phone !== 'string' || input.phone.length > 60)) return 'Please check the phone number.';
-  if (input.lot && (!Number.isInteger(Number(input.lot)) || Number(input.lot) < 1 || Number(input.lot) > 14)) return 'Please select a valid lot.';
+  const hasLot = input.lot !== undefined && input.lot !== null && input.lot !== '';
+  if (hasLot && (!['string', 'number'].includes(typeof input.lot) || !Number.isInteger(Number(input.lot)) || Number(input.lot) < 1 || Number(input.lot) > 14)) return 'Please select a valid lot.';
   const path = input.path || 'home';
   if (!['home', 'development'].includes(path)) return 'Please select a consultation type.';
   const topics = path === 'home' ? ['Dexter Acres', 'Custom home'] : ['Landowner opportunity', 'Investment partnership', 'Development partnership'];

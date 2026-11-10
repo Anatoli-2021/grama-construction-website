@@ -1,8 +1,22 @@
-# Grama Construction website
+# Grama Construction development workspace
 
-Premium React/Vite/GSAP website for Grama Construction, featuring the planned Dexter Acres / Webster–Dexter neighborhood and residential portfolio. This private repository is the shared source of truth for website code. The live company website is separate; no production deployment is configured here.
+One private repository for the existing React/Vite/GSAP website and the reusable Development OS launch tool. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
 
 Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Owner: **Anatoli-2021**.
+
+Public review preview: [Grama / Dexter Acres](https://grama-dexter-acres-preview.anatoli-gram-1564.chatgpt.site). The current company domain remains separate.
+
+## Two products, separate boundaries
+
+| Product | Source | Start locally | Data / hosting status |
+| --- | --- | --- | --- |
+| Public website | Root `src/`, `public/`, `server.mjs` | `npm run dev` → port 5173 | Public static preview; hosted enquiry delivery not connected |
+| Development OS | `apps/development-os/` | `npm run dev:os` → port 5180 | Loopback-only blank launch tool; no live data or authentication |
+| Shared utility | `packages/shared/` | Used by OS / Node tests | Project ID validation; no company records |
+
+For the prepared OS work, check out `feature/unified-development` until its PR is approved and merged. For the existing web preview work, see PR #1. `main` remains the stable starting version.
+
+Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
 
 ## Start on another computer
 
@@ -30,6 +44,10 @@ Use Git Credential Manager's browser sign-in or your own GitHub CLI authenticati
 See [CONTRIBUTING.md](CONTRIBUTING.md) for exact invitation, branch, PR, conflict-resolution and safe-sync instructions. The PR template records the change and checks. Review is a team requirement; verify repository settings for technical enforcement rather than assuming this document configures it.
 
 ## Verify and preview
+
+Run the full shared checks with `npm run check`: website build, OS draft and access-boundary tests, then repository/artifact data-policy checks. The build runs first because the static host tests exercise the actual output. GitHub Actions runs these checks on pull requests and on `main`, plus the website API/media checks. The workflow has read-only repository permission and contains no deployment secrets.
+
+The OS has no dependencies beyond Node and runs independently of the website. Use synthetic input during shared development. Its JSON exports remain Draft and do not provision or update operational records.
 
 Build without changing the source website:
 
@@ -72,6 +90,8 @@ Visit the same localhost URL. Rebuild after source edits before restarting produ
 | package-lock.json | Reproducible npm dependency installation |
 
 ## Local data and excluded files
+
+On hosted preview addresses, the consultation section provides Grama's direct telephone link and clearly states that online enquiry delivery is not connected. Personal-information forms appear only on localhost/loopback, where the local API can save them. Publishing the static preview does not copy local enquiry records or connect email/CRM delivery.
 
 The consented enquiry forms append to **.data/interest.jsonl on the developer's computer**. There is no email/CRM delivery, reservation, allocation or production lead service. Client and development-partner enquiries have separate types; lots are accepted only for Dexter Acres home enquiries.
 
