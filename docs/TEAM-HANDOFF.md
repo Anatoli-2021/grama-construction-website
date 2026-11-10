@@ -4,11 +4,11 @@
 
 - Repository: https://github.com/Anatoli-2021/grama-construction-website (currently public, verified through GitHub). Private business and investor data remain excluded.
 - Railway website: https://grama-construction-website-production.up.railway.app/.
-- Connected source: `feature/private-investor-presentation`, without a commit pin; incorporates Nail's latest multipage source.
-- Verified application release: `9f6b6d0156e84ddb845086afd71c6bc7490c1862`, Railway deployment `f3bcd2d4-dce2-4756-ad98-e2c424dc5dd7`, SUCCESS on November 10 at 22:59 UTC. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
+- Connected source: `feature/private-investor-presentation`, temporarily pinned to the exact tested application commit below because the unpinned connection did not retain the branch.
+- Verified application release: `bc8e81b12fea07b701d0970a400c2f08589bcfb2`, Railway deployment `3d5b57ed-6b7b-4473-a859-2a539d76bde3`, SUCCESS on November 10; live checks at 23:06 UTC. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
 - Live checks: all fourteen public pages HTTP 200; five served JS/CSS assets match the checked local build byte for byte; health HTTP 200; OS, `.data`, `.env` and unknown URLs HTTP 404. `/presentation` is a no-store login shell; anonymous deck access is HTTP 401 and unconfigured login is HTTP 503. Actual financial data/accounts are not hosted.
-- Previous recoverable release: Nail's `a73c0172f378f6706166dd76b383a883f0c3a1a6`, deployment `6db6d542-245d-4000-92f0-c90dff4baadf`. Its pages and case studies are preserved in this release.
-- [PR #10](https://github.com/Anatoli-2021/grama-construction-website/pull/10) records current deployment evidence; [CI run 42919270661](https://github.com/Anatoli-2021/grama-construction-website/actions/runs/42919270661) passed for the application release.
+- Previous recoverable integrated release: `9f6b6d0`, deployment `3befd28a-70c6-469b-8ac6-3c824403ca9d`. Nail's earlier multipage release `a73c017` is also preserved in source/history.
+- [PR #10](https://github.com/Anatoli-2021/grama-construction-website/pull/10) records current deployment evidence; [CI run 42919880006](https://github.com/Anatoli-2021/grama-construction-website/actions/runs/42919880006) passed all checks for the final application commit. Later documentation-only commits do not alter the running application.
 - Preserve the team's newer investor showcase, family story, project portfolio and browser-only enquiry draft. Do not deploy the older setup branch over it.
 - Company domain/DNS is unchanged. Railway labels this environment `production`; the Railway address remains the current development/review website.
 
@@ -18,7 +18,7 @@ On November 10, Tony instructed: finish requested website changes, run relevant 
 
 This covers requested website work through deployment. It does not create a background job or authorize unrelated changes. Keep branches and PR review for stable `main`; never force-push shared history. Company-domain/DNS changes, new spending, access grants and private OS publication remain separate decisions.
 
-The Railway connector is authenticated. Earlier, a commit pin was removed but a later push did not deploy automatically. Nail subsequently connected the multipage branch. For this release, switching the existing service to the genuinely new integrated branch without a commit pin built and deployed `9f6b6d0` successfully. Do not infer push-trigger behavior from a source switch: verify the deployment created by each subsequent push and record its SHA/ID in PR #10. See `IMPLEMENTATION-QUEUE.md` for ordered work and pending inputs.
+The Railway connector is authenticated. Its unpinned source call built the requested feature branch once but did not retain the branch in service configuration; subsequent pushes did not deploy. The dashboard could not load branches. Its command-palette "Deploy latest commit" selected older `main`, briefly activating `af3faf5`; the verified integrated build was restored, then exact tested `bc8e81b` was deployed with a commit pin. Current source inspection confirms that branch and pin. Do not use the generic latest-commit command or remove the pin until the GitHub/branch connection is repaired and its target verified. No source or Git history was lost.
 
 Run relevant local checks before pushing to the connected branch: Railway may deploy while GitHub CI runs. Stable `main` keeps its PR review convention; server-enforced review and CI-before-deploy gates are not claimed.
 
@@ -48,13 +48,13 @@ Local private working review: `npm run build`, then `npm run dev:presentation`, 
 
 The integrated release passed build, 91 tests (including all fourteen prerendered public routes, metadata, true 404s, local preview and private-access behavior), repository policy and a separate scan against private local values. Browser checks confirmed sans-serif headings on company/project pages, completed-project filtering, case gallery, mobile navigation, cinematic neighborhood view, Lot 8 context carried into Contact, browser-only draft mode and the authenticated private working deck. No console errors or mobile overflow were observed. Earlier checks also covered chapter navigation after resize and motion-off fallback. The exact application release and live checks are recorded above.
 
-Final live review found pale emphasis/caption text on the light motion-off detail panel. The follow-up stylesheet correction restores dark, readable text; browser inspection, rebuild and privacy checks passed. PR #10 records the final follow-up SHA/CI/deployment proof. A documentation push did not create a new Railway deployment, so push-trigger automation remains unverified; use an explicit latest-commit deployment and verify its actual source.
+Final live review found pale emphasis/caption text on the light motion-off detail panel. The deployed follow-up correction restores dark, readable text; browser inspection, rebuild, privacy checks and CI passed. Automatic deployment is unresolved; the exact-commit release above is verified independently.
 
 Pending owner inputs: actual investor names/emails for recipient-specific access; approval for Wispr owner-account sign-in if full transcripts are required. Both shared summaries were read. No real investor invitations or hosted financial data have been issued.
 
 ## Remaining work
 
-- Keep branch-following source connected without a commit pin. Verify each automatic deployment and its commit; reconnecting with a pin intentionally suspends push deployments until removed.
+- Platform owner/Nail: repair the Railway account's GitHub repository/branch connection through secure provider UI, then verify the intended feature branch and a push-triggered deployment before removing the temporary pin. Never provide tokens in chat or change company DNS for this repair. Until then, deploy only an explicitly checked commit and verify its actual SHA.
 - Reconcile/review the PRs and eventually use `main` as the stable deployment branch, preserving the approved design.
 - No enforced `main` protection is claimed; issue #4 tracks owner review. The old private-repository plan restriction should be reassessed now that the repository is public.
 - The OS stays local with blank templates. Real dashboards, finances and pilot evidence remain private; issue #3 tracks authentication before hosting.
