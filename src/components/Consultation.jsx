@@ -14,6 +14,7 @@ export default function Consultation({ request, motion }) {
   const [values, setValues] = useState(blank);
   const [status, setStatus] = useState({ state: 'idle', message: '' });
   const firstInput = useRef(null);
+  const panel = useRef(null);
   const tabs = useRef([]);
   useEffect(() => {
     if (!request) return;
@@ -21,7 +22,7 @@ export default function Consultation({ request, motion }) {
     setTopic(request.topic || topics[request.path || 'home'][0]);
     setLot(request.lot || '');
     setStatus({ state: 'idle', message: '' });
-    const timer = window.setTimeout(() => firstInput.current?.focus({ preventScroll: true }), motion ? 700 : 0);
+    const timer = window.setTimeout(() => (firstInput.current || panel.current)?.focus({ preventScroll: true }), motion ? 700 : 0);
     return () => clearTimeout(timer);
   }, [request]);
   function choose(next) { setPath(next); setTopic(topics[next][0]); setLot(''); setStatus({ state: 'idle', message: '' }); }
@@ -53,7 +54,7 @@ export default function Consultation({ request, motion }) {
         {[['home', '01', 'Build your custom home', 'For future homeowners and Dexter Acres buyers.'], ['development', '02', 'Develop with Grama', 'For landowners, investors and development partners.']].map(([key, number, title, copy], index) => <button ref={element => { tabs.current[index] = element; }} key={key} id={'consultation-tab-' + key} role="tab" aria-controls="consultation-panel" aria-selected={path === key} tabIndex={path === key ? 0 : -1} onClick={() => choose(key)} onKeyDown={event => tabKey(event, index)}><span className="path-index">{number}</span><span><strong>{title}</strong><span>{copy}</span></span><Arrow /></button>)}
         <div className="consultation-direct"><span className="eyebrow">PREFER A CONVERSATION?</span><a href="tel:+17738499634">+1 773 849 9634 <Arrow /></a><p>Chicago & the surrounding Illinois suburbs.</p></div>
       </div>
-      <div className="consultation-panel" id="consultation-panel" role="tabpanel" aria-labelledby={'consultation-tab-' + path}>
+      <div ref={panel} className="consultation-panel" id="consultation-panel" role="tabpanel" aria-labelledby={'consultation-tab-' + path} tabIndex={-1}>
         <div className="consultation-form-title"><span className="eyebrow">{isHome ? 'YOUR HOME' : 'YOUR OPPORTUNITY'}</span><h3>{isHome ? 'Make room for your vision.' : 'Let’s consider the possibilities.'}</h3></div>
         {!isLocalPreview ? <div className="hosted-consultation"><p>This website is a preview of the Grama vision. For {isHome ? 'a custom home or Dexter Acres enquiry' : 'a land, investment or development conversation'}, speak with Grama directly.</p><a className="button button-dark" href="tel:+17738499634">Call +1 773 849 9634 <Arrow /></a><p className="form-preview-note">Online enquiry delivery is being prepared. This preview does not collect personal information or reserve a property.</p></div> : status.state === 'success' ? <div className="consultation-success" role="status"><span>✓</span><h4>A conversation started.</h4><p>{status.message}</p><button className="text-link" onClick={() => setStatus({ state: 'idle', message: '' })}>Begin another enquiry <Arrow /></button></div> : <form onSubmit={submit}>
           <div className="consultation-fields"><label className="form-field">Your name<input ref={firstInput} name="name" value={values.name} onChange={change} required minLength={2} maxLength={100} autoComplete="name" placeholder="Full name" /></label><label className="form-field">Email address<input name="email" value={values.email} onChange={change} type="email" required maxLength={254} autoComplete="email" placeholder="you@example.com" /></label></div>
