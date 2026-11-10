@@ -2,7 +2,7 @@
 
 ## Verified live website
 
-- Repository: https://github.com/Anatoli-2021/grama-construction-website (private).
+- Repository: https://github.com/Anatoli-2021/grama-construction-website (currently public, verified through GitHub). Private business and investor data remain excluded.
 - Railway website: https://grama-construction-website-production.up.railway.app/.
 - Connected branch: `feature/investor-showcase-polish`, following its latest commit without a commit pin.
 - Initial release verified before reconnecting the source: `e2dca4de464e663a9facc5b91aa29f1495fd4e00`, deployment `1f2b9373-162f-429a-9fd0-b52af5ef3abb`. Later releases are identified in Railway's deployment history. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
@@ -16,7 +16,7 @@ On November 10, Tony instructed: finish requested website changes, run relevant 
 
 This covers requested website work through deployment. It does not create a background job or authorize unrelated changes. Keep branches and PR review for stable `main`; never force-push shared history. Company-domain/DNS changes, new spending, access grants and private OS publication remain separate decisions.
 
-The Railway connector is authenticated. Its source inspection revealed an explicit pin to `e2dca4d`, which prevented future pushes from deploying. The source was reconnected to the same repository/branch without `commitSha`; Railway confirmed that pushes now trigger builds and started a deployment. This documentation push also exercises that connection. Record the resulting source SHA and deployment ID, wait for success and verify the public site; a successful push alone still does not prove a successful release. Report any build/access failure honestly.
+The Railway connector is authenticated. Its source inspection revealed an explicit pin to `e2dca4d`. Reconnecting without a pin successfully deployed `6dda772` as deployment `7123ccec-ad4b-4c0b-b979-f4885ee53367`. However, the next GitHub push did not automatically trigger a deployment and the dashboard could not load branches. Automatic deployment remains unverified. Explicitly deploy and verify intended commits until the GitHub trigger is repaired. See `IMPLEMENTATION-QUEUE.md` for the ordered presentation and public-design work now in progress.
 
 Run relevant local checks before pushing to the connected branch: Railway may deploy while GitHub CI runs. Stable `main` keeps its PR review convention; server-enforced review and CI-before-deploy gates are not claimed.
 
