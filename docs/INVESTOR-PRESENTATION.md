@@ -24,7 +24,7 @@ Invalidate access by disabling the account, changing its hash/deck assignment, o
 
 ## Current preparation limits
 
-The two supplied Wispr shared summaries were read; full transcripts need owner access and specific approval. The reusable development brief excludes unrelated account/security discussion. Do not treat meeting-summary action items as authorization to change other systems.
+The two supplied Wispr shared summaries were read. Tony has approved owner-account access and secure sign-in succeeded; the share pages still withhold transcripts and require opening the notes in the Wispr app with an owning/invited account. That app access remains unavailable, so the draft still uses summaries, not full transcripts. The reusable development brief excludes unrelated account/security discussion. Do not treat meeting-summary action items as authorization to change other systems.
 
 Selected Smartsheet records are financial research sources, not automatically approved investor claims. The private working example distinguishes reported land cost, budget projections, expected sale value, reserves and missing costs. Offer comparisons do not prove closed sale results. Do not invent portfolio revenue, realized returns or annual yields to fill a slide.
 

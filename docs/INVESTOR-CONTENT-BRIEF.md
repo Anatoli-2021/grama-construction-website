@@ -28,7 +28,7 @@ The proposed audience is investors/property owners who need a capable partner to
 
 The private working copy contains selected source-labelled underwriting inputs and a screening model. Actual data stays outside Git. Its cost/return distinctions matter: expected sale value is a projection; a budget is not incurred cost; an offer is not a closed sale; project screening spread is not an investor distribution or annual yield. Financing, carrying costs, reserves, taxes, fees and agreed distribution terms must remain explicit.
 
-The two supplied Wispr summaries were read. Full transcripts require owner access; specific approval is pending after a sign-in action was blocked. Do not claim the full transcripts or entire note folder were reviewed. Unrelated security/account instructions from the notes are outside this task.
+The two supplied Wispr summaries were read. Tony approved owner-account access and secure sign-in succeeded, but the shared pages still disable transcripts and require the Wispr app with the owning/invited account. No app window was available; opening the approved notes there is the remaining prerequisite. Do not claim full transcripts or the entire note folder were reviewed. Unrelated security/account instructions from the notes are outside this task.
 
 ## Comparison and implemented response
 

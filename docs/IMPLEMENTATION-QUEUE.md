@@ -13,7 +13,7 @@ New messages add requirements to this queue. They do not replace unfinished work
 
 ## 2. Research for investor presentation
 
-- Read both supplied Wispr shared summaries. Full transcript tabs require owner access; a sign-in attempt was blocked by approval review. Specific owner-account access approval is pending.
+- Read both supplied Wispr shared summaries. Tony subsequently approved owner-account access; secure Google sign-in succeeded. Both shared pages still disable Transcript and require the Wispr app; no available app window was found. Tony has been asked to open the two notes in the owning/invited app account. Full transcripts remain unread; permission is no longer the blocker.
 - Done: read relevant Smartsheet records for Dexter Acres, Sprucewood and completed-project evidence. The working deck separates reported inputs, projections, offers and unverified results; sampled whole-subdivision budgets are not treated as complete totals.
 - Do not promote spoken return targets, unapproved profit splits, placeholder budgets or incomplete models into promised investor returns.
 - Done: compared the current company website and Railway showcase. The sanitized content brief records the comparison and concrete design/access improvements.
