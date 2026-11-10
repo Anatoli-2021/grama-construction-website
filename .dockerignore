@@ -10,3 +10,4 @@
 !public/**
 !scripts/
 !scripts/serve-website.mjs
+!scripts/build-pages.mjs

@@ -8,20 +8,20 @@ gsap.registerPlugin(ScrollTrigger);
 const chapters = [
   {
     label: 'The residence',
-    eyebrow: '01 / A PERSONAL PERSPECTIVE',
-    first: 'A singular',
-    second: 'expression.',
-    body: 'A distinctive silhouette. A sheltered arrival. A vision of home with its own point of view.',
+    eyebrow: '01 / RESIDENCE CONCEPT',
+    first: 'A proposed',
+    second: 'residence.',
+    body: 'Concept design for a Dexter Acres home: gabled rooflines, light masonry and a covered entrance.',
     image: '/assets/residence.webp',
     alt: 'Architectural concept of a Dexter Acres residence with a steep gabled roof and light masonry',
     target: 0.015,
   },
   {
     label: 'The detail',
-    eyebrow: '02 / A CLOSER CONSIDERATION',
-    first: 'Form. Material.',
-    second: 'Craft.',
-    body: 'Light masonry, dark rooflines and finely framed glazing. A study in warmth, proportion and contrast.',
+    eyebrow: '02 / ARCHITECTURAL DETAIL',
+    first: 'Materials &',
+    second: 'detail.',
+    body: 'A closer view of the proposed masonry, windows and rooflines. Final selections depend on the project’s design development.',
     image: '/assets/residence-angle.webp',
     alt: 'Angled architectural rendering showing the conceptual masonry palette, roofline and sheltered entrance',
     target: 0.405,
@@ -29,9 +29,9 @@ const chapters = [
   {
     label: 'The neighborhood',
     eyebrow: '03 / INTRODUCING DEXTER ACRES',
-    first: 'Fourteen homes.',
-    second: 'One shared vision.',
-    body: 'Individual character, brought together in a planned neighborhood at Webster and Dexter Lanes.',
+    first: '14 planned homes.',
+    second: 'Des Plaines.',
+    body: 'The proposed neighborhood at Webster and Dexter Lanes. Explore all 14 lots in the plan below.',
     image: '/assets/community.webp',
     alt: 'AI-generated concept aerial showing all fourteen proposed Dexter Acres homes',
     target: 0.84,
@@ -341,7 +341,7 @@ export default function CinematicStory({ motion = true }) {
     <section
       className={`cinema ${enhanced ? 'cinema--enhanced' : 'cinema--static'}`}
       id="architecture"
-      data-chapter="03"
+      data-chapter="04"
       data-phase={phase}
       ref={sectionRef}
       aria-label="From one residence to a shared neighborhood vision"

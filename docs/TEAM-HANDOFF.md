@@ -1,46 +1,21 @@
-# Developer team handoff — November 10, 2026
+# Website development guide
 
-## Start here
+The multipage implementation is commit `6fb4308`, proposed through [PR9](https://github.com/Anatoli-2021/grama-construction-website/pull/9) on `feature/multipage-website`.
 
-- Repository: https://github.com/Anatoli-2021/grama-construction-website (private).
-- Working setup branch: `feature/unified-development`.
-- Website preview source: PR #1. Unified deployment/tooling: PR #2, based on PR #1. Review and merge #1 first; then retarget #2 to `main` for review. Neither is automatically merged.
-- Setup: Node 24, `npm ci`, `npm run check`. Website: `npm run dev` (5173). OS: `npm run dev:os` (5180).
-- Full developer steps and permissions: [ONBOARDING.md](ONBOARDING.md).
+Public review: [Grama Construction preview](https://grama-construction-website-production.up.railway.app/).
 
-## What is ready
+## Build and verify
 
-The original website and assets remain intact. A website-only Dockerfile and static host are ready for Railway; the runtime excludes the OS and local enquiry records. Existing source paths are unchanged. The reusable blank OS launch tool is shared and tested, including common/subdivision tasks, stable IDs, Draft status and access boundaries.
+Use Node.js24 and the committed lockfile. Run `npm ci` and `npm run check`. The build creates fourteen route-specific HTML pages and a separate404 document. Tests cover route content, metadata, enquiry context and public-host boundaries.
 
-GitHub Actions ran successfully on the clean Linux runner after correcting build-before-test order. Local checks also passed, including the existing nine website API/media checks. The browser downloaded a real synthetic 29-task Draft export without console errors. Desktop source HTML and JSON hashes remained unchanged.
+Pages include Home, About, Projects, eight completed cases, Dexter Acres, Partnerships and Contact. Routes are registered in `src/site-routes.js`; approved project content is in `src/data/projects.js`. Shared static hosting supports direct URLs and refreshes, with genuine404 responses for unknown routes.
 
-## Existing Railway target
+## Preserve the website
 
-- Project: `earnest-wisdom`, ID `ffb7baed-e751-41be-9874-c4eb4c4ae290`.
-- Service: `grama-construction-website`, ID `875425ae-8bb5-4d47-a026-49a9df71dc22`.
-- Environment: Railway labels it `production`, ID `15058afa-2401-4d42-83a7-5e807d7d1258`; its intended use here is a temporary website preview, not replacement of the company site.
-- Observed state before configuration: online initial GitHub deployment, `main` source, no public domain, private `*.railway.internal` endpoint. GitHub branch loading reported an error.
-- Existing Railway trial shows 30 days / $5 credit remaining at inspection; no paid upgrade was purchased. This is a point-in-time UI observation, not a permanent hosting allowance.
-- A project invitation already existed. Verify the recipient and acceptance in Railway before creating another invitation. Do not publish invite links, auth codes or tokens in GitHub.
+Keep the Dexter Acres cinematic sequence, original media and14-lot drawing geometry intact. Inspect desktop/mobile navigation, project filters, galleries and lot-to-contact links after relevant changes. Completed projects, proposed developments and current listings remain distinct.
 
-## Immediate deployment work
+Hosted forms prepare browser-only drafts. Email/CRM delivery and reservations are not enabled. The company domain is a separate launch decision. Use verified public project facts and approved media; keep private records and platform administration details outside source control.
 
-Tony authorized this temporary Railway website deployment and keeping the company domain unchanged. Browser connectivity stopped before settings/domain changes could be applied. Restore the existing browser connection or authorize the Railway connector, then:
+## Collaborate
 
-1. Confirm this exact project/service; do not create another repository or service.
-2. Select the reviewed deployment commit/branch without replacing stable `main`. Refresh/repair the GitHub repository integration if branches cannot load.
-3. Use the root Dockerfile, service PORT and `/healthz`; remove conflicting old build/start overrides. See [Railway settings](../infra/website/README.md).
-4. Generate a temporary Railway HTTPS domain. Do not edit company DNS or add a custom company domain.
-5. Wait for the deployment, record its source SHA and deployment ID, then verify anonymous HTTP 200, actual images/video, mobile contact, console errors and blocked private/OS/API paths.
-6. Update this handoff with the verified URL and result. A running container or private internal hostname alone is not public deployment completion.
-
-The working Sites review URL remains available: https://grama-dexter-acres-preview.anatoli-gram-1564.chatgpt.site.
-
-## Remaining gates and owners
-
-- Tony: review PRs, confirm Railway team invitation recipient/acceptance, approve future paid hosting or GitHub plan changes, and approve any eventual company-domain release.
-- Developers: complete/verify Railway preview after connection restoration; keep all OS records private. Issues #3 and #4 track OS authentication and enforceable owner review.
-- OS: no hosted service, database, live connector or company-data migration exists. Follow [SECURITY.md](SECURITY.md) before connecting private records.
-- GitHub: `main` is unprotected under the current plan. CI and documented owner review exist; enforced review/production gates require further setup.
-
-Source details: [SOURCE-INVENTORY.md](SOURCE-INVENTORY.md). Platform decision: [HOSTING.md](HOSTING.md). Approval and rollback: [RELEASES.md](RELEASES.md).
+Work on focused feature branches, inspect diffs and relevant checks, then open a PR for owner review. Do not push directly to main or overwrite unfinished work. The PR records the reviewed source version, preview and completed checks. Platform administration and release-account details are maintained privately by the project owners.

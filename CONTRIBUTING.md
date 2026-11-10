@@ -1,6 +1,6 @@
 # Contributing
 
-Private repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). **Anatoli-2021 is the owner.** Keep `main` stable; propose changes through `feature/*` branches and reviewed pull requests. Public hosting and live-domain changes require separate owner authorization.
+Private repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). **Anatoli-2021 is the owner.** Keep `main` stable; propose changes through `feature/*` branches and reviewed pull requests. Requested website changes are authorized through checked commit, push and deployment to the existing Railway address under Tony's November 10 standing instruction; see [release steps](docs/RELEASES.md). Company-domain/DNS changes, new spending and private OS publication require separate authorization.
 
 ## Owner: invite approved collaborators
 
