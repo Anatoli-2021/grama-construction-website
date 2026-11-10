@@ -4,8 +4,8 @@
 
 - Repository: https://github.com/Anatoli-2021/grama-construction-website (currently public, verified through GitHub). Private business and investor data remain excluded.
 - Railway website: https://grama-construction-website-production.up.railway.app/.
-- Last verified source branch: `feature/investor-showcase-polish`, without a commit pin. New candidate: `feature/private-investor-presentation`, based on its latest shared source; a branch push alone is not deployment evidence.
-- Latest verified live release before this refinement: `6dda772229a856a3ca891abc850f8788e4eaf24f`, deployment `7123ccec-ad4b-4c0b-b979-f4885ee53367`. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
+- Last verified source branch: `feature/multipage-website`, without a commit pin. New candidate: `feature/private-investor-presentation`, incorporating that latest shared source; a branch push alone is not deployment evidence.
+- Latest verified live release before this integration: `a73c0172f378f6706166dd76b383a883f0c3a1a6`, deployment `6db6d542-245d-4000-92f0-c90dff4baadf`, published by Nail. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
 - Anonymous checks: website, health and hero media HTTP 200; OS, `.data` and `.env` paths HTTP 404. Loaded website console contained no errors.
 - Preserve the team's newer investor showcase, family story, project portfolio and browser-only enquiry draft. Do not deploy the older setup branch over it.
 - Company domain/DNS is unchanged. Railway labels this environment `production`; the Railway address remains the current development/review website.
@@ -23,7 +23,7 @@ Run relevant local checks before pushing to the connected branch: Railway may de
 ## Team source and setup
 
 - `main` was verified at `af3faf5b924865f898bb32f022ef84ab7e4aca94` before this documentation update. PR #1 and #6 are merged.
-- PR #7 contains the current showcase branch and remains open. PR #2 is an older setup PR; reconcile already-included changes before merging it. Do not blindly reintroduce old source.
+- PR #7 contains the earlier showcase branch; PR #9 adds the multipage website. The new private-presentation branch integrates both. PR #2 is an older setup PR; reconcile already-included changes before merging it. Do not blindly reintroduce old source.
 - `axmatea` has approved GitHub write access and authored the running Railway deployment. Check current access before sending duplicate invitations.
 - Node 24; `npm ci`; `npm run check`. Website: `npm run dev` at port 5173. Blank OS tool: `npm run dev:os` at port 5180.
 - Fetch the latest shared source before editing. Follow [ONBOARDING.md](ONBOARDING.md) for branches, PRs and safe synchronization.
@@ -38,11 +38,13 @@ The root Dockerfile serves the website and the separate presentation authorizati
 
 ## Private presentation and public refinement candidate
 
-The `feature/private-investor-presentation` branch preserves Nail's newer website. It adds sans-serif typography, quieter captions, responsive residence/detail/community scroll animation and reduced-motion fallback. `/presentation` is a separate generic login shell with individually assigned decks, expiring/revocable access and server-only content. See [INVESTOR-PRESENTATION.md](INVESTOR-PRESENTATION.md) and [INVESTOR-CONTENT-BRIEF.md](INVESTOR-CONTENT-BRIEF.md).
+The `feature/private-investor-presentation` branch preserves Nail's newer multipage website, including fourteen prerendered public pages, eight completed case studies, filters, galleries, contextual contact links and a genuine 404 page. Routes are in `src/site-routes.js`; public project records are in `src/data/projects.js`. The build runs Vite and `scripts/build-pages.mjs`; Docker includes both build inputs and the separate presentation entry.
+
+The refinement adds sans-serif typography across those pages, quieter captions, responsive residence/detail/community scroll animation and reduced-motion fallback. `/presentation` is a separate generic login shell with individually assigned decks, expiring/revocable access and server-only content. See [INVESTOR-PRESENTATION.md](INVESTOR-PRESENTATION.md) and [INVESTOR-CONTENT-BRIEF.md](INVESTOR-CONTENT-BRIEF.md).
 
 Local private working review: `npm run build`, then `npm run dev:presentation`, http://localhost:5190/presentation. The owner-machine working deck and source snapshot are under ignored `.data/investor-presentation/`; they are intentionally absent from this public repository. Use individually authorized source connections for financial research. Never copy private figures or transcripts into issues, PRs, fixtures or public assets.
 
-Browser checks covered desktop/mobile typography, all three motion phases, chapter navigation after resize, motion-off fallback, mobile menu, private deck login and responsive layout. No console errors or mobile horizontal overflow were observed. The candidate passed build, 70 automated tests, repository policy, 32-frame cinematic verification and a separate scan against private local values. Deployment evidence is recorded after publishing; no deployment is claimed from a Git push alone.
+The integrated candidate passed build, 91 tests (including all fourteen prerendered public routes, metadata, true 404s, local preview and private-access behavior), repository policy and a separate scan against private local values. Browser checks confirmed sans-serif headings on company/project pages, completed-project filtering, case gallery, mobile navigation, cinematic neighborhood view, Lot 8 context carried into Contact, browser-only draft mode and the authenticated private working deck. No console errors or mobile overflow were observed. Earlier checks also covered chapter navigation after resize and motion-off fallback. Deployment evidence is recorded after publishing; no deployment is claimed from a Git push alone.
 
 Pending owner inputs: actual investor names/emails for recipient-specific access; approval for Wispr owner-account sign-in if full transcripts are required. Both shared summaries were read. No real investor invitations or hosted financial data have been issued.
 

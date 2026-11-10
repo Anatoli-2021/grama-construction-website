@@ -7,6 +7,7 @@ COPY index.html vite.config.js ./
 COPY src ./src
 COPY public ./public
 COPY presentation ./presentation
+COPY scripts/build-pages.mjs ./scripts/build-pages.mjs
 RUN npm run build
 
 FROM node:24-alpine AS runtime

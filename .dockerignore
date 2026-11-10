@@ -13,3 +13,4 @@
 !scripts/presentation-access.mjs
 !presentation/
 !presentation/**
+!scripts/build-pages.mjs

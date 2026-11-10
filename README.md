@@ -8,6 +8,24 @@ Website review preview: [Grama Construction on Railway](https://grama-constructi
 
 The hosted enquiry form is a browser-only draft review, clearly labelled before entry and after review. It sends nothing to a server. Localhost retains the existing local-save workflow; live email/CRM delivery needs an approved destination. Sold-home totals, closing values and company revenue are omitted until supported by approved records.
 
+## Multipage website
+
+Current implementation: `6fb4308` / [PR9](https://github.com/Anatoli-2021/grama-construction-website/pull/9), branch `feature/multipage-website`. The existing Railway review service follows this branch; the PR records its actual deployed SHA and status.
+
+The review website now has fourteen prerendered public pages. Normal document links and direct URL refreshes work without a catch-all homepage response. Build with `npm run build`; the build emits each page’s HTML, title, description, canonical and sharing metadata. Preview indexing remains disabled.
+
+| Page | Route |
+| --- | --- |
+| Company homepage | `/` |
+| About and family | `/about` |
+| Project index and status filters | `/projects` |
+| Eight individual completed cases | `/projects/<project-slug>` |
+| Dexter Acres cinematic and14-lot plan | `/projects/dexter-acres` |
+| Development partnerships and process | `/partnerships` |
+| Contact and contextual enquiry draft | `/contact` |
+
+Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Unknown URLs return a real404. Runtime hosting serves `dist` plus the individually authorized presentation API; repository files, the OS and local enquiry API remain unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Hosted review stays browser-only; enquiry delivery is not connected.
+
 ## Two products, separate boundaries
 
 | Product | Source | Start locally | Data / hosting status |
@@ -16,7 +34,7 @@ The hosted enquiry form is a browser-only draft review, clearly labelled before 
 | Development OS | `apps/development-os/` | `npm run dev:os` → port 5180 | Loopback-only blank launch tool; no live data or authentication |
 | Shared utility | `packages/shared/` | Used by OS / Node tests | Project ID validation; no company records |
 
-Current Railway source: `feature/investor-showcase-polish` (PR #7). PR #1 and #6 are merged. Keep `main` stable and reconcile the older setup PR before merging it. Tony authorizes requested website edits through checks, commit, push and deployment to the existing Railway address; see the release guide for verification and remaining boundaries.
+Current integration candidate: `feature/private-investor-presentation`, including `feature/multipage-website` / PR9 and earlier showcase work in PR7. Review the stack before merging to stable main. The public preview and completed checks are recorded in the candidate PR and team handoff.
 
 Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
 
@@ -95,7 +113,7 @@ Visit the same localhost URL. Rebuild after source edits before restarting produ
 
 ## Local data and excluded files
 
-On hosted preview addresses, the consultation section provides Grama's direct telephone link and clearly states that online enquiry delivery is not connected. Personal-information forms appear only on localhost/loopback, where the local API can save them. Publishing the static preview does not copy local enquiry records or connect email/CRM delivery.
+On hosted preview addresses, the consultation section provides Grama's direct telephone link and clearly states that online enquiry delivery is not connected. Hosted form fields prepare browser-only drafts; no personal details are submitted. Localhost/loopback retains its consented local-save API. Publishing the static preview does not copy local enquiry records or connect email/CRM delivery.
 
 The consented enquiry forms append to **.data/interest.jsonl on the developer's computer**. There is no email/CRM delivery, reservation, allocation or production lead service. Client and development-partner enquiries have separate types; lots are accepted only for Dexter Acres home enquiries.
 

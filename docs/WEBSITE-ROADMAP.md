@@ -16,11 +16,11 @@ Website release `e2dca4d` provides:
 
 The Railway address is the review deployment; the company domain remains a separate release decision. Hosted enquiries currently support a clearly labelled browser-only draft review and send nothing to a server. Local development retains its local-save workflow. No email/CRM delivery or reservation is implied.
 
-## M2 — Real page depth and project navigation
+## M2 — Implemented page depth and project navigation
 
-Develop the current single-page experience into a multi-level website. Proposed destinations include the company homepage, About/team, Projects, individual project case studies, Dexter Acres, Services/process, Partnerships and Contact.
+The multipage release implements fourteen prerendered pages: the company homepage, About/team, Projects, eight individual case studies, Dexter Acres, Partnerships and Contact. Services are described on About; the seven-stage process is on Partnerships. The cinematic sequence and14-lot plan remain available on the homepage and dedicated Dexter Acres page.
 
-Acceptance criteria:
+Implemented acceptance criteria:
 
 - Public pages have meaningful URLs, direct navigation and refresh support, distinct titles/descriptions and a consistent navigation system.
 - Project browsing supports approved upcoming, current and completed statuses. Introduce current projects only when their status is supported; do not invent inventory to populate a filter.
@@ -28,7 +28,7 @@ Acceptance criteria:
 - Unknown URLs return a genuine 404. Source, private-data, OS and API paths remain inaccessible in the public website service; routing must not replace these boundaries with a blanket fallback.
 - Desktop, mobile, keyboard navigation, cinematic behavior, lot selection and consultation paths remain verified.
 
-Choose the rendering/routing approach before implementation so page-specific metadata and direct URLs work in the deployed static website.
+The existing React/Vite build prerenders each known route to static HTML with page-specific metadata. The static host resolves real page documents and returns a separate404 for unknown routes. Project status filters include an honest empty current-listings view; no active inventory is invented.
 
 ## M3 — Approved project proof and financial context
 

@@ -6,12 +6,21 @@ import { createPresentationHandler } from './presentation-access.mjs';
 
 const dist = resolve(fileURLToPath(new URL('../dist/', import.meta.url)));
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.mp4': 'video/mp4' };
-export function createWebsiteServer() {
-  const presentation = createPresentationHandler({ secureCookies: process.env.NODE_ENV === 'production' || process.argv.includes('--hosted') });
-  return http.createServer(async (req, res) => {
+const presentation = createPresentationHandler({ secureCookies: process.env.NODE_ENV === 'production' || process.argv.includes('--hosted') });
+export async function serveWebsiteRequest(req, res, { localApi = false } = {}) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    async function notFound() {
+      try {
+        const content = await readFile(resolve(dist, '404.html'));
+        res.writeHead(404, { 'Content-Type': types['.html'], 'Cache-Control': 'no-cache', 'Content-Length': content.length });
+        return res.end(req.method === 'HEAD' ? undefined : content);
+      } catch {
+        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+        return res.end(req.method === 'HEAD' ? undefined : 'Not found.');
+      }
+    }
     let pathname;
     try { pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname); }
     catch { res.writeHead(400); return res.end('Invalid request.'); }
@@ -22,18 +31,22 @@ export function createWebsiteServer() {
     // Outside the separately authorized presentation routes, serve only the
     // build. Repository files and the local enquiry/OS APIs stay unavailable.
     if (pathname.split(/[\\/]/).some(part => part.startsWith('.')) || pathname.startsWith('/api/')) {
-      res.writeHead(404); return res.end('Not found.');
+      return notFound();
     }
-    const path = resolve(dist, '.' + (pathname === '/' ? '/index.html' : pathname));
-    if (!path.startsWith(dist + sep)) { res.writeHead(404); return res.end('Not found.'); }
+    let path = resolve(dist, '.' + (pathname === '/' ? '/index.html' : pathname));
+    if (!path.startsWith(dist + sep)) return notFound();
     try {
-      if (!(await stat(path)).isFile()) throw new Error('Not a file');
+      const entry = await stat(path);
+      if (entry.isDirectory()) path = resolve(path, 'index.html');
+      else if (!entry.isFile()) return notFound();
       let content = await readFile(path);
-      if (path === resolve(dist, 'index.html')) content = Buffer.from(content.toString('utf8').replace('name="grama-runtime" content="local-api"', 'name="grama-runtime" content="static-preview"'));
-      res.writeHead(200, { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600' });
+      if (!localApi && path.endsWith('.html')) content = Buffer.from(content.toString('utf8').replace('name="grama-runtime" content="local-api"', 'name="grama-runtime" content="static-preview"'));
+      res.writeHead(path === resolve(dist, '404.html') ? 404 : 200, { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600', 'Content-Length': content.length });
       res.end(req.method === 'HEAD' ? undefined : content);
-    } catch { res.writeHead(404); res.end('Not found.'); }
-  });
+    } catch { return notFound(); }
+}
+export function createWebsiteServer() {
+  return http.createServer((req, res) => serveWebsiteRequest(req, res));
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const port = Number(process.env.PORT || 5174);

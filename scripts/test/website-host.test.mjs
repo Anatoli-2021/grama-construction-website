@@ -19,3 +19,18 @@ test('website host health is available and source/private/API paths stay inacces
   for (const route of ['/apps/development-os/launch.html', '/.data/interest.jsonl', '/.env', '/package.json', '/api/interest', '/assets/%2e%2e%2f%2e%2e%2fpackage.json']) assert.equal((await fetch(base + route)).status, 404, route);
   assert.equal((await fetch(base + '/api/interest', { method: 'POST', body: '{}' })).status, 405);
 });
+
+test('multipage host keeps the private presentation boundary ahead of static routing', async t => {
+  const server = createWebsiteServer();
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const base = 'http://127.0.0.1:' + server.address().port;
+  const shell = await fetch(base + '/presentation');
+  assert.equal(shell.status, 200);
+  assert.match(shell.headers.get('cache-control'), /no-store/);
+  assert.match(await shell.text(), /Private presentation/i);
+  assert.equal((await fetch(base + '/presentation/api/deck')).status, 401);
+  const login = await fetch(base + '/presentation/api/login', { method: 'POST', headers: { Origin: base, 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'nobody@example.invalid', code: 'synthetic-unissued-code' }) });
+  assert.equal(login.status, 503);
+  assert.equal((await fetch(base + '/presentation/decks.json')).status, 404);
+});

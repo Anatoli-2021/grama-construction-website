@@ -12,6 +12,7 @@ const blank = { name: '', email: '', phone: '', location: '', timing: '', detail
 function Arrow() { return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" strokeWidth="1.3" /></svg>; }
 
 export default function Consultation({ request, motion }) {
+  const [interactive, setInteractive] = useState(false);
   const [path, setPath] = useState('development');
   const [topic, setTopic] = useState('Development partnership');
   const [lot, setLot] = useState('');
@@ -20,6 +21,7 @@ export default function Consultation({ request, motion }) {
   const firstInput = useRef(null);
   const panel = useRef(null);
   const tabs = useRef([]);
+  useEffect(() => { setInteractive(true); }, []);
   useEffect(() => {
     if (!request) return;
     setPath(request.path || 'development');
@@ -69,6 +71,8 @@ export default function Consultation({ request, motion }) {
       <div ref={panel} className="consultation-panel" id="consultation-panel" role="tabpanel" aria-labelledby={'consultation-tab-' + path} tabIndex={-1}>
         <div className="consultation-form-title"><span className="eyebrow">{isHome ? 'YOUR HOME' : 'YOUR OPPORTUNITY'}</span><h3>{isHome ? 'Tell us about your home.' : 'Tell us about the opportunity.'}</h3></div>
         {status.state === 'draft' ? <div className="enquiry-draft" role="status"><p className="eyebrow">DRAFT ONLY — NOT SENT</p><h4>Your enquiry draft</h4><p>This draft stays in this browser. Online delivery is not connected. Call Grama to discuss your project.</p><dl><div><dt>Name</dt><dd>{values.name}</dd></div><div><dt>Email</dt><dd>{values.email}</dd></div>{values.phone && <div><dt>Phone</dt><dd>{values.phone}</dd></div>}<div><dt>Topic</dt><dd>{topic}{isHome && topic === 'Dexter Acres' && lot ? ' · Lot ' + lot : ''}</dd></div>{values.location && <div><dt>Location</dt><dd>{values.location}</dd></div>}{values.timing && <div><dt>Timeframe</dt><dd>{values.timing}</dd></div>}{values.details && <div><dt>Details</dt><dd>{values.details}</dd></div>}</dl><a className="button button-dark" href="tel:+17738499634">Call +1 773 849 9634 <Arrow /></a><button className="text-link" onClick={() => { setStatus({ state: 'idle', message: '' }); requestAnimationFrame(() => firstInput.current?.focus()); }}>Edit this draft <Arrow /></button></div> : status.state === 'success' ? <div className="consultation-success" role="status"><span>✓</span><h4>Enquiry saved locally.</h4><p>{status.message}</p><button className="text-link" onClick={() => setStatus({ state: 'idle', message: '' })}>Begin another enquiry <Arrow /></button></div> : <form onSubmit={submit}>
+          <noscript><p className="form-preview-note">Enable JavaScript to prepare an enquiry draft, or call +1 773 849 9634.</p></noscript>
+          <fieldset className="enquiry-fields" disabled={!interactive}>
           {!isLocalPreview && <p className="form-preview-note draft-notice">Preview form: you can fill in and review a draft. Nothing is sent or saved to a server. For a response, call <a href="tel:+17738499634">+1 773 849 9634</a>.</p>}
           <div className="consultation-fields"><label className="form-field">Your name<input ref={firstInput} name="name" value={values.name} onChange={change} required minLength={2} maxLength={100} autoComplete="name" placeholder="Full name" /></label><label className="form-field">Email address<input name="email" value={values.email} onChange={change} type="email" required maxLength={254} autoComplete="email" placeholder="you@example.com" /></label></div>
           <div className="consultation-fields"><label className="form-field">Phone <span>(optional)</span><input name="phone" value={values.phone} onChange={change} type="tel" maxLength={60} autoComplete="tel" placeholder="Phone number" /></label><label className="form-field">{isHome ? 'I’m interested in' : 'Type of opportunity'}<select name="interest" value={topic} onChange={event => { setTopic(event.target.value); setLot(''); }} required>{topics[path].map(item => <option key={item}>{item}</option>)}</select></label></div>
@@ -79,6 +83,7 @@ export default function Consultation({ request, motion }) {
           <button className="button button-dark" type="submit" disabled={status.state === 'sending'}>{status.state === 'sending' ? 'Saving your enquiry…' : isLocalPreview ? 'Save enquiry locally' : 'Review enquiry draft'}<Arrow /></button>
           {status.state === 'error' && <p className="form-error" role="alert">{status.message}</p>}
           <p className="form-preview-note">{isLocalPreview ? 'Local preview. No email or CRM submission is sent.' : 'Draft only. This form does not submit an enquiry or reserve a property.'}</p>
+          </fieldset>
         </form>}
       </div>
     </div>

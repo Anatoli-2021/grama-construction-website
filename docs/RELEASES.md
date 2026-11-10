@@ -2,7 +2,7 @@
 
 ## Current state
 
-The website is live at https://grama-construction-website-production.up.railway.app/. Last verified release before the private-presentation refinement: `6dda772`, deployed from `feature/investor-showcase-polish`. The next candidate is `feature/private-investor-presentation`; do not assume a pushed commit is live. See `TEAM-HANDOFF.md` for exact verified deployment evidence. Company domain/DNS remains unchanged. PR #1 and #6 are merged; PR #7 contains newer showcase work. Reconcile the older setup PR before merging it.
+The website is live at https://grama-construction-website-production.up.railway.app/. Nail concurrently deployed `a73c017` from `feature/multipage-website` (PR #9). It is now integrated into the `feature/private-investor-presentation` candidate; his route-specific pages, project cases, enquiry context and genuine 404 behavior are preserved. Do not assume a pushed commit is live. See `TEAM-HANDOFF.md` for exact verified deployment evidence. Company domain/DNS remains unchanged. PR #1 and #6 are merged; PR #7 contains earlier showcase work. Reconcile the PR stack before merging to stable main.
 
 The Development OS demonstration remains local and contains only blank templates. No OS production deployment, company data migration or live connector was made.
 

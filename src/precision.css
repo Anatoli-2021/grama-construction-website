@@ -3,6 +3,8 @@
 .experience{font-family:General Sans,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow:clip}
 .experience :is(h1,h2,h3,.display,.cinema__title){font-family:General Sans,Arial,sans-serif;font-weight:500;font-style:normal;letter-spacing:-.048em}
 .experience :is(h1,h2,h3,.display,.cinema__title) em{font-family:inherit;font-style:normal;font-weight:inherit;letter-spacing:inherit}
+.experience :is(.company-page,.projects-page,.project-case,.page-masthead) :is(h1,h2,h3){font-family:General Sans,Arial,sans-serif;font-weight:500;font-style:normal}
+.experience :is(.company-contact-phone>span:last-child,.projects-page-contact>p,.project-case-navigation strong){font-family:General Sans,Arial,sans-serif;font-weight:500;font-style:normal}
 .experience :is(.consultation-paths strong,.about-lead,.about-philosophy>p,.consultation-success>h4,.lot-number strong,.tiny-number,.enquiry-draft>h4){font-family:General Sans,Arial,sans-serif;font-style:normal;font-weight:500;letter-spacing:-.035em}
 .experience :is(.about-grama,.community,.development-process,.partnerships,.consultation){background-color:#f7f7f9}
 .experience .property-collection{background-color:#eeeeF1}

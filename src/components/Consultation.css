@@ -219,3 +219,6 @@
 .enquiry-draft dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
 .enquiry-draft .text-link { display: flex; width: fit-content; margin-top: 20px; min-height: 44px; font-size: 13px; }
 @media(max-width:600px) { .enquiry-draft dl > div { grid-template-columns: 70px minmax(0,1fr); gap: 12px; } }
+
+.consultation-panel .enquiry-fields { border:0; padding:0; margin:0; min-width:0; }
+.consultation-panel .enquiry-fields > .button { width:100%; }
