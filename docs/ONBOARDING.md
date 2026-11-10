@@ -59,4 +59,4 @@ Owner path for future invitations: repository **Settings → Collaborators → A
 
 GitHub rejected branch protection for this private repository under the current plan (403: Pro or public repository required). `main` is currently unprotected. Owner review and passing CI are documented conventions, not enforced merge gates. Keep the repository private. Tony may approve a plan/organization change later to enforce protection; no upgrade was purchased.
 
-CI has no deployment credentials. The website is running on Railway, but its settings currently report automatic deployment unavailable. Follow the standing authorization and explicit deployment verification in `RELEASES.md`; a push alone is not proof that the website updated.
+CI has no deployment credentials. Railway follows pushes to the branch recorded in `TEAM-HANDOFF.md`; the old commit pin has been removed. Run relevant local checks before pushing, then verify the actual Railway result as described in `RELEASES.md`. A push alone is not proof that the website updated.

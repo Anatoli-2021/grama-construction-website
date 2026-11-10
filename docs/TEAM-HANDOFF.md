@@ -4,8 +4,8 @@
 
 - Repository: https://github.com/Anatoli-2021/grama-construction-website (private).
 - Railway website: https://grama-construction-website-production.up.railway.app/.
-- Connected branch: `feature/investor-showcase-polish`. Running source: `e2dca4de464e663a9facc5b91aa29f1495fd4e00`, deployed by `axmatea`.
-- Active deployment: `1f2b9373-162f-429a-9fd0-b52af5ef3abb`. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
+- Connected branch: `feature/investor-showcase-polish`, following its latest commit without a commit pin.
+- Initial release verified before reconnecting the source: `e2dca4de464e663a9facc5b91aa29f1495fd4e00`, deployment `1f2b9373-162f-429a-9fd0-b52af5ef3abb`. Later releases are identified in Railway's deployment history. Root Dockerfile, port 8080, `/healthz`, one replica in `sfo`.
 - Anonymous checks: website, health and hero media HTTP 200; OS, `.data` and `.env` paths HTTP 404. Loaded website console contained no errors.
 - Preserve the team's newer investor showcase, family story, project portfolio and browser-only enquiry draft. Do not deploy the older setup branch over it.
 - Company domain/DNS is unchanged. Railway labels this environment `production`; the Railway address remains the current development/review website.
@@ -16,7 +16,9 @@ On November 10, Tony instructed: finish requested website changes, run relevant 
 
 This covers requested website work through deployment. It does not create a background job or authorize unrelated changes. Keep branches and PR review for stable `main`; never force-push shared history. Company-domain/DNS changes, new spending, access grants and private OS publication remain separate decisions.
 
-Railway currently displays **Auto deploy unavailable / Could not load branches** despite the connected GitHub source. Until the integration is repaired and a push-to-deploy test succeeds, explicitly deploy the intended commit through authenticated Railway controls, wait for success and verify the public result. Record the source SHA and deployment ID. A successful push alone does not prove deployment; report access failures honestly.
+The Railway connector is authenticated. Its source inspection revealed an explicit pin to `e2dca4d`, which prevented future pushes from deploying. The source was reconnected to the same repository/branch without `commitSha`; Railway confirmed that pushes now trigger builds and started a deployment. This documentation push also exercises that connection. Record the resulting source SHA and deployment ID, wait for success and verify the public site; a successful push alone still does not prove a successful release. Report any build/access failure honestly.
+
+Run relevant local checks before pushing to the connected branch: Railway may deploy while GitHub CI runs. Stable `main` keeps its PR review convention; server-enforced review and CI-before-deploy gates are not claimed.
 
 ## Team source and setup
 
@@ -36,7 +38,7 @@ The root Dockerfile serves only the website; OS source and private enquiry recor
 
 ## Remaining work
 
-- Repair and verify GitHub automatic deployment with the account owner; use explicit deployment verification meanwhile.
+- Keep branch-following source connected without a commit pin. Verify each automatic deployment and its commit; reconnecting with a pin intentionally suspends push deployments until removed.
 - Reconcile/review the PRs and eventually use `main` as the stable deployment branch, preserving the approved design.
 - `main` is unprotected under the current GitHub plan; issue #4 tracks enforced owner review.
 - The OS stays local with blank templates. Real dashboards, finances and pilot evidence remain private; issue #3 tracks authentication before hosting.

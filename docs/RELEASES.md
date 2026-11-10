@@ -16,7 +16,7 @@ The Development OS demonstration remains local and contains only blank templates
 6. Record the release SHA, build result, target, previous version and rollback route. Tony's November 10 standing instruction authorizes deployment of requested, checked website changes to the existing Railway address without another release confirmation. New company-domain targets, spending, access grants and OS publication are separate decisions.
 7. Deploy the approved commit to the approved environment. Verify HTML/media, mobile contact, links, anonymous access and no private artifacts; record deployment ID and SHA.
 
-CI checks the code; it does not itself deploy. Railway's source is connected, but the UI currently reports automatic deployment unavailable. Until a push-to-deploy test succeeds, explicitly deploy the intended commit and verify it after each requested website change. Do not assume GitHub push success means Railway success. Preserve PR review for stable `main`; this standing Railway approval does not authorize company DNS cutover.
+CI checks the code; Railway deploys pushes to `feature/investor-showcase-polish`. The old explicit commit pin was removed by reconnecting the same GitHub source without `commitSha`. Run relevant local checks before pushing: CI and Railway may run concurrently. Verify the exact resulting deployment and public website after each requested change. A green push alone does not prove a successful deployment. Preserve PR review for stable `main`; this standing Railway approval does not authorize company DNS cutover.
 
 ## Domain cutover plan — approval required
 
