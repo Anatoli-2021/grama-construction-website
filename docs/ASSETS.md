@@ -36,9 +36,9 @@ The user authorized restoring the original company's public photography, portfol
 | Runtime file | Official source | Caption limits |
 | --- | --- | --- |
 | tony-grama.webp | [Original homepage About image](https://cdn.prod.website-files.com/66117180961169ea1597a070/662ffb341622859d64c24fef_about%20us.jpg), published on the [Grama homepage](https://www.gramaconstruction.com/) | Anatoli (Tony) Grama, founder; identity and founder context supplied by the user. Original photograph shows him beside a branded Grama vehicle. Optimized to 1280 × 853, WebP. |
-| grama-realtor.webp | [Original realtor portrait](https://cdn.prod.website-files.com/66117180961169ea1597a070/66675008dd69d433fbd09b38_realtor.jpg), published in project enquiry sections including [Foster Avenue](https://www.gramaconstruction.com/projects/w-foster-ave-unit-1e-chicago-il-60640) and [Dexter Lane](https://www.gramaconstruction.com/projects/1847-dexter-des-plaines) | The source caption is “Exclusive Realtor of Grama Construction.” The source does not publish her name or family relationship. The website uses that role only; it does not identify her as Tony's wife. Optimized to 600 × 852, WebP. |
+| grama-realtor.webp | [Original realtor portrait](https://cdn.prod.website-files.com/66117180961169ea1597a070/66675008dd69d433fbd09b38_realtor.jpg), published in project enquiry sections including [Foster Avenue](https://www.gramaconstruction.com/projects/w-foster-ave-unit-1e-chicago-il-60640) and [Dexter Lane](https://www.gramaconstruction.com/projects/1847-dexter-des-plaines) | The source caption confirms “Exclusive Realtor of Grama Construction.” The user directly confirmed her first name is Alina and that she is Anatoli (Tony) Grama's wife. The website caption is “ALINA / REAL ESTATE”; no surname is assumed. Optimized to 600 × 852, WebP. |
 
-The source also has a [second crop of the same realtor](https://cdn.prod.website-files.com/66117180961169ea1597a070/6667514e9c4da112a88bd589_anothaone-min.jpg), which is not duplicated in runtime assets. A named spouse biography or further family claims require direct confirmation.
+The source also has a [second crop of the same realtor](https://cdn.prod.website-files.com/66117180961169ea1597a070/6667514e9c4da112a88bd589_anothaone-min.jpg), which is not duplicated in runtime assets. Alina's surname remains unconfirmed and is not needed for the approved caption. Further biography or family claims require direct confirmation.
 
 ### Complete official portfolio
 
@@ -52,7 +52,7 @@ The [official completed-project index](https://www.gramaconstruction.com/complet
 
 “Completed project” follows the official index category. It does not mean sold, currently available, or independently verified project scope. The [current-listings page](https://www.gramaconstruction.com/current-listings) showed no published entries during this pass, so the review website offers an enquiry path rather than invented active inventory. No prices, sales totals, revenue or investment returns were added.
 
-Do not reuse conflicting source specifications without resolution: Prospect Lane's narrative and structured bedroom/bathroom counts disagree; South Barrington and Sedgwick have conflicting floor areas. The research fetcher could not retrieve the Foster detail page from its cache; the archive uses only its official index title and link.
+Do not reuse conflicting source specifications without resolution: Prospect Lane's narrative and structured bedroom/bathroom counts disagree; South Barrington and Sedgwick have conflicting floor areas. The Foster detail page was subsequently verified directly in the live browser DOM, resolving the research fetcher's cache gap; the archive retains its official title and source link.
 
 ### Original partner-logo section
 
