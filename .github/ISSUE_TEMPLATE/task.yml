@@ -1,0 +1,24 @@
+name: Development task
+description: A focused website or Development OS change (no confidential data).
+title: "[Website / OS] "
+body:
+  - type: dropdown
+    id: product
+    attributes:
+      label: Product
+      options: [Website, Development OS, Shared tooling]
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Problem and desired result
+      description: Use synthetic examples. Keep project finances, personal data and credentials out of GitHub.
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Completion checks and approval needed
+    validations:
+      required: true
