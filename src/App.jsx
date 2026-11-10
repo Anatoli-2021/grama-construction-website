@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SitePlan, { lotData } from './components/SitePlan.jsx';
 import CinematicStory from './components/CinematicStory.jsx';
-import { AboutGrama, PropertyCollection, Capabilities, Partnerships } from './components/BrandSections.jsx';
+import { AboutGrama, PropertyCollection, Capabilities, Partnerships, TrustedPartners } from './components/BrandSections.jsx';
 import DevelopmentProcess from './components/DevelopmentProcess.jsx';
 import Consultation from './components/Consultation.jsx';
 import { isLocalPreview } from './preview-mode.js';
@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 const assets = '/assets/';
 const enquiryPreviewNote = isLocalPreview
   ? 'Local enquiries are saved only on this computer; no email or CRM delivery is connected.'
-  : 'Online enquiries are not collected; use the direct telephone link.';
+  : 'The enquiry form creates a draft in this browser only. Nothing is submitted; contact Grama by telephone.';
 
 function Arrow({ diagonal = false, reverse = false, ...props }) {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props} style={{ transform: reverse ? 'rotate(180deg)' : undefined }}><path d={diagonal ? 'M5 19 19 5M5 5h14v14' : 'M3 12h17m-6-6 6 6-6 6'} stroke="currentColor" strokeWidth="1.3" /></svg>;
@@ -113,7 +113,7 @@ function App() {
   function navigate() { setMenuOpen(false); }
   function openConsultation(options = {}) {
     setMenuOpen(false);
-    setConsultationRequest({ path: 'home', topic: 'Custom home', ...options });
+    setConsultationRequest({ path: 'development', topic: 'Development partnership', ...options });
     document.querySelector('#interest').scrollIntoView({ behavior: motion ? 'smooth' : 'instant' });
   }
   function enquireLot() {
@@ -128,11 +128,11 @@ function App() {
         <button type="button" className="menu-button" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
         <nav id="mobile-menu" className={menuOpen ? 'main-nav is-open' : 'main-nav'} aria-label="Main navigation">
           <a href="#about" onClick={navigate}>About Grama</a>
-          <a href="#properties" onClick={navigate}>Our properties</a>
+          <a href="#properties" onClick={navigate}>Projects & listings</a>
           <a href="#services" onClick={navigate}>Services & process</a>
           <a href="#partnerships" onClick={navigate}>Partnerships</a>
           <a href="#architecture" onClick={navigate}>Dexter Acres</a>
-          <a className="nav-cta" href="#interest" onClick={navigate}>Private consultation <Arrow diagonal /></a>
+          <a className="nav-cta" href="#interest" onClick={navigate}>Discuss a project <Arrow diagonal /></a>
         </nav>
         <div className="header-progress" />
       </header>
@@ -144,34 +144,35 @@ function App() {
             {filmAvailable && <video ref={video} className="hero-video" src={assets + 'residence-film.mp4'} poster={assets + 'residence.webp'} autoPlay={motion} muted loop playsInline preload="metadata" aria-label="Animated architectural concept of a Dexter Acres residence" />}
           </div>
           <div className="hero-shade" />
-          <div className="hero-location"><span className="tiny-dot" /> DES PLAINES, ILLINOIS <span className="location-line" /> A NEW CHAPTER</div>
+          <div className="hero-location"><span className="tiny-dot" /> CHICAGO & CHICAGOLAND <span className="location-line" /> GRAMA CONSTRUCTION</div>
           <div className="hero-copy">
-            <p className="eyebrow light">LUXURY CUSTOM HOMES & RESIDENTIAL DEVELOPMENT</p>
-            <h1 id="hero-title">Distinctive homes.<br /><em>One shared vision.</em></h1>
-            <p className="hero-positioning">Founder-led custom homes and complete residential development.<br />{' '}Chicago & the surrounding Illinois suburbs.</p>
-            <div className="hero-actions"><a className="text-link light-link" href="#interest" onClick={event => { event.preventDefault(); openConsultation(); }}>Build your custom home <Arrow /></a><a className="text-link light-link" href="#interest" onClick={event => { event.preventDefault(); openConsultation({ path: 'development', topic: 'Development partnership' }); }}>Develop with Grama <Arrow diagonal /></a></div>
+            <p className="eyebrow light">FOR INVESTORS, DEVELOPERS & PROPERTY OWNERS</p>
+            <h1 id="hero-title">Luxury custom homes.<br /><em>Residential development.</em></h1>
+            <p className="hero-positioning">A family business serving Chicago and Chicagoland.<br />{' '}For property owners, developers and investment partners.</p>
+            <div className="hero-actions"><a className="text-link light-link" href="#interest" onClick={event => { event.preventDefault(); openConsultation({ path: 'development', topic: 'Development partnership' }); }}>Discuss a partnership <Arrow /></a><a className="text-link light-link" href="#properties">View completed projects <Arrow diagonal /></a></div>
           </div>
           <div className="hero-bottom"><a href="#architecture" className="scroll-cue"><span />DEXTER ACRES / 14 PLANNED HOMES</a><span className="image-disclosure">Architectural concept{filmAvailable ? ' · AI-animated visualization' : ' rendering'}</span><button className="motion-button" onClick={() => setMotion(!motion)} aria-label={motion ? 'Pause motion' : 'Enable motion'}><MotionIcon paused={!motion} /><span>{motion ? 'PAUSE MOTION' : 'PLAY MOTION'}</span></button></div>
         </section>
 
         <AboutGrama onConsultation={() => openConsultation()} />
+        <PropertyCollection onView={setModal} motion={motion} />
 
         <CinematicStory motion={motion} />
 
-        <section className="community section-pad" id="community" data-chapter="04" aria-labelledby="community-title">
-          <div className="section-heading reveal"><p className="eyebrow">02 / DEXTER ACRES — THE COMMUNITY</p><div className="heading-row"><h2 className="display" id="community-title">Individually distinctive.<br /><em>Thoughtfully connected.</em></h2><p>A planned neighborhood of 14 homes at Webster and Dexter Lanes. A cohesive architectural vision, with room for your own point of view.</p></div></div>
-          <div className="community-layout"><div className="map-frame"><div className="map-topline"><span>EXPLORE THE PROPOSED LOTS</span><span>SELECT A LOT <Arrow diagonal /></span></div><SitePlan selectedLot={selectedLot} onSelectLot={setSelectedLot} /></div><aside className="lot-panel" aria-live="polite"><div className="lot-panel-top"><span className="eyebrow">YOUR PERSPECTIVE</span><span className="lot-status">PLANNED COMMUNITY</span></div><div className="lot-number"><span>LOT</span><strong>{String(selectedLot).padStart(2, '0')}</strong></div><h3>{lot.frontage === 'Internal street' ? 'Within the neighborhood.' : 'Along ' + lot.frontage + '.'}</h3><dl><div><dt>Drawing-reported area</dt><dd>{lot.area.toLocaleString('en-US')} <span>sq ft</span></dd></div><div><dt>Frontage</dt><dd>{lot.frontage}</dd></div></dl><button className="button button-dark" onClick={enquireLot}>Enquire about this lot <Arrow diagonal /></button><button className="text-link plan-link" onClick={() => setModal({ image: 'site-plan-original.png', title: 'Supplied subdivision drawing — C5', caption: 'The supplied drawing is the reference for lot numbering. Approval status and current engineering revisions have not been established.' })}>View the source drawing <span>+</span></button><p className="fineprint">Lot selection expresses interest only. Availability, dimensions, home designs and project details are subject to confirmation and the current approved documents.</p></aside></div>
-          <div className="community-notes"><div><span className="tiny-number">I.</span><h3>A cohesive vision</h3><p>A collection of new homes with a shared architectural language and individual character.</p></div><div><span className="tiny-number">II.</span><h3>Connected planning</h3><p>Street access, utilities, landscape and drainage are part of the coordinated development vision, subject to approved plans.</p></div><div><span className="tiny-number">III.</span><h3>A personal conversation</h3><p>Explore the possibilities for your home as the neighborhood plans and designs take shape.</p></div></div>
+        <section className="community section-pad" id="community" data-chapter="05" aria-labelledby="community-title">
+          <div className="section-heading reveal"><p className="eyebrow">DEXTER ACRES / PROPOSED DEVELOPMENT</p><div className="heading-row"><h2 className="display" id="community-title">Dexter Acres.<br /><em>The proposed neighborhood.</em></h2><p>Explore the proposed 14-home development at Webster and Dexter Lanes in Des Plaines. Select a lot to view the supplied plan’s details.</p></div></div>
+          <div className="community-layout"><div className="map-frame"><div className="map-topline"><span>EXPLORE THE PROPOSED LOTS</span><span>SELECT A LOT <Arrow diagonal /></span></div><SitePlan selectedLot={selectedLot} onSelectLot={setSelectedLot} /></div><aside className="lot-panel" aria-live="polite"><div className="lot-panel-top"><span className="eyebrow">LOT DETAILS</span><span className="lot-status">PLANNED COMMUNITY</span></div><div className="lot-number"><span>LOT</span><strong>{String(selectedLot).padStart(2, '0')}</strong></div><h3>{lot.frontage === 'Internal street' ? 'Within the neighborhood.' : 'Along ' + lot.frontage + '.'}</h3><dl><div><dt>Drawing-reported area</dt><dd>{lot.area.toLocaleString('en-US')} <span>sq ft</span></dd></div><div><dt>Frontage</dt><dd>{lot.frontage}</dd></div></dl><button className="button button-dark" onClick={enquireLot}>Enquire about this lot <Arrow diagonal /></button><button className="text-link plan-link" onClick={() => setModal({ image: 'site-plan-original.png', title: 'Supplied subdivision drawing — C5', caption: 'The supplied drawing is the reference for lot numbering. Approval status and current engineering revisions have not been established.' })}>View the source drawing <span>+</span></button><p className="fineprint">Lot selection expresses interest only. Availability, dimensions, home designs and project details are subject to confirmation and the current approved documents.</p></aside></div>
+          <div className="community-notes"><div><span className="tiny-number">I.</span><h3>14 planned homes</h3><p>A residential development concept at Webster and Dexter Lanes in Des Plaines.</p></div><div><span className="tiny-number">II.</span><h3>Site coordination</h3><p>Street access, utilities, landscape and drainage depend on the project’s engineering and approved plans.</p></div><div><span className="tiny-number">III.</span><h3>Development enquiries</h3><p>Speak with Grama about the project, a potential collaboration or your interest in a home.</p></div></div>
         </section>
 
-        <PropertyCollection onView={setModal} motion={motion} />
         <Capabilities />
         <DevelopmentProcess onConsultation={() => openConsultation()} />
         <Partnerships onExplore={() => openConsultation({ path: 'development', topic: 'Investment partnership' })} />
+        <TrustedPartners />
         <Consultation request={consultationRequest} motion={motion} />
       </main>
 
-      <footer className="site-footer"><div className="footer-navigation"><a href="#about">About Grama</a><a href="#properties">Our properties</a><a href="#services">Services</a><a href="#process">The process</a><a href="#partnerships">Development partnerships</a><a href="#interest">Private consultation</a></div><div className="footer-main"><a className="footer-brand" href="#home"><img src={assets + 'logo-light.png'} alt="Grama Construction" width="1633" height="387" /></a><p>Signature luxury homes.<br />Full-service residential development.</p><a className="footer-phone" href="tel:+17738499634">+1 773 849 9634 <Arrow diagonal /></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Grama Construction</span><span>Chicago & the surrounding Illinois suburbs</span><button onClick={() => setModal({ title: 'About this preview', text: 'Dexter Acres is an upcoming, owner-described 14-home development. House images are architectural renderings; the aerial is an AI-generated concept. The interactive map follows the supplied C5 drawing for lot organization and numbering. Project approval status, infrastructure specifications, dates, final designs, pricing and availability have not been confirmed. Completed-project photographs are separately identified and sourced from Grama Construction’s official website. This preview sends no marketing emails and does not reserve a property. ' + enquiryPreviewNote })}>Project & image notes</button></div></footer>
+      <footer className="site-footer"><div className="footer-navigation"><a href="#about">About Grama</a><a href="#properties">Projects & listings</a><a href="#services">Services</a><a href="#process">The process</a><a href="#partnerships">Development partnerships</a><a href="#interest">Private consultation</a></div><div className="footer-main"><a className="footer-brand" href="#home"><img src={assets + 'logo-light.png'} alt="Grama Construction" width="1633" height="387" /></a><p>A family construction business.<br />Chicago & Chicagoland residential development.</p><a className="footer-phone" href="tel:+17738499634">+1 773 849 9634 <Arrow diagonal /></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Grama Construction</span><span>Chicago & the surrounding Illinois suburbs</span><button onClick={() => setModal({ title: 'About this preview', text: 'Dexter Acres is an upcoming, owner-described 14-home development. House images are architectural renderings; the aerial is an AI-generated concept. The interactive map follows the supplied C5 drawing for lot organization and numbering. Project approval status, infrastructure specifications, dates, final designs, pricing and availability have not been confirmed. Completed-project photographs are separately identified and sourced from Grama Construction’s official website. This preview sends no marketing emails and does not reserve a property. ' + enquiryPreviewNote })}>Project & image notes</button></div></footer>
       <div className="chapter-index" aria-hidden="true"><span>{chapter}</span><i />08</div>
       {modal && <dialog ref={dialog} aria-labelledby="preview-dialog-title" className={modal.image ? 'media-dialog' : 'notes-dialog'} onCancel={() => setModal(null)} onClick={event => { if (event.target === event.currentTarget) setModal(null); }}><div className="dialog-sticky-toolbar"><button className="dialog-close" autoFocus aria-label="Close preview" onClick={() => setModal(null)}>×</button></div>{modal.image && <><img src={assets + (modal.images?.[modal.index || 0]?.image || modal.image)} alt={modal.images?.[modal.index || 0]?.alt || modal.title} />{modal.images?.length > 1 && <div className="dialog-gallery-controls"><button aria-label="Previous project photograph" onClick={() => setModal(current => ({ ...current, index: ((current.index || 0) + current.images.length - 1) % current.images.length }))}><Arrow reverse /></button><span>{String((modal.index || 0) + 1).padStart(2, '0')} / {String(modal.images.length).padStart(2, '0')}</span><button aria-label="Next project photograph" onClick={() => setModal(current => ({ ...current, index: ((current.index || 0) + 1) % current.images.length }))}><Arrow /></button></div>}</>}<div className="dialog-caption"><h2 id="preview-dialog-title">{modal.title}</h2><p>{modal.caption || modal.text}</p>{modal.source && <a href={modal.source} target="_blank" rel="noreferrer">Original Grama project page <Arrow diagonal /></a>}</div></dialog>}
     </div>
