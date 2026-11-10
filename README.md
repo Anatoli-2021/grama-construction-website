@@ -1,6 +1,6 @@
 # Grama Construction website
 
-Premium React/Vite/GSAP website for Grama Construction, featuring the planned Dexter Acres / Webster–Dexter neighborhood and residential portfolio. This private repository is the shared source of truth for website code. The live company website is separate; no production deployment is configured here.
+Premium React/Vite/GSAP website for Grama Construction, featuring the planned Dexter Acres / Webster–Dexter neighborhood and residential portfolio. This private repository is the shared source of truth for website code. The main company website is separate. Sites configuration supports a new review preview address.
 
 Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Owner: **Anatoli-2021**.
 
@@ -72,6 +72,8 @@ Visit the same localhost URL. Rebuild after source edits before restarting produ
 | package-lock.json | Reproducible npm dependency installation |
 
 ## Local data and excluded files
+
+On hosted preview addresses, the consultation section provides Grama's direct telephone link and clearly states that online enquiry delivery is not connected. Personal-information forms appear only on localhost/loopback, where the local API can save them. Publishing the static preview does not copy local enquiry records or connect email/CRM delivery.
 
 The consented enquiry forms append to **.data/interest.jsonl on the developer's computer**. There is no email/CRM delivery, reservation, allocation or production lead service. Client and development-partner enquiries have separate types; lots are accepted only for Dexter Acres home enquiries.
 
