@@ -6,5 +6,6 @@ import './refinement.css';
 import './editorial.css';
 import './multipage.css';
 import './precision.css';
+import './signature.css';
 
 createRoot(document.getElementById('root')).render(<App />);

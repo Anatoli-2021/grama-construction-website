@@ -6,7 +6,8 @@ import { AboutPage, PartnershipsPage, ContactPage } from './components/CompanyPa
 import { ProjectsPage, ProjectCase } from './components/ProjectPages.jsx';
 import { getRoute, notFoundRoute } from './site-routes.js';
 import { readEnquiryContext, enquiryHref } from './enquiry-context.js';
-import { AboutGrama, PropertyCollection, TrustedPartners } from './components/BrandSections.jsx';
+import { AboutGrama, TrustedPartners } from './components/BrandSections.jsx';
+import { SignatureHero, ProofBar, SignatureResidences } from './components/SignatureHome.jsx';
 import { isLocalPreview } from './preview-mode.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -39,9 +40,6 @@ function App({ initialPath } = {}) {
   const [chapter, setChapter] = useState('01');
 
   useEffect(() => {
-    if (isHome) fetch('/assets/residence-film.mp4', { method: 'HEAD' })
-      .then(response => setFilmAvailable(response.ok && (response.headers.get('content-type') || '').includes('video')))
-      .catch(() => {});
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = event => { if (event.matches) setMotion(false); };
     query.addEventListener('change', update);
@@ -91,8 +89,8 @@ function App({ initialPath } = {}) {
     const mm = gsap.matchMedia();
     mm.add('all', () => {
       if (isHome) {
-      gsap.fromTo('.hero-visual', { scale: 1.045 }, { scale: 1.14, yPercent: 7, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
-      gsap.to('.hero-copy', { y: 80, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero', start: '25% top', end: 'bottom top', scrub: .6 } });
+      gsap.to('.sig-hero__media', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.sig-hero', start: 'top top', end: 'bottom top', scrub: true } });
+      gsap.to('.sig-hero__inner', { y: 60, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.sig-hero', start: '35% top', end: 'bottom top', scrub: .6 } });
       }
       gsap.utils.toArray('.reveal').forEach(element => gsap.from(element, { y: 36, opacity: 0, duration: 1.1, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 92%', once: true } }));
     }, root);
@@ -150,23 +148,10 @@ function App({ initialPath } = {}) {
 
       <main id="main-content" tabIndex={-1}>
         {isHome && <>
-        <section className="hero" id="home" data-chapter="01" aria-labelledby="hero-title">
-          <div className="hero-visual">
-            <img className="hero-image" src={assets + 'residence.webp'} alt="Architectural concept of a gabled Dexter Acres residence, with light masonry and dark rooflines" width="1536" height="1024" fetchPriority="high" />
-            {filmAvailable && <video ref={video} className="hero-video" src={assets + 'residence-film.mp4'} poster={assets + 'residence.webp'} autoPlay={motion} muted loop playsInline preload="metadata" aria-label="Animated architectural concept of a Dexter Acres residence" />}
-          </div>
-          <div className="hero-shade" />
-          <div className="hero-location"><span className="tiny-dot" /> Chicago & Chicagoland <span className="location-line" /> Grama Construction</div>
-          <div className="hero-copy">
-            <p className="eyebrow light">For investors, developers & property owners</p>
-            <h1 id="hero-title">Luxury custom homes.<br /><em>Residential development.</em></h1>
-            <p className="hero-positioning">A family business serving Chicago and Chicagoland.<br />{' '}For property owners, developers and investment partners.</p>
-            <div className="hero-actions"><a className="text-link light-link" href="/partnerships">Discuss a partnership <Arrow /></a><a className="text-link light-link" href="/projects">View completed projects <Arrow diagonal /></a></div>
-          </div>
-          <div className="hero-bottom"><a href="#architecture" className="scroll-cue"><span />DEXTER ACRES / 14 PLANNED HOMES</a><span className="image-disclosure">Architectural concept{filmAvailable ? ' · AI-animated visualization' : ' rendering'}</span><button className="motion-button" onClick={() => setMotion(!motion)} aria-label={motion ? 'Pause motion' : 'Enable motion'}><MotionIcon paused={!motion} /><span>{motion ? 'PAUSE MOTION' : 'PLAY MOTION'}</span></button></div>
-        </section>
+        <SignatureHero motion={motion} onToggleMotion={() => setMotion(!motion)} />
+        <ProofBar />
         <AboutGrama onConsultation={() => openConsultation()} />
-        <PropertyCollection motion={motion} />
+        <SignatureResidences motion={motion} />
         <DexterExperience motion={motion} onView={setModal} onConsultation={openConsultation} />
         <TrustedPartners />
         <section className="page-invitation section-pad" data-chapter="08"><p className="eyebrow">WORK WITH GRAMA</p><h2 className="display">A site, a home<br /><em>or a development.</em></h2><p>Meet the team, review our work and tell us about your project.</p><div><a className="button button-dark" href="/partnerships">Development partnerships <Arrow diagonal /></a><a className="text-link" href="/contact">Contact Grama <Arrow diagonal /></a></div></section>

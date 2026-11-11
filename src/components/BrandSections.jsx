@@ -100,5 +100,5 @@ export function Partnerships({ onExplore }) {
 }
 
 export function TrustedPartners() {
-  return <section className="trusted-partners section-pad" id="trusted-partners" aria-labelledby="trusted-partners-title"><div className="trusted-partners-heading"><p className="eyebrow">OUR NETWORK</p><h2 id="trusted-partners-title">We are honored to be<br /><em>trusted partners for</em></h2></div><div className="trusted-partners-grid">{partners.map(([name, image]) => <div className="trusted-partner" key={image}><img src={'/assets/partner-' + image + '.png'} alt={name} width="440" height="180" loading="lazy" /></div>)}</div></section>;
+  return <section className="trusted-partners section-pad" id="trusted-partners" aria-labelledby="trusted-partners-title"><div className="trusted-partners-heading"><p className="eyebrow">MATERIALS &amp; SUPPLIERS</p><h2 id="trusted-partners-title">The brands<br /><em>we build with.</em></h2></div><div className="trusted-partners-grid">{partners.map(([name, image]) => <div className="trusted-partner" key={image}><img src={'/assets/partner-' + image + '.png'} alt={name} width="440" height="180" loading="lazy" /></div>)}</div></section>;
 }

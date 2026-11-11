@@ -1,11 +1,15 @@
 import http from 'node:http';
+import { gzipSync } from 'node:zlib';
+import { createHash } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
 import { resolve, sep, extname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createPresentationHandler } from './presentation-access.mjs';
 
 const dist = resolve(fileURLToPath(new URL('../dist/', import.meta.url)));
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.mp4': 'video/mp4' };
+const compressible = new Set(['.html', '.js', '.css', '.svg', '.json', '.xml', '.txt', '.ttf']);
+const gzipCache = new Map();
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.mp4': 'video/mp4', '.xml': 'application/xml; charset=utf-8', '.txt': 'text/plain; charset=utf-8' };
 const presentation = createPresentationHandler({ secureCookies: process.env.NODE_ENV === 'production' || process.argv.includes('--hosted') });
 export async function serveWebsiteRequest(req, res, { localApi = false } = {}) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -41,7 +45,19 @@ export async function serveWebsiteRequest(req, res, { localApi = false } = {}) {
       else if (!entry.isFile()) return notFound();
       let content = await readFile(path);
       if (!localApi && path.endsWith('.html')) content = Buffer.from(content.toString('utf8').replace('name="grama-runtime" content="local-api"', 'name="grama-runtime" content="static-preview"'));
-      res.writeHead(path === resolve(dist, '404.html') ? 404 : 200, { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600', 'Content-Length': content.length });
+      const headers = { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600' };
+      if (compressible.has(extname(path))) {
+        headers['Vary'] = 'Accept-Encoding';
+        if (/\bgzip\b/.test(req.headers['accept-encoding'] || '') && content.length > 1024) {
+          const key = createHash('sha256').update(content).digest('base64');
+          let packed = gzipCache.get(key);
+          if (!packed) { packed = gzipSync(content, { level: 9 }); if (gzipCache.size < 200) gzipCache.set(key, packed); }
+          content = packed;
+          headers['Content-Encoding'] = 'gzip';
+        }
+      }
+      headers['Content-Length'] = content.length;
+      res.writeHead(path === resolve(dist, '404.html') ? 404 : 200, headers);
       res.end(req.method === 'HEAD' ? undefined : content);
     } catch { return notFound(); }
 }
