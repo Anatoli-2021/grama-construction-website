@@ -4,11 +4,11 @@ Verified against official documentation November 10, 2026. Prices are USD before
 
 **Recommendation: use Railway Pro as the future unified runtime, with separate website and authenticated OS services. Keep the working Sites review preview during preparation.** This is an architectural recommendation, not authorization to publish the OS.
 
-The current website is a Vite static build with a separate native Node local server. The server binds to loopback and writes enquiry JSONL locally; that is not a durable production lead backend. The OS is currently HTML plus a local JSON export, not a database application. Railway accommodates a future persistent Node backend/Postgres without converting it to serverless functions. Starting with one platform reduces operational overhead; Vercel remains a strong optional frontend choice if the team values its frontend preview workflow enough to maintain two services.
+The public website is a Vite build served by a small Node host. The same host now has a separate, authenticated `/presentation` API; its private data and accounts come only from server runtime configuration. The local development enquiry server binds to loopback and writes enquiry JSONL locally; that is not a durable production lead backend. The OS is currently HTML plus a local JSON export, not a database application. Railway accommodates this Node host and a future persistent backend/Postgres without converting it to serverless functions. Starting with one platform reduces operational overhead.
 
 | Factor | Railway | Vercel |
 | --- | --- | --- |
-| Current website | Prepared static Node host serves only `dist`; Railway PORT and health check supported | Native Vite/static build fit; prepared `vercel.json` |
+| Current website | Node host serves `dist` and the individually authorized presentation API; Railway PORT and health check supported | Public Vite/static build fits; private presentation API requires an additional server implementation |
 | Future OS/API | Long-running Node service and separate database fit; application auth still required | Frontend/serverless fit; native HTTP listener and local JSONL persistence need adaptation |
 | GitHub / previews | Branch integration and temporary PR environments; contributors need associated workspace/project access | Git-connected deployment previews and production branch workflows |
 | Storage / auth | Private service networking can isolate DB traffic; add application identity, project authorization and backups | Use protected data services and application identity; deployment protection alone is insufficient |
@@ -25,7 +25,7 @@ No performance benchmark or SLA guarantee is claimed. Test actual images, video 
 flowchart LR
   Dev[Approved developer branch] --> PR[Pull request and CI]
   PR --> Review[Tony review]
-  Review --> Web[Public website service: dist only]
+  Review --> Web[Website service: public build and private presentation API]
   Review --> OS[Separate OS service: future authenticated app]
   OS --> Auth[Approved identity provider and project roles]
   OS --> DB[Private database and audit trail]
@@ -36,11 +36,11 @@ flowchart LR
 - The existing public preview is https://grama-dexter-acres-preview.anatoli-gram-1564.chatgpt.site. It serves a static website only. Hosted personal-data forms are disabled; Grama’s telephone CTA remains available.
 - OS has no hosted URL. Local blank-tool preview: http://localhost:5180. Do not create a public PR environment for real OS records.
 
-## Configuration prepared, not activated
+## Runtime configuration
 
-Railway website: select this repository, root `/`, and the root Dockerfile. The multi-stage image builds with `npm ci && npm run build` and starts only the static host on Railway’s PORT; `/healthz` checks readiness. The runtime image excludes OS source, private records and the local enquiry API. The existing Railway trial service is now the user-approved temporary website target. No subscription upgrade or company domain change is authorized. See `infra/website/README.md` for exact settings.
+Railway website: select this repository, root `/`, and the root Dockerfile. The multi-stage image builds with `npm ci && npm run build` and starts the website host on Railway’s PORT; `/healthz` checks readiness. The runtime image excludes OS source, private records and the local enquiry API. `/presentation` serves a generic login shell; its API denies access without private server configuration and an individual session. The existing Railway trial service is the user-approved temporary website target. No subscription upgrade or company domain change is authorized. See `infra/website/README.md` for exact settings.
 
-Vercel alternative: import the same private repository with Vite settings, root `/`, `npm run build`, output `dist`; `vercel.json` defines these settings. It does not include the OS. Do not enable company production promotion automatically before the release gate is enforceable.
+Vercel alternative: the prepared `vercel.json` covers the public static build only. It does not run the Node presentation API or include the OS. Do not promote it as a working private investor portal without implementing and testing equivalent server authorization.
 
 No database, identity provider, mail service or real credentials are configured. Do not deploy `server.mjs` as the public lead backend or use container-local JSONL as durable shared storage.
 

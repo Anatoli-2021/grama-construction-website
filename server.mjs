@@ -72,14 +72,8 @@ const server = http.createServer(async (request, response) => {
     }
     if (url.pathname.startsWith('/api/')) return json(response, 404, { error: 'Not found.' });
     if (!production) return vite.middlewares(request, response);
-    const base = resolve(root, 'dist');
-    let path = resolve(base, '.' + decodeURIComponent(url.pathname));
-    if (path !== base && !path.startsWith(base + sep)) return json(response, 403, { error: 'Forbidden.' });
-    try { if ((await stat(path)).isDirectory()) path = resolve(path, 'index.html'); }
-    catch { path = resolve(base, 'index.html'); }
-    const content = await readFile(path);
-    response.writeHead(200, { 'Content-Type': mime[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600' });
-    response.end(content);
+    const { serveWebsiteRequest } = await import('./scripts/serve-website.mjs');
+    return await serveWebsiteRequest(request, response, { localApi: true });
   } catch (error) {
     console.error('Request failed:', error.message);
     if (!response.headersSent) json(response, 500, { error: 'The local preview could not save your enquiry. Please try again.' });
