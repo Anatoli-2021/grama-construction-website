@@ -10,4 +10,7 @@
 !public/**
 !scripts/
 !scripts/serve-website.mjs
+!scripts/presentation-access.mjs
+!presentation/
+!presentation/**
 !scripts/build-pages.mjs

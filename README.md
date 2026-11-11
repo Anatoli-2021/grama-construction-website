@@ -24,7 +24,7 @@ The review website now has fourteen prerendered public pages. Normal document li
 | Development partnerships and process | `/partnerships` |
 | Contact and contextual enquiry draft | `/contact` |
 
-Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Unknown URLs return a real404. Runtime hosting still serves only `dist`, with source/private/OS/API paths unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Hosted review stays browser-only; enquiry delivery is not connected.
+Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Unknown URLs return a real404. Runtime hosting serves `dist` plus the individually authorized presentation API; repository files, the OS and local enquiry API remain unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Hosted review stays browser-only; enquiry delivery is not connected.
 
 ## Two products, separate boundaries
 
@@ -34,9 +34,11 @@ Project links come from `src/data/projects.js`; the public page registry is `src
 | Development OS | `apps/development-os/` | `npm run dev:os` → port 5180 | Loopback-only blank launch tool; no live data or authentication |
 | Shared utility | `packages/shared/` | Used by OS / Node tests | Project ID validation; no company records |
 
-Current website branch: `feature/multipage-website` / PR9. Earlier showcase work is in PR7; review the stack before merging to stable main. The public preview and completed checks are recorded in the PR.
+Current integration candidate: `feature/private-investor-presentation`, including `feature/multipage-website` / PR9 and earlier showcase work in PR7. Review the stack before merging to stable main. The public preview and completed checks are recorded in the candidate PR and team handoff.
 
 Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
+
+The [ordered implementation queue](docs/IMPLEMENTATION-QUEUE.md) records all current requests. The [investor content brief](docs/INVESTOR-CONTENT-BRIEF.md) supplies portable context for Nail's agent. `/presentation` is a separate login shell with server-enforced individual deck access; actual figures and account records stay outside Git and the static build. See [private presentation setup](docs/INVESTOR-PRESENTATION.md). A local private review runs with `npm run dev:presentation` at port 5190 after building and supplying the approved local data. Hosted access remains closed until actual recipients are approved and provisioned.
 
 ## Start on another computer
 

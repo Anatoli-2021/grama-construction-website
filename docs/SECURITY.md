@@ -2,12 +2,14 @@
 
 ## Current implemented boundary
 
-- Repository is private. Only approved collaborator access is added; `axmatea` has verified write permission.
+- Repository is currently public, verified November 10. Keep all confidential business/investor records and credentials outside Git. `axmatea` has approved write permission.
 - Git excludes local enquiry data, populated exports, private-data/backups folders, environment files, credentials, workbooks and database dumps. `.env.example` contains ports only.
 - Shared OS specification is blank; actual dashboard, project finances, private source URLs and pilot evidence are excluded.
 - OS server binds only to `127.0.0.1`, allowlists exact routes, rejects unexpected Host headers and writes, and sets no-store / frame / outbound-connection restrictions.
-- Website artifact contains only `dist`. Automated checks look for private paths and OS specification leakage. Railway’s prepared website host also rejects repository/API paths.
+- Website build contains only generic public assets, including the presentation login shell and renderer. Automated checks look for private paths and OS specification leakage. The Railway host rejects repository/local API paths; its separate presentation API requires an individual server-validated session.
 - GitHub CI uses pinned official action commits, read-only permissions and no application/deployment secrets. PR checks do not provision records or send messages.
+
+The private investor presentation has its own authorization middleware. Its static HTML/JavaScript contain only a login shell and generic renderer. Private deck data comes from server configuration after individual login; account-to-deck assignment, expiry/revocation, secure production cookies, origin checks and request/guess limits apply. Empty configuration denies access. This is separate from the unhosted Development OS; neither user accounts nor private business records are copied from the OS automatically. See `INVESTOR-PRESENTATION.md` for the current small-deployment scope and provisioning limits.
 
 Gitignore and pattern checks reduce accidents; they do not certify the entire history is free of secrets. Review every staged diff and asset before pushing. If a credential is exposed, revoke it first, notify Tony and repair history deliberately; deleting the latest file is insufficient.
 

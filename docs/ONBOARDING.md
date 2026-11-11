@@ -1,6 +1,6 @@
 # Developer onboarding and collaboration
 
-Repository: https://github.com/Anatoli-2021/grama-construction-website (private).
+Repository: https://github.com/Anatoli-2021/grama-construction-website (currently public; approved accounts are required for write access).
 Owner/release approver: Tony, GitHub `Anatoli-2021`.
 Approved developer: Nail, verified GitHub `axmatea` (display name AI); write permission verified November 10, 2026.
 

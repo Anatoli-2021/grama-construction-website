@@ -73,7 +73,7 @@ const server = http.createServer(async (request, response) => {
     if (url.pathname.startsWith('/api/')) return json(response, 404, { error: 'Not found.' });
     if (!production) return vite.middlewares(request, response);
     const { serveWebsiteRequest } = await import('./scripts/serve-website.mjs');
-    return await serveWebsiteRequest(request, response);
+    return await serveWebsiteRequest(request, response, { localApi: true });
   } catch (error) {
     console.error('Request failed:', error.message);
     if (!response.headersSent) json(response, 500, { error: 'The local preview could not save your enquiry. Please try again.' });

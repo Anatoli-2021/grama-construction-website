@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const chapters = [
   {
     label: 'The residence',
-    eyebrow: '01 / RESIDENCE CONCEPT',
+    eyebrow: 'Residence concept',
     first: 'A proposed',
     second: 'residence.',
     body: 'Concept design for a Dexter Acres home: gabled rooflines, light masonry and a covered entrance.',
@@ -18,7 +18,7 @@ const chapters = [
   },
   {
     label: 'The detail',
-    eyebrow: '02 / ARCHITECTURAL DETAIL',
+    eyebrow: 'Architectural detail',
     first: 'Materials &',
     second: 'detail.',
     body: 'A closer view of the proposed masonry, windows and rooflines. Final selections depend on the project’s design development.',
@@ -28,7 +28,7 @@ const chapters = [
   },
   {
     label: 'The neighborhood',
-    eyebrow: '03 / INTRODUCING DEXTER ACRES',
+    eyebrow: 'The neighborhood',
     first: '14 planned homes.',
     second: 'Des Plaines.',
     body: 'The proposed neighborhood at Webster and Dexter Lanes. Explore all 14 lots in the plan below.',
@@ -47,8 +47,7 @@ const smooth = (amount) => {
 
 function supportsSequence(motion) {
   return typeof window !== 'undefined'
-    && motion
-    && window.matchMedia('(min-width: 900px)').matches;
+    && motion;
 }
 
 function cover(context, image, width, height, zoom = 1, focusX = 0.5, focusY = 0.5) {
@@ -65,18 +64,13 @@ export default function CinematicStory({ motion = true }) {
   const canvasRef = useRef(null);
   const panelRefs = useRef([]);
   const triggerRef = useRef(null);
+  const jumpRef = useRef(null);
   const phaseRef = useRef(0);
   const [enhanced, setEnhanced] = useState(() => supportsSequence(motion));
   const [phase, setPhase] = useState(0);
 
   useLayoutEffect(() => {
-    const viewport = window.matchMedia('(min-width: 900px)');
-    const update = () => setEnhanced(motion && viewport.matches);
-    update();
-    viewport.addEventListener('change', update);
-    return () => {
-      viewport.removeEventListener('change', update);
-    };
+    setEnhanced(supportsSequence(motion));
   }, [motion]);
 
   useLayoutEffect(() => {
@@ -128,11 +122,13 @@ export default function CinematicStory({ motion = true }) {
       if (images.aerial && transition > 0) {
         // The ambient layer fills the stage; the sharp main image always uses
         // contain fitting, preserving every home once the neighborhood arrives.
-        context.save();
-        context.globalAlpha = transition;
-        context.filter = 'blur(22px) brightness(.45) saturate(.72)';
-        cover(context, images.aerial, width, height, 1.16);
-        context.restore();
+        if (width >= 900) {
+          context.save();
+          context.globalAlpha = transition;
+          context.filter = 'blur(22px) brightness(.35) saturate(.55)';
+          cover(context, images.aerial, width, height, 1.16);
+          context.restore();
+        }
 
         const mainTop = Math.max(240, height * 0.285);
         const mainHeight = Math.max(100, height - mainTop - Math.max(105, height * 0.12));
@@ -191,7 +187,7 @@ export default function CinematicStory({ motion = true }) {
       const bounds = stage.getBoundingClientRect();
       width = Math.max(1, bounds.width);
       height = Math.max(1, bounds.height);
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      dpr = Math.min(window.devicePixelRatio || 1, width < 900 ? 1.25 : 1.5);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       requestDraw();
@@ -274,6 +270,10 @@ export default function CinematicStory({ motion = true }) {
       },
     });
     triggerRef.current = tween.scrollTrigger;
+    jumpRef.current = progress => {
+      playhead.progress = progress;
+      requestDraw();
+    };
 
     return () => {
       alive = false;
@@ -283,6 +283,7 @@ export default function CinematicStory({ motion = true }) {
       tween.scrollTrigger?.kill();
       tween.kill();
       triggerRef.current = null;
+      jumpRef.current = null;
       for (const entry of [...pending]) entry.finish(null);
     };
   }, [enhanced]);
@@ -307,12 +308,16 @@ export default function CinematicStory({ motion = true }) {
   function goToChapter(index) {
     const trigger = triggerRef.current;
     if (enhanced && trigger) {
+      // Chapter navigation may follow a responsive resize. Re-measure before
+      // using cached scroll bounds, then settle the scrub on the chosen scene.
+      trigger.refresh();
       window.scrollTo({
         top: trigger.start + (trigger.end - trigger.start) * chapters[index].target,
         behavior: 'instant',
       });
       trigger.update();
       trigger.getTween()?.progress(1);
+      jumpRef.current?.(chapters[index].target);
     } else {
       panelRefs.current[index]?.scrollIntoView({ behavior: 'instant', block: 'start' });
     }
@@ -350,7 +355,6 @@ export default function CinematicStory({ motion = true }) {
         <div className="cinema__stage" ref={stageRef}>
           <canvas className="cinema__canvas" ref={canvasRef} aria-hidden="true" />
           <div className="cinema__shade" aria-hidden="true" />
-          <div className="cinema__topline" aria-hidden="true"><span>THE ARCHITECTURAL VISION</span><span>DEXTER ACRES / GRAMA</span></div>
           <div className="cinema__chapters">
             {chapters.map((chapter, index) => (
               <article key={chapter.label} className={`cinema__copy cinema__copy--${index}${phase === index ? ' cinema__copy--active' : ''}`}>

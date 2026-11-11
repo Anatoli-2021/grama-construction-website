@@ -9,6 +9,7 @@
     "preview": "node server.mjs --production",
     "verify": "node scripts/verify.mjs",
     "dev:os": "node apps/development-os/server.mjs",
+    "dev:presentation": "node scripts/serve-presentation-review.mjs",
     "test": "node --test apps/development-os/test/*.test.mjs scripts/test/*.test.mjs",
     "start:web": "node scripts/serve-website.mjs --hosted",
     "check:repository": "node scripts/check-repository.mjs",
