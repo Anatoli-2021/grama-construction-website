@@ -9,6 +9,7 @@ New messages add requirements to this queue. They do not replace unfinished work
 - Done: Nail's concurrent multipage release `a73c017` on PR #9 is integrated into the private-presentation candidate. Its new pages, project cases and direct-route behavior are preserved and passed combined checks.
 - Done: authenticated Railway connector, removed the explicit source commit pin and deployed documentation commit `6dda772` successfully.
 - Branch repair: the November 11 environment-scoped staged change removed only the temporary pin while retaining `feature/private-investor-presentation`. Railway successfully deployed `dcc95a4` as `e713d762-3ff5-43bf-9fd5-62c4a21280ef`; application code remains the checked `bc8e81b`. Actual push-trigger evidence is recorded in PR #10. Company DNS is unchanged.
+- Automatic deployment prerequisite: test push `4db877f` passed CI but did not deploy. Railway App is absent from the owner's GitHub installations. Its installation is prepared for this repository only; explicit approval of the new permissions is pending before the final Install & Authorize action. Existing OAuth reconnection did not resolve the missing App. No access expansion has occurred.
 - Boundary: the repository is currently public, verified through GitHub. Keep confidential material outside Git and the public build regardless of visibility.
 
 ## 2. Research for investor presentation

@@ -22,6 +22,8 @@ The Railway connector is authenticated. On November 10, a live source replacemen
 
 For later source changes, inspect the environment's staged diff and effective source before deploying. Avoid a broad live reconnect that silently drops the branch. Never assume a generic latest-commit command selects the intended branch; confirm its source first. Verify each pushed commit against the deployment metadata and CI; the latest push-test result is recorded in PR #10.
 
+Push test `4db877f` passed CI but created no Railway deployment. There are no watch-path exclusions in the service configuration; the dashboard reports "Auto deploy unavailable" and cannot load branches. The connected account is `Anatoli-2021`; its existing OAuth connection was refreshed, but the account's Installed GitHub Apps list does not contain Railway App. Installation is prepared for this repository only and awaits Tony's explicit approval of the new App permissions. No installation or expanded access has been granted. After approval, finish the prepared installation, enable/verify autodeploy and test another real push. Do not equate the authenticated Codex Railway connector with the separate GitHub App installation.
+
 Run relevant local checks before pushing to the connected branch: Railway may deploy while GitHub CI runs. Stable `main` keeps its PR review convention; server-enforced review and CI-before-deploy gates are not claimed.
 
 ## Team source and setup
@@ -52,11 +54,11 @@ The integrated release passed build, 91 tests (including all fourteen prerendere
 
 Final live review found pale emphasis/caption text on the light motion-off detail panel. The deployed follow-up correction restores dark, readable text; browser inspection, rebuild, privacy checks and CI passed. The branch configuration is now repaired; actual push-trigger results are recorded separately from configuration changes in PR #10.
 
-Pending owner inputs: actual investor names/emails for recipient-specific access; open the approved notes in the Wispr Flow app with the owning/invited account to expose their transcripts. Tony approved owner-account sign-in and secure Google sign-in succeeded, but both shared pages still disable Transcript and no Wispr app window was available. Both summaries were read; full transcripts remain unread. No real investor invitations or hosted financial data have been issued.
+Pending owner inputs: approve the prepared repository-only Railway GitHub App installation; actual investor names/emails for recipient-specific access; open the approved notes in the Wispr Flow app with the owning/invited account to expose their transcripts. Tony approved Wispr owner-account sign-in and secure Google sign-in succeeded, but both shared pages still disable Transcript and no Wispr app window was available. Both summaries were read; full transcripts remain unread. No real investor invitations or hosted financial data have been issued.
 
 ## Remaining work
 
-- Keep the verified feature branch selected and check deployment metadata after every push. If a push creates no deployment, inspect GitHub App access/webhook delivery with the platform owner; do not fall back to an ambiguous default branch. No tokens belong in chat, and company DNS is unrelated to this check.
+- Finish the prepared Railway GitHub App installation only after Tony approves the exact new access. Keep the verified feature branch selected, test an actual push and compare deployment SHA/CI. Until then, use an explicitly checked manual release; do not assume automatic deployment works. No tokens belong in chat, and company DNS is unrelated to this check.
 - Reconcile/review the PRs and eventually use `main` as the stable deployment branch, preserving the approved design.
 - No enforced `main` protection is claimed; issue #4 tracks owner review. The old private-repository plan restriction should be reassessed now that the repository is public.
 - The OS stays local with blank templates. Real dashboards, finances and pilot evidence remain private; issue #3 tracks authentication before hosting.

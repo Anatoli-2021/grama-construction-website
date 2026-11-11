@@ -18,6 +18,8 @@ The Development OS demonstration remains local and contains only blank templates
 
 CI checks the code. An environment-scoped staged source repair retained the feature branch and removed only the temporary commit pin. For subsequent pushes, compare the actual Railway deployment SHA with the intended source and GitHub CI; PR #10 records the push-test evidence. Source configuration alone does not prove webhook delivery. Prefer a reviewed environment-scoped diff over replacing the live source, which previously dropped the branch. Preserve PR review for stable `main`; this standing Railway approval does not authorize company DNS cutover. Private investor content must never enter the public static build.
 
+The first post-repair push (`4db877f`) passed CI but did not deploy. Railway App is missing from the owner's GitHub installations; repository-only installation is prepared and pending explicit permission approval. The Codex Railway connector can deploy independently of that App, so connector authentication alone does not enable push deployment. Complete the approved App installation and verify another push before describing autodeploy as working. Official requirements: https://docs.railway.com/deployments/github-autodeploys.
+
 ## Domain cutover plan — approval required
 
 Inventory current registrar/DNS, hosting and mail records read-only. Save a DNS export and prior target. Verify the chosen platform’s exact hostname/certificate instructions on its temporary address. Present Tony the precise DNS record changes, website release SHA, test result and rollback target. Change only approved web records; preserve email records. Verify TLS, www/apex routing and contact flow after cutover. No domain records have been edited in this task.
