@@ -2,7 +2,7 @@
 
 ## Current state
 
-The website is live at https://grama-construction-website-production.up.railway.app/. Application release `bc8e81b` from `feature/private-investor-presentation` is verified running as deployment `3d5b57ed-6b7b-4473-a859-2a539d76bde3`; CI passed. It is temporarily pinned because Railway's unpinned connection lost the feature branch. Nail's multipage release `a73c017` (PR #9), route-specific pages, project cases, enquiry context and genuine 404 behavior are preserved. See `TEAM-HANDOFF.md` and PR #10 for current evidence. Company domain/DNS remains unchanged. Reconcile the PR stack before merging to stable main.
+The website is live at https://grama-construction-website-production.up.railway.app/. The November 11 branch repair deployed `dcc95a4` from `feature/private-investor-presentation` as deployment `e713d762-3ff5-43bf-9fd5-62c4a21280ef`; CI passed. The source now retains the feature branch without a pin. Application code remains the checked `bc8e81b` implementation, including Nail's multipage work. See `TEAM-HANDOFF.md` and PR #10 for current deployment and push-test evidence. Company domain/DNS remains unchanged. Reconcile the PR stack before merging to stable main.
 
 The Development OS demonstration remains local and contains only blank templates. No OS production deployment, company data migration or live connector was made.
 
@@ -16,7 +16,7 @@ The Development OS demonstration remains local and contains only blank templates
 6. Record the release SHA, build result, target, previous version and rollback route. Tony's November 10 standing instruction authorizes deployment of requested, checked website changes to the existing Railway address without another release confirmation. New company-domain targets, spending, access grants and OS publication are separate decisions.
 7. Deploy the approved commit to the approved environment. Verify HTML/media, mobile contact, links, anonymous access and no private artifacts; record deployment ID and SHA.
 
-CI checks the code. Automatic deployment remains unresolved: the unpinned connector did not retain the feature branch, and the dashboard's generic latest-commit command selected older `main`. The verified current release therefore uses an explicit commit pin. Keep it until the platform owner repairs and verifies the correct GitHub/branch connection; do not retry the generic latest command against an ambiguous source. Run checks, deploy the exact intended commit through the authenticated control and verify its actual SHA and public result. Preserve PR review for stable `main`; this standing Railway approval does not authorize company DNS cutover. Private investor content must never enter the public static build.
+CI checks the code. An environment-scoped staged source repair retained the feature branch and removed only the temporary commit pin. For subsequent pushes, compare the actual Railway deployment SHA with the intended source and GitHub CI; PR #10 records the push-test evidence. Source configuration alone does not prove webhook delivery. Prefer a reviewed environment-scoped diff over replacing the live source, which previously dropped the branch. Preserve PR review for stable `main`; this standing Railway approval does not authorize company DNS cutover. Private investor content must never enter the public static build.
 
 ## Domain cutover plan — approval required
 
