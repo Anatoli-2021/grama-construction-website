@@ -10,6 +10,7 @@
 !public/**
 !scripts/
 !scripts/serve-website.mjs
+!scripts/contact-delivery.mjs
 !scripts/presentation-access.mjs
 !presentation/
 !presentation/**

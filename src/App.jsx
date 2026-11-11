@@ -14,7 +14,7 @@ gsap.registerPlugin(ScrollTrigger);
 const assets = '/assets/';
 const enquiryPreviewNote = isLocalPreview
   ? 'Local enquiries are saved only on this computer; no email or CRM delivery is connected.'
-  : 'The enquiry form creates a draft in this browser only. Nothing is submitted; contact Grama by telephone.';
+  : 'The Contact page shows whether online submission is available. Submitted enquiries are sent through Grama’s configured email service. Browser-only drafts are not sent.';
 
 function Arrow({ diagonal = false, reverse = false, ...props }) {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props} style={{ transform: reverse ? 'rotate(180deg)' : undefined }}><path d={diagonal ? 'M5 19 19 5M5 5h14v14' : 'M3 12h17m-6-6 6 6-6 6'} stroke="currentColor" strokeWidth="1.3" /></svg>;

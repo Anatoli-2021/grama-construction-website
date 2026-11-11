@@ -16,6 +16,7 @@ ENV PORT=8080
 WORKDIR /app
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --chown=node:node scripts/serve-website.mjs ./scripts/serve-website.mjs
+COPY --chown=node:node scripts/contact-delivery.mjs ./scripts/contact-delivery.mjs
 COPY --chown=node:node scripts/presentation-access.mjs ./scripts/presentation-access.mjs
 USER node
 EXPOSE 8080
