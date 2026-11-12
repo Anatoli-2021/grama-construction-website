@@ -26,3 +26,8 @@ coverage/
 *.xlsx
 *.csv
 *.jsonl
+CLAUDE.local.md
+.claude/settings.local.json
+.mcp.local.json
+playwright/.auth/
+*.har

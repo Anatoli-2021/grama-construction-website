@@ -40,7 +40,7 @@ flowchart LR
 
 Railway website: select this repository, root `/`, and the root Dockerfile. The multi-stage image builds with `npm ci && npm run build` and starts only the static host on Railway’s PORT; `/healthz` checks readiness. The runtime image excludes OS source, private records and the local enquiry API. The existing Railway trial service is now the user-approved temporary website target. No subscription upgrade or company domain change is authorized. See `infra/website/README.md` for exact settings.
 
-Vercel alternative: import the same private repository with Vite settings, root `/`, `npm run build`, output `dist`; `vercel.json` defines these settings. It does not include the OS. Do not enable company production promotion automatically before the release gate is enforceable.
+Vercel alternative: import the same repository with Vite settings, root /, npm run build, output dist; vercel.json defines these settings. GitHub currently reports public visibility: keep company records out of Git. This configuration does not include the OS. Do not enable company production promotion automatically before the release gate is enforceable.
 
 No database, identity provider, mail service or real credentials are configured. Do not deploy `server.mjs` as the public lead backend or use container-local JSONL as durable shared storage.
 

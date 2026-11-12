@@ -1,6 +1,8 @@
 # Grama Construction development workspace
 
-One private repository for the existing React/Vite/GSAP website and the reusable Development OS launch tool. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
+One shared repository for the existing React/Vite/GSAP website and reusable Development OS tools. GitHub reported this repository as public on November 12, 2026; only code, blank templates and synthetic examples belong here. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
+
+Start with [AGENTS.md](AGENTS.md), the [master plan](docs/OS_MASTER_PLAN.md), [current status](docs/OS_STATUS.md) and [team handoff](docs/TEAM_HANDOFF.md). Existing product paths are retained; no second platform or repository is needed. Detailed technical evidence remains linked from those central documents.
 
 Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Owner: **Anatoli-2021**.
 
@@ -14,7 +16,7 @@ Public review preview: [Grama / Dexter Acres](https://grama-dexter-acres-preview
 | Development OS | `apps/development-os/` | `npm run dev:os` → port 5180 | Loopback-only blank launch tool; no live data or authentication |
 | Shared utility | `packages/shared/` | Used by OS / Node tests | Project ID validation; no company records |
 
-For the prepared OS work, check out `feature/unified-development` until its PR is approved and merged. For the existing web preview work, see PR #1. `main` remains the stable starting version.
+The blank OS launch tool is present on main. Older feature branches and stacked PRs remain separate work; inspect their current state before integration. Keep main stable and start each task from an agreed reviewed base.
 
 Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
 
@@ -47,7 +49,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for exact invitation, branch, PR, conflic
 
 Run the full shared checks with `npm run check`: website build, OS draft and access-boundary tests, then repository/artifact data-policy checks. The build runs first because the static host tests exercise the actual output. GitHub Actions runs these checks on pull requests and on `main`, plus the website API/media checks. The workflow has read-only repository permission and contains no deployment secrets.
 
-The OS has no dependencies beyond Node and runs independently of the website. Use synthetic input during shared development. Its JSON exports remain Draft and do not provision or update operational records.
+The existing loopback OS tool needs only Node and runs independently of the website. The separate [synthetic hosted-auth candidate](apps/development-os/hosted/README.md) uses the pinned OIDC dependency installed by npm ci; it is not a deployed Dashboard. Use synthetic input during shared development. JSON exports remain Draft and do not provision or update operational records.
 
 Build without changing the source website:
 

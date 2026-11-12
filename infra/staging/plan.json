@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "status": "OS_CANDIDATE_NOT_DEPLOYED",
+  "existingProject": "earnest-wisdom",
+  "productionChangesAllowed": false,
+  "automaticPrEnvironments": false,
+  "environments": [
+    {
+      "name": "staging-website",
+      "created": true,
+      "copiedFromProduction": false,
+      "dataMode": "synthetic-only requirement; runtime data not audited here",
+      "runtimeActive": true,
+      "services": [
+        {
+          "name": "humorous-delight",
+          "state": "SUCCESS",
+          "sourceBranch": "main",
+          "owner": "website coordination",
+          "activatedByThisContinuation": false
+        }
+      ],
+      "proposedRuntime": {
+        "sourcePath": ".",
+        "dockerfile": "Dockerfile",
+        "healthcheck": "/healthz",
+        "reviewedCommit": null
+      },
+      "publicExposureApproved": "Owned by separate website approval scope; not granted by this plan"
+    },
+    {
+      "name": "staging-os",
+      "created": true,
+      "copiedFromProduction": false,
+      "dataMode": "synthetic-only",
+      "runtimeActive": false,
+      "services": [
+        {
+          "name": "exquisite-comfort",
+          "state": "STAGED_CREATE_NOT_APPLIED",
+          "sourceBranch": "main",
+          "deployment": null,
+          "owner": "unknown; reconcile before mutation",
+          "createdByThisContinuation": false
+        }
+      ],
+      "proposedRuntime": {
+        "sourcePath": ".",
+        "dockerfile": "infra/staging/os.Dockerfile",
+        "start": "node apps/development-os/hosted/server.mjs",
+        "healthcheck": "/healthz",
+        "reviewedCommit": null,
+        "uiIntegrated": false
+      },
+      "publicExposureApproved": false,
+      "blockers": [
+        "Existing staged service owner/source reconciliation",
+        "Claude mandatory-contract-gate and predecessor export fixes; protected UI integration",
+        "Exact-head review and container build/runtime acceptance",
+        "Private OAuth client/callback/owner/project configuration",
+        "Approved synthetic resource activation/spend",
+        "Real provider access tests and Railway rollback"
+      ],
+      "identity": {
+        "provider": "Google OIDC",
+        "role": "owner only",
+        "decision": "approved",
+        "actualAccountStoredHere": false,
+        "oauthConfigured": false,
+        "liveSignInTested": false
+      }
+    }
+  ],
+  "productionDataInStaging": "not audited across other contributors' services; forbidden for OS candidate",
+  "secretsStoredHere": false,
+  "liveSmartsheetWrites": false,
+  "resourceActivationApproval": null,
+  "observedOn": "2026-11-12"
+}

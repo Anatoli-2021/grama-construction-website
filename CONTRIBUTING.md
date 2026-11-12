@@ -1,6 +1,6 @@
 # Contributing
 
-Private repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). **Anatoli-2021 is the owner.** Keep `main` stable; propose changes through `feature/*` branches and reviewed pull requests. Public hosting and live-domain changes require separate owner authorization.
+Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). **Public as verified November 12, 2026; Anatoli-2021 is the owner.** Commit code and synthetic examples only. Keep main stable; propose changes through feature branches and reviewed pull requests. Read AGENTS.md and docs/INFRASTRUCTURE-READINESS.md first. Public hosting and live-domain changes require separate owner authorization.
 
 ## Owner: invite approved collaborators
 
@@ -12,7 +12,7 @@ Invite only exact GitHub accounts approved by the owner. For Nail or any additio
 4. Search the approved username, verify the matching profile, select it, and click **Add NAME to REPOSITORY**.
 5. Each person signs in to their own invited account and accepts the repository invitation from GitHub's invitation email. Access begins after acceptance. Check the Collaborators list to confirm acceptance; an unanswered invitation is not active access.[^invite]
 
-A personal repository has two access levels: owner and collaborator. In this **private personal repository**, collaborators receive read/write access; there is no read-only collaborator option or organization-style role picker. Collaborators can push changes and merge PRs, so our review convention matters. Only the owner manages invitations and repository ownership/settings reserved to the owner.[^permissions]
+A personal repository has owner and collaborator access; approved collaborators receive read/write access. Public readers can see committed content without an invitation. Only the owner manages invitations and reserved settings. Apply review gates before merging; never rely on repository visibility to protect application data.[^permissions]
 
 ## Contributor: authenticate and run locally
 

@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-12T22:24:45.049Z",
+  "source": {
+    "branch": "claude/design-studio-prototype",
+    "commit": "8b55c4f84c5898d5cc2cb8645338f9c682961938",
+    "gitBlobSHA": "871633a946ecd7bf372cb611df9138c5841348b7",
+    "localSHA256": "3f8477d3a1a62132b6ae4286620416140a1f47ffb445f2454a5fbd940b357f53",
+    "assets": [
+      {
+        "path": "studio-logic.js",
+        "gitBlobSHA": "616ea3bc562498fee26b2c2572ac8d6add072e16"
+      },
+      {
+        "path": "studio.js",
+        "gitBlobSHA": "6d97ec17c24020e5698091f0412b125de6315813"
+      },
+      {
+        "path": "studio.css",
+        "gitBlobSHA": "736d1bdc8b4501b34a99d0049c7115c9547e722f"
+      }
+    ]
+  },
+  "method": "Unmodified reviewed scripts in restricted Node vm; actual form/click/download handlers plus actual launch builder import; synthetic inputs; minimal DOM/storage stubs; no network, browser or live systems.",
+  "limits": [
+    "Not a browser/visual test",
+    "Not browser persistence or IndexedDB durability",
+    "Not hosted authentication/authorization",
+    "Launch import is logic only, not browser upload or a shared project store",
+    "Not Smartsheet/Wave/company data",
+    "No release approval or live contractor package"
+  ],
+  "summary": {
+    "pass": 23,
+    "fail": 2,
+    "overall": "FAIL — complete integrated workflow not ready"
+  },
+  "results": [
+    {
+      "id": "FLOW-01",
+      "result": "PASS",
+      "detail": "Actual submit handler creates a separate synthetic project with empty selections."
+    },
+    {
+      "id": "FLOW-02",
+      "result": "PASS",
+      "detail": "Kitchen design area exists; metadata is project-scoped."
+    },
+    {
+      "id": "FLOW-03",
+      "result": "PASS",
+      "detail": "Discussed selections do not feed budget output."
+    },
+    {
+      "id": "FLOW-04",
+      "result": "PASS",
+      "detail": "Selected items wait for a demo approval before output."
+    },
+    {
+      "id": "FLOW-05",
+      "result": "PASS",
+      "detail": "Demo approval feeds 2 × 100 = 200 into a budget draft; all amounts are fictional test input."
+    },
+    {
+      "id": "FLOW-06",
+      "result": "PASS",
+      "detail": "A synthetic drawing plus complete selection clears the prototype metadata blocker list."
+    },
+    {
+      "id": "FLOW-07",
+      "result": "PASS",
+      "detail": "Actual download handler produces a Draft contractor task with no invented owner/deadline."
+    },
+    {
+      "id": "FLOW-08",
+      "result": "PASS",
+      "detail": "Daily Workspace must show the project-linked action and return to the same project/budget step; passing is prototype logic only, not hosted/live Dashboard integration."
+    },
+    {
+      "id": "FLOW-09",
+      "result": "PASS",
+      "detail": "Draft contractor tasks require explicit predecessor/release references; no work is released."
+    },
+    {
+      "id": "REV-01",
+      "result": "PASS",
+      "detail": "Editing an approved item creates R2, retains R1 history and removes the changed item from approved outputs pending reapproval."
+    },
+    {
+      "id": "REV-02",
+      "result": "PASS",
+      "detail": "Prior approved history must preserve the actual former unit cost and cost code."
+    },
+    {
+      "id": "TRACE-01",
+      "result": "PASS",
+      "detail": "Budget export must carry project ID, selection ID and approved revision."
+    },
+    {
+      "id": "ID-01",
+      "result": "PASS",
+      "detail": "Existing logical task identity must survive inserting another approved item; no particular key format is assumed."
+    },
+    {
+      "id": "CSV-01",
+      "result": "PASS",
+      "detail": "Formula-leading text must be neutralized in spreadsheet-facing CSV. No formula is executed."
+    },
+    {
+      "id": "UNKNOWN-01",
+      "result": "PASS",
+      "detail": "Missing cost remains unknown/blank, not zero."
+    },
+    {
+      "id": "DATE-01",
+      "result": "PASS",
+      "detail": "Draft export does not invent assignments or dates."
+    },
+    {
+      "id": "HTML-01",
+      "result": "PASS",
+      "detail": "The prototype escapes text containing HTML."
+    },
+    {
+      "id": "DEP-01",
+      "result": "PASS",
+      "detail": "Single-home dependency IDs must resolve to real checklist/package tasks and remain unreleased."
+    },
+    {
+      "id": "ID-02",
+      "result": "PASS",
+      "detail": "Actual form-created selections produce unique stable global task and selection IDs."
+    },
+    {
+      "id": "CSV-02",
+      "result": "PASS",
+      "detail": "Dangerous text markers are quoted as text; typed numeric values remain numbers. Consumer/resave behavior is not tested."
+    },
+    {
+      "id": "IMPORT-01",
+      "result": "PASS",
+      "detail": "Import the actual reusable launch builder output: preserve subdivision Project ID, all 29 task IDs and dependencies. This is logic, not a browser upload or shared store."
+    },
+    {
+      "id": "IMPORT-02",
+      "result": "PASS",
+      "detail": "Repeated launch import must not create a duplicate Project ID."
+    },
+    {
+      "id": "DEP-02",
+      "result": "PASS",
+      "detail": "Quick-created renovation must contain its referenced contract/release gate tasks; dangling predecessors are a setup defect, not satisfied gates."
+    },
+    {
+      "id": "DEP-03",
+      "result": "FAIL",
+      "detail": "Missing contract authority T17 must block actual export, not silently remove the approval gate from dependencies."
+    },
+    {
+      "id": "DEP-04",
+      "result": "FAIL",
+      "detail": "An unapproved predecessor must not create a dangling contractor task reference; block export or require the predecessor approval."
+    }
+  ]
+}
