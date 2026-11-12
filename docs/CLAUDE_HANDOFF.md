@@ -2,100 +2,96 @@
 
 Newest entry first. Keep every entry safe for a public repository: no real addresses, clients, prices, files or credentials.
 
+## 2026-11-12 (later) — Six reviewed workflow fixes and the shared Project ID
+
+- **Agent:** Claude Code, directed by Tony. Role: builder. Requested reviewer: Codex. Tony merges.
+- **Acknowledgement:** read `AGENTS.md`, `docs/OS_MASTER_PLAN.md`, `docs/OS_STATUS.md`, `docs/TEAM_HANDOFF.md` and `docs/CLAUDE-INFRA-HANDOFF.md` from PR #15 (`feature/infrastructure-readiness-2026-11-12`, head `7f5464b876` when read). Nothing from that branch was merged or copied here.
+- **Branch:** `claude/design-studio-prototype`, from `main`. Commits are made without checking the branch out, so the shared checkout was never switched and has no dirty paths from this work.
+- **Dashboard source:** the dashboard is the Daily Workspace view inside `apps/development-os/studio/index.html`. A separate dashboard prototype holding real pilot data exists only on Tony's computer and stays out of this repository. It links to the Studio by Project ID.
+- **Scope:** Studio paths and Claude handoff files only. No server, CI, package, staging, website or Animated Experience file is touched.
+
+### The six findings
+
+| Finding | Fix | Evidence |
+| --- | --- | --- |
+| FLOW-08 Dashboard navigation was a placeholder | The Daily Workspace is the dashboard: every project by Project ID, with decisions, deadlines and blockers. `#project/<ID>` and `#project/<ID>/<step>` open a project; an unknown ID opens intake with the ID filled in | Codex helper FLOW-08; browser checks "dashboard lists projects by Project ID" and both deep-link checks |
+| FLOW-09 Draft tasks had no predecessors | Every Draft task depends on the launch plan's contract-authority and release-to-build tasks (`<project>-T17`, `<project>-T19`) and on any selection it must follow. A loop is refused. Tasks carry `releaseStatus: "Not released"` | FLOW-09; "task dependencies" and "a dependency loop is refused" |
+| ID-01 Task keys shifted when an item was inserted | Each selection gets a permanent number when created. IDs derive from it: `<project>-SEL-nn`, task key `DS-nn`, task ID `<project>-DS-nn` | ID-01; "stable IDs" |
+| TRACE-01 Outputs had no selection or revision | Takeoff, budget, proposal inputs, procurement and tasks all carry Selection ID, Revision, Approved on, Source document and Project ID | TRACE-01; "traceability" |
+| REV-02 Old revision lost unit cost and cost code | The whole approved revision is kept, with its approval date. Every status change is logged with time and revision. The history can be downloaded as JSON | REV-02; "full approval history" and "approval history export" |
+| CSV-01 Formula-leading text | Text starting with `=`, `+`, `-`, `@`, a tab or a return (after any spaces) gets a leading apostrophe. Numbers from numeric fields stay numbers. Programs should read the JSON exports | CSV-01; "CSV: formula-leading text is neutralised" |
+
+### Connected to the existing workflow, no new application
+
+- **One Project ID.** The Studio uses the same rule as `packages/shared/project-id.mjs`. The rule is duplicated in the page because a single file cannot import a module when opened directly; see "Left for Codex".
+- **Launch plan import.** New Development Project accepts the Draft JSON exported by `launch.html`. The project keeps its Project ID, and the plan rows become its checklist with their Task IDs and predecessors.
+- **Same row shape out.** The task export includes `planRows` with the launch plan's column names, so Studio tasks can join the same plan.
+- **Still Draft.** Selection approval is a demo action on one device. Budget approval, purchase commitment and released-for-work approval are separate and are not recorded.
+
+### Tests
+
+| Check | Result |
+| --- | --- |
+| `node apps/development-os/studio/tools/browser-check.mjs` (headless Chrome, throwaway profile) | **35 of 35 pass** |
+| `scripts/qa/verify-studio-workflow.mjs` from PR #15, unmodified, against this branch's `index.html` | **17 pass, 0 fail** (was 11 and 6). Run with the blob SHA of `index.html` at this branch's head |
+| Repository unit tests on an export of this branch, without a website build | 62 of 63; the one failure needs `dist` |
+| `npm run build`, full `npm run check`, GitHub CI | **Not run** |
+| Hosted authentication, permissions, staging | **Not implemented, not tested** |
+
+To keep Codex's helper working, the page keeps one inline script, the `newproj` quick-add form, the `viewInfo()` name and the first six budget columns in their original order.
+
+### Functionality checklist (made-up data, one browser)
+
+| Step | State |
+| --- | --- |
+| New Project, by address or by importing a launch plan | Works |
+| Design: sources, options, selections, revisions | Works |
+| Selections approved and re-approved after a change | Works as a demo action; not a protected approval |
+| Budget draft from approved selections | Works; unknown cost stays blank |
+| Contractor package: Draft tasks with predecessors, procurement list | Works; nothing is released or ordered |
+| Dashboard by Project ID | Works |
+| Sign-in, roles, shared storage, Smartsheet | Not built |
+
+### Staging, hosting and sign-in — proposal only, nothing built or deployed
+
+- **Hosting.** Recommendation: a protected app subdomain rather than `/platform` on the main domain. The public site is served separately, so a `/platform` path needs a proxy in front of the website. A separate host also keeps session cookies and the content policy apart from the public site and makes deny-by-default simpler. `/platform` stays possible later behind such a proxy. Tony decides.
+- **Staging.** Use the existing empty `staging-os` environment, synthetic data only, after Tony approves the exact resources.
+- **Sign-in and permissions.** As `docs/SECURE-OS-CONTRACT.md` sets out: individual sign-in with an account allowlist, server-validated sessions, project roles, deny by default. Tests required before any exposure: anonymous denied, wrong role denied, wrong project denied, sign-out works.
+- **Authentication test results:** none. Nothing is hosted.
+
+### Left for Codex (not done here)
+
+1. Hosted runtime, sign-in, permissions, routes and staging deployment.
+2. Serving the Studio: its inline script and `blob:` thumbnails do not pass the local server's content policy. Claude will move the script and styles into files under `studio/` once Codex confirms how the helper should then load the source.
+3. One copy of the Project ID rule and of the launch task list, once the page is served and can import modules.
+
+### Blockers
+
+- Identity provider, allowed accounts and staging resources are not approved.
+- Claude has no Railway connection, and the GitHub command-line tool is not signed in on this computer.
+- `main` is not protected.
+- Safari on an iPhone is not tested.
+
+### Next three actions
+
+1. **Codex:** rerun the helper and review this branch's head; confirm the plan for external script files.
+2. **Tony:** choose subdomain or `/platform`, approve the identity provider, accounts and staging resources.
+3. **Claude Code:** after 1 and 2, make the Studio assets policy-compatible and build the screens against Codex's signed-in read interface, with synthetic data.
+
 ## 2026-11-12 — Workspace prototype: Daily Workspace, Design Studio, New Development Project
 
-- **Agent:** Claude Code, directed by Tony.
-- **Branch:** `claude/design-studio-prototype`, from `main`.
-- **Role:** builder. Requested reviewer: Codex. Tony merges.
-- **Scope:** a prototype for review. No production deployment, no live-record change, no infrastructure change.
-
-### Step 1 — what the current interface was missing
-
-| Area | Before this branch | Missing |
-| --- | --- | --- |
-| Daily workspace | Nothing in the repository. A private dashboard prototype exists outside it | A place for tasks, client requests, follow-ups, deadlines and decisions across projects |
-| Design Studio | Nothing in the repository | Sources, design options, review and approval, selections, revisions, and a path to estimating and construction |
-| New project | `launch.html` exports a Draft JSON plan and stops | Creating a project inside the workspace with partners, legal, feasibility, architecture, permits, budgets, schedules and team roles organised |
-
-### Step 2 — navigation
-
-Sidebar: **Daily Workspace · Design Studio · New Development Project · Higgsfield designs**, then projects by address with search. On a phone: a bottom bar with Daily, Studio, New and Projects.
-
-Inside a project the Design Studio is one eight-step flow:
-
-`Project → Upload sources → Design → Review & approve → Takeoff & budget → Client proposal → Work package → Construction`
-
-### Step 3 — what was built
+- **Branch:** `claude/design-studio-prototype`. Builder: Claude Code. Scope: a prototype for review.
+- **Navigation:** Daily Workspace · Design Studio · New Development Project · Higgsfield designs, then projects by address. On a phone: a bottom bar.
+- **Design Studio flow:** Project → Upload sources → Design → Review & approve → Takeoff & budget → Client proposal → Work package → Construction.
 
 | File | Purpose |
 | --- | --- |
 | `apps/development-os/studio/index.html` | The whole prototype. One page, no build step, no dependencies |
-| `apps/development-os/studio/README.md` | What it is, data rules, built-in rules |
+| `apps/development-os/studio/README.md` | What it is, data rules |
 | `apps/development-os/studio/tools/browser-check.mjs` | Headless browser check. Node 22+ and a local Chrome; no packages |
-| `apps/development-os/studio/screenshots/*.png` | Eight screenshots produced by the check, made-up data only |
+| `apps/development-os/studio/screenshots/*.png` | Screenshots produced by the check, made-up data only |
 | `docs/CLAUDE_HANDOFF.md` | This file |
 
-Rules the page enforces:
+Rules the page enforces: outputs come only from approved selections; a changed approved item keeps its earlier revision and returns for approval; a file added again becomes a new revision; unknown quantity or cost stays blank; a date is proposed until confirmed; a checklist item marked Done without evidence is flagged; new projects start with no owner, dates or prices; proposal inputs are lines to enter in Wave; Higgsfield links are accepted only on `higgsfield.ai`.
 
-- Outputs are built only from approved selections.
-- Editing an approved selection, or revising an approved design option, keeps the earlier revision and returns the item for approval.
-- A file added again under the same name becomes a new revision. Nothing is removed.
-- Unknown quantity or cost stays blank and is never counted as zero. The budget total says how many lines are not included.
-- A date is "proposed" until it is marked "confirmed".
-- A development checklist item marked Done without evidence is flagged.
-- New projects start with no owner, no dates and no prices. Team roles are blank until a real name is typed.
-- Proposal inputs are lines to enter in Wave. The page produces no proposal document and no price.
-- Draft tasks use the `launch-template.json` task fields with `status: "Draft"`, no responsible person and no dates.
-- Higgsfield links are accepted only on `higgsfield.ai`.
-
-### Step 4 — tests
-
-`node apps/development-os/studio/tools/browser-check.mjs` — **23 of 23 checks pass** (headless Chrome, throwaway profile):
-
-- sample data and counts; budget total from known amounts only;
-- approval, revision and design-option rules;
-- file revisions; typed text is escaped; CSV quoting;
-- intake rejects empty and duplicate addresses; 27 or 29 checklist items by type; none for construction;
-- tasks add and complete; exported tasks are Draft with no owner or date;
-- Higgsfield import rejects other links and lands as a Rendering attached to the option;
-- records and an uploaded file survive a reload;
-- no sideways scroll in 11 views at desktop and phone width; no script errors.
-
-Repository unit tests on an export of this branch, without a website build: 62 of 63 pass. The one failure is `scripts/test/website-host.test.mjs`, which needs `dist`. `npm run build` and the full `npm run check` were **not** run; no website, package or CI file is touched.
-
-Not tested: Safari on an iPhone; a screen-reader pass; very large files.
-
-### Step 5 — for Codex to integrate and deploy
-
-Nothing below was done on this branch. These are infrastructure, left to its owner.
-
-1. **Serve it.** `apps/development-os/server.mjs` allows explicit routes only, and its content policy (`script-src 'self'`, `img-src 'self' data:`) blocks this page's inline script and `blob:` thumbnails. Split script and styles into files under `studio/`, add the routes, allow `img-src blob:`.
-2. **One template.** `index.html` embeds a grouped copy of the 29 launch tasks. Once served, load `launch-template.json` instead and add a group field there, or extend `scripts/check-repository.mjs` to compare the two.
-3. **Unit tests.** Move `blockers()`, `outRows()`, `csv()`, `importHiggsfield()` and the revision rules into `studio/src/*.mjs` so `node --test` covers them. Wire `tools/browser-check.mjs` into CI only if the runner has Chrome.
-4. **Storage.** Browser storage is a stand-in. Files belong in each project's own folder or approved storage, and records in Smartsheet. Follow `docs/SECURITY.md` before any real data or any hosting.
-5. **Deployment.** None requested. The page has no sign-in and must not be hosted with real data.
-
-### Missing integrations
-
-| Integration | State |
-| --- | --- |
-| Smartsheet | Not connected. Draft task export only. Smartsheet stays the operational record |
-| Wave | Not connected. Status and document number are typed by hand |
-| AI design generation | Not connected. The page builds a text brief to paste into an AI tool |
-| Higgsfield | Not connected to the page. Images are added by hand, or by an assistant that has the Higgsfield connection |
-| Email and calendar | Not connected. Client requests and dates are typed by hand |
-| Sign-in and roles | None |
-
-### Not built
-
-A free-form canvas for arranging and annotating images; deleting or archiving; importing or exporting a whole workspace; notifications; permissions.
-
-### Next actions
-
-| # | Action | Owner |
-| --- | --- | --- |
-| 1 | Try the prototype on one real kitchen or bathroom and say what to change | Tony |
-| 2 | Review this branch against the rules above | Codex |
-| 3 | Decide where project files really live and which AI tool receives briefs | Tony |
-| 4 | Serve the page from the local tool server and move logic into testable modules | Codex |
-| 5 | Design the read-only Smartsheet reader, then Draft-row creation after approval | Claude Code builds, Codex reviews, Tony approves each write type |
+Missing integrations: Smartsheet, Wave, AI generation, Higgsfield, email and calendar are not connected. There is no sign-in. Not built: a free-form canvas, deleting or archiving, whole-workspace import and export, notifications.

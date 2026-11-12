@@ -28,8 +28,16 @@ Open `index.html` in a browser. No build step and no dependencies.
 node apps/development-os/studio/tools/browser-check.mjs
 ```
 
-Needs Node 22 or later and a local Chrome (`CHROME_PATH` if it is not in the default Windows location). It starts Chrome headless with a throwaway profile, runs 23 checks and, given a folder as the second argument, writes screenshots.
+Needs Node 22 or later and a local Chrome (`CHROME_PATH` if it is not in the default Windows location). It starts Chrome headless with a throwaway profile, runs 35 checks and, given a folder as the second argument, writes screenshots.
+
+## IDs
+
+One Project ID, under the same rule as `packages/shared/project-id.mjs`, starts every record ID: `<project>-SEL-01` (selection), `<project>-OPT-01` (design option), `<project>-F-01` (file), `<project>-DS-01` (contractor task), `<project>-T19` (launch plan task). A Draft export from `launch.html` can be added in New Development Project and keeps its Project ID.
+
+## Exports
+
+CSV for people, with formula-leading text neutralised. JSON for programs: Draft tasks (with predecessors and launch-plan-shaped rows) and the approval history. Every output line carries Selection ID, Revision and Project ID.
 
 ## Deep links
 
-`#daily`, `#new`, `#higgsfield`, `#studio`, `#studio-1` … `#studio-8`.
+`#daily`, `#new`, `#higgsfield`, `#studio`, `#studio-1` … `#studio-8`, `#project/<Project ID>`, `#project/<Project ID>/<step>`.

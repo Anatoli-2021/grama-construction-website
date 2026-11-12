@@ -102,7 +102,7 @@ try {
   check('exported tasks are Draft with no owner and no date', r.draft === true);
 
   // 4b. a Higgsfield design becomes a project rendering and can be attached to an option
-  r = await run(`state.current = 'sample'; const p = P(), o = p.options.find(x => x.status !== 'Approved');
+  r = await run(`state.current = state.projects[0].id; const p = P(), o = p.options.find(x => x.status !== 'Approved');
     const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='), c => c.charCodeAt(0)), f = () => [new File([png], 'kitchen-option.png', { type: 'image/png' })];
     const bad = await importHiggsfield({ projectId: p.id, areaId: p.areas[0].id, files: f(), link: 'https://example.com/x' });
     const none = await importHiggsfield({ projectId: p.id, areaId: p.areas[0].id, files: [] });
@@ -113,17 +113,64 @@ try {
   check('Higgsfield import: saved as a Rendering marked Higgsfield and attached to the option', r.ok === '' && r.n === 1 && r.cat === 'Rendering' && r.attached && r.listed === 1);
   await shot('08-higgsfield-designs-desktop');
 
+  // 4c. the six reviewed workflow fixes
+  r = await run(`${SUBMIT} const out = {}; state.current = state.projects[0].id; const p = P(); state.view = 'studio'; p.step = 3; render();
+    out.idFormat = p.selections.filter(s => /^DEMO-SAMPLE-LANE-SEL-\\d\\d$/.test(s.id)).length >= 6;
+    const range = p.selections.find(s => s.name === '36 in range'), before = outRows(p, 'tasks').find(x => x[1].includes('36 in range'))[0];
+    p.selections.unshift(Object.assign({}, range, { id: 'qa-earlier', name: 'Earlier item', seq: 99, history: [], log: [] }));
+    out.stableKey = outRows(p, 'tasks').find(x => x[1].includes('36 in range'))[0] === before; p.selections.shift();
+    const cab = p.selections.find(s => s.name === 'Base and wall cabinets'), ct = p.selections.find(s => s.name === 'Quartz countertop');
+    out.fullHistory = cab.history.length === 1 && Object.hasOwn(cab.history[0], 'unitCost') && Object.hasOwn(cab.history[0], 'costCode') && cab.history[0].costCode === '6400' && !!cab.history[0].approvedOn;
+    out.events = cab.log.length >= 1 && cab.log.every(l => l.at && l.from && l.to); out.ctEvents = ct.log.map(l => l.from + '>' + l.to);
+    out.traceCols = ['takeoff','budget','proposal','procurement','tasks'].every(k => ['Selection ID','Revision','Project ID'].every(c => OUT[k][1].includes(c)));
+    const b = outRows(p, 'budget')[0], bi = OUT.budget[1]; out.traceVals = /-SEL-\\d\\d$/.test(b[bi.indexOf('Selection ID')]) && /^R\\d+$/.test(b[bi.indexOf('Revision')]) && b[bi.indexOf('Project ID')] === p.id;
+    const j = JSON.parse(taskJson(p)), tct = j.tasks.find(t => t.task.includes('Quartz countertop'));
+    out.deps = j.tasks.length > 0 && j.tasks.every(t => t.dependsOn.includes(p.id + '-T19') && t.dependsOn.includes(p.id + '-T17') && t.releaseStatus === 'Not released' && t.status === 'Draft');
+    out.predecessor = !!tct && tct.dependsOn.includes(p.id + '-DS-01');
+    out.planRows = j.planRows.length === j.tasks.length && j.planRows.every(x => x['Depends On / Gate'] && x['Task ID'].startsWith(p.id + '-DS-') && x['Status'] === 'Draft');
+    out.csv = [csv([['=1+1']]), csv([['+1']]), csv([['-x']]), csv([['@y']]), csv([['  =SUM(A1)']]), csv([[-5]]), csv([[12.5]]), csv([['plain']])];
+    document.querySelector('[data-act=edit][data-id="' + cab.id + '"]').click(); set('s_after', ct.id); submit('selform'); out.loopRefused = !p.selections.find(s => s.id === cab.id).after.includes(ct.id);
+    const tryId = v => { try { return normalizeProjectId(v); } catch (e) { return null; } };
+    out.idRule = [tryId(' A-1 '), tryId('   '), tryId('-x'), tryId('a'.repeat(81)), tryId('GC_2026-014')];
+    const launch = { template: 'Launch template', version: '1.0-pilot', status: 'Draft for human review', project: { project_id: 'DEMO-LAUNCH-01', project_type: 'Single home', address_or_site_identity: '55 Import Way', opportunity_description: 'made-up', source_reference: 'made-up note', pm_name: 'Demo Lead' },
+      planRows: ['T01','T17','T19'].map(k => ({ 'Task': 'Task ' + k, 'Task ID': 'DEMO-LAUNCH-01-' + k, 'Project ID': 'DEMO-LAUNCH-01', 'Approval Needed': 'gate', 'Depends On / Gate': k === 'T19' ? 'DEMO-LAUNCH-01-T17' : '', 'Status': 'Draft' })) };
+    out.imp1 = importLaunch(launch); const ip = proj('DEMO-LAUNCH-01');
+    out.imported = !!ip && ip.address === '55 Import Way' && ip.checklist.length === 3 && ip.checklist[2].id === 'DEMO-LAUNCH-01-T19' && ip.checklist[2].dependsOn === 'DEMO-LAUNCH-01-T17' && ip.team[1].name === 'Demo Lead';
+    out.imp2 = importLaunch(launch); out.imp3 = importLaunch({ project: { project_id: '  ' }, planRows: [] }); out.imp4 = importLaunch({});
+    out.dash = viewInfo('today').includes('DEMO-LAUNCH-01') && !viewInfo('today').includes('separate private prototype');
+    out.approvalFile = JSON.parse(approvalJson(p)).selections.find(s => s.name === 'Base and wall cabinets').earlierRevisions.length === 1;
+    state.current = state.projects[0].id; state.view = 'daily'; save(); render(); return out;`);
+  check('stable IDs: selections carry <project>-SEL-nn and a task key survives an inserted item', r.idFormat && r.stableKey);
+  check('full approval history: the replaced revision keeps unit cost, cost code and approval date; every status change is logged', r.fullHistory && r.events && r.ctEvents.join() === 'Selected>Approved', r.ctEvents.join());
+  check('traceability: every output carries Selection ID, Revision and Project ID', r.traceCols && r.traceVals);
+  check('task dependencies: every Draft task depends on the launch plan gates, plus its predecessor selection', r.deps && r.predecessor && r.planRows);
+  check('a dependency loop is refused', r.loopRefused === true);
+  check('CSV: formula-leading text is neutralised; numbers and plain text are unchanged', r.csv.join('|') === "'=1+1|'+1|'-x|'@y|'  =SUM(A1)|-5|12.5|plain", r.csv.join(' | '));
+  check('Project ID rule matches the shared launch rule', JSON.stringify(r.idRule) === JSON.stringify(['A-1', null, null, null, 'GC_2026-014']));
+  check('launch plan import keeps the Project ID and task IDs; duplicates and bad files are refused', r.imp1 === '' && r.imported && !!r.imp2 && !!r.imp3 && !!r.imp4);
+  check('dashboard lists projects by Project ID, with no placeholder', r.dash === true);
+  check('approval history export includes earlier revisions', r.approvalFile === true);
+  await run('scrollTo(0, 0);'); await shot('09-dashboard-with-project-ids-desktop');
+
   // 5. persistence across a reload
   await open('#daily');
   r = await run(`return { projects: state.projects.length, tasks: state.tasks.length, file: !!(await Files.get(${JSON.stringify(fid)})), rev: P().selections.concat(state.projects[0].selections).find(s => s.name === 'Base and wall cabinets').rev };`);
-  check('records are still there after a reload', r.projects === 3 && r.tasks === 4 && r.rev === 2, `${r.projects} projects, ${r.tasks} tasks`);
+  check('records are still there after a reload', r.projects === 4 && r.tasks === 4 && r.rev === 2, `${r.projects} projects, ${r.tasks} tasks`);
   check('an uploaded file is still there after a reload', r.file === true);
+
+  // 5b. deep links by shared Project ID
+  await open('#project/DEMO-LAUNCH-01/4');
+  r = await run(`return { view: state.view, id: P().id, step: P().step };`);
+  check('a link with a Project ID opens that project at the named step', r.view === 'studio' && r.id === 'DEMO-LAUNCH-01' && r.step === 4);
+  await open('#project/NEW-ID-9');
+  r = await run(`return { view: state.view, prefill: (document.querySelector('#n_id') || {}).value };`);
+  check('an unknown Project ID opens intake with the ID filled in', r.view === 'new' && r.prefill === 'NEW-ID-9');
 
   // 6. every view at desktop and phone width: no sideways scroll, no script errors
   const views = ['#daily', '#new', '#higgsfield', ...[1, 2, 3, 4, 5, 6, 7, 8].map(n => '#studio-' + n)];
   for (const [label, w, h, mobile] of [['desktop', 1360, 900, false], ['phone', 390, 844, true]]) {
     await size(w, h, mobile); const wide = [];
-    for (const v of views) { await run(`state.current = 'sample'; const m = ${JSON.stringify(v)}.match(/studio-(\\d)/); if (m) { state.view = 'studio'; P().step = +m[1]; } else state.view = ${JSON.stringify(v)}.slice(1); render(); scrollTo(0, 0);`);
+    for (const v of views) { await run(`state.current = state.projects[0].id; const m = ${JSON.stringify(v)}.match(/studio-(\\d)/); if (m) { state.view = 'studio'; P().step = +m[1]; } else state.view = ${JSON.stringify(v)}.slice(1); render(); scrollTo(0, 0);`);
       await sleep(120); if (await run(`return document.documentElement.scrollWidth > innerWidth + 1;`)) wide.push(v);
       if (label === 'desktop' && v === '#studio-4') await shot('03-design-studio-step4-review-desktop');
       if (label === 'desktop' && v === '#studio-7') await shot('04-design-studio-step7-work-package-desktop');

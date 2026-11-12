@@ -167,6 +167,7 @@ pre.brief{white-space:pre-wrap;font:13px/1.5 ui-monospace,"SF Mono",Consolas,mon
       <h3>Projects by address</h3>
       <input class="in" id="q" type="search" placeholder="Search address" autocomplete="off" aria-label="Search projects by address">
       <div class="plist" id="plist"></div>
+      <form id="newproj" style="display:flex;gap:6px;margin-top:10px"><input class="in" id="np_addr" placeholder="Quick add: address" autocomplete="off" aria-label="Quick add a project by address"><input type="hidden" id="np_type" value="Construction or renovation"><button class="btn sm" type="submit">Add</button></form>
     </div>
     <div class="side-foot">
       <span id="storage"></span>
@@ -232,7 +233,7 @@ const LAUNCH_TASKS = [
  ["T26","Closeout","Assign warranty and security-release obligations","All","Warranty / agency closure"],
  ["T27","Closeout","Archive evidence and reusable cost lessons","All","Final archive verification"]
 ];
-const GROUPS = ["Partners","Legal documents","Feasibility","Architecture","Permits","Budgets","Schedules","Team responsibilities","Closeout"];
+const GROUPS = ["Partners","Legal documents","Feasibility","Architecture","Permits","Budgets","Schedules","Team responsibilities","Closeout","Other"];
 const ICON = {
   daily:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
   studio:'<path d="M4 17.5L15.5 6l2.5 2.5L6.5 20H4z"/><path d="M13.5 8l2.5 2.5M15 19h5"/>',
@@ -275,22 +276,39 @@ const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0
 const today = () => iso(new Date());
 const plus = n => { const d = new Date(); d.setDate(d.getDate() + n); return iso(d); };
 const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+const pad = n => String(n).padStart(2, "0");
+const toTop = () => { try { scrollTo(0, 0); } catch (e) {} };
+// One Project ID for the launch form and this workspace: the same rule as packages/shared/project-id.mjs.
+// Every record ID starts with it: <project>-SEL-01 (selection), <project>-OPT-01 (design option), <project>-F-01 (file),
+// <project>-DS-01 (contractor task) and <project>-T19 (launch plan task).
+const PROJECT_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,79}$/;
+function normalizeProjectId(value){ const id = String(value == null ? "" : value).trim(); if (!PROJECT_ID.test(id)) throw new Error("Use a Project ID of 1–80 letters, numbers, hyphens or underscores, starting with a letter or number."); return id; }
+function suggestProjectId(address){ const base = String(address).replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "PROJECT"; let id = base, n = 2; while (state && state.projects.some(p => p.id === id)) id = base + "-" + n++; return id; }
+// A full copy of a selection revision, kept when an approved revision is replaced.
+const snapshot = s => ({ rev: s.rev, status: s.status, when: today(), approvedOn: s.approvedOn || "", name: s.name, category: s.category, spec: s.spec, vendor: s.vendor, qty: s.qty, unit: s.unit, unitCost: s.unitCost, costCode: s.costCode, leadDays: s.leadDays, neededBy: s.neededBy, neededConfirmed: s.neededConfirmed, sourceId: s.sourceId || "", after: (s.after || []).slice() });
+// Every status change is logged with its time and revision. These are demo actions on one device, not protected approvals.
+const logEvent = (x, from, to) => { (x.log = x.log || []).push({ at: new Date().toISOString(), rev: x.rev, from, to }); };
+function follows(p, fromId, targetId, seen = new Set()){ if (seen.has(fromId)) return false; seen.add(fromId); const s = p.selections.find(x => x.id === fromId); return !!s && (s.after || []).some(a => a === targetId || follows(p, a, targetId, seen)); }
 function checklist(type){ return type.startsWith("Development") ? LAUNCH_TASKS.filter(t => t[3] === "All" || type.includes("subdivision")).map(t => ({ key: t[0], group: t[1], task: t[2], gate: t[4], status: "Not started", evidence: "" })) : []; }
 function newProject(address, type, extra){
-  const areas = DEFAULT_AREAS.map(n => ({ id: uid(), name: n }));
-  return Object.assign({ id: uid(), address, type, client: "", source: "", description: "", step: 1, areaId: areas[0].id, areas, files: [], notes: {}, selections: [], options: [],
-    team: ROLES.map(r => ({ role: r, name: "" })), checklist: checklist(type), proposal: { state: PROPOSAL_STATES[0], waveNo: "" } }, extra || {});
+  const areas = DEFAULT_AREAS.map(n => ({ id: uid(), name: n })), id = (extra && extra.id) || suggestProjectId(address);
+  return Object.assign({ id, address, type, client: "", source: "", description: "", step: 1, areaId: areas[0].id, areas, files: [], notes: {}, selections: [], options: [], seq: { SEL: 0, OPT: 0, F: 0 },
+    team: ROLES.map(r => ({ role: r, name: "" })), checklist: checklist(type).map(c => Object.assign(c, { id: id + "-" + c.key, dependsOn: "" })), proposal: { state: PROPOSAL_STATES[0], waveNo: "" } }, extra || {});
 }
 function upgrade(s){ // older saved data gains the newer fields; nothing is dropped
-  s.version = 2; s.view = ["daily","studio","new","higgsfield"].includes(s.view) ? s.view : "daily"; s.tasks = s.tasks || []; s.filter = s.filter || "All"; s.out = s.out === "budget" ? "budget" : "takeoff";
+  s.version = 3; s.view = ["daily","studio","new","higgsfield"].includes(s.view) ? s.view : "daily"; s.tasks = s.tasks || []; s.filter = s.filter || "All"; s.out = s.out === "budget" ? "budget" : "takeoff";
   for (const p of s.projects) { p.step = p.step || 1; p.options = p.options || []; p.client = p.client || ""; p.team = p.team || ROLES.map(r => ({ role: r, name: "" }));
-    p.checklist = p.checklist || []; p.proposal = p.proposal || { state: PROPOSAL_STATES[0], waveNo: "" }; }
+    p.checklist = p.checklist || []; p.proposal = p.proposal || { state: PROPOSAL_STATES[0], waveNo: "" }; p.seq = p.seq || { SEL: 0, OPT: 0, F: 0 };
+    for (const x of p.selections) { if (!x.seq) x.seq = ++p.seq.SEL; x.log = x.log || []; x.after = x.after || []; x.sourceId = x.sourceId || ""; }   // existing IDs are kept as they are
+    for (const o of p.options) { if (!o.seq) o.seq = ++p.seq.OPT; o.log = o.log || []; }
+    for (const f of p.files) if (!f.fid) f.fid = p.id + "-F-" + pad(++p.seq.F);
+    for (const c of p.checklist) { c.id = c.id || p.id + "-" + c.key; c.dependsOn = c.dependsOn || ""; } }
   return s;
 }
 function sampleState(){
-  const p = newProject("1200 Sample Lane", "Development — single home", { id: "sample", sample: true });
+  const p = newProject("1200 Sample Lane", "Development — single home", { id: "DEMO-SAMPLE-LANE", sample: true });
   const a = n => p.areas.find(x => x.name === n).id;
-  const sel = (area, name, category, status, o = {}) => Object.assign({ id: uid(), areaId: a(area), name, category, spec: "", vendor: "", qty: null, unit: "", unitCost: null, costCode: "", leadDays: null, neededBy: "", neededConfirmed: false, status, rev: 1, history: [] }, o);
+  const sel = (area, name, category, status, o = {}) => { const n = ++p.seq.SEL; return Object.assign({ id: p.id + "-SEL-" + pad(n), seq: n, areaId: a(area), name, category, spec: "", vendor: "", qty: null, unit: "", unitCost: null, costCode: "", leadDays: null, neededBy: "", neededConfirmed: false, after: [], sourceId: "", status, rev: 1, history: [], log: [], approvedOn: STATUSES.indexOf(status) >= 2 ? today() : "" }, o); };
   p.selections = [
     sel("Kitchen","Base and wall cabinets","Cabinets","Approved",{ spec: "Shaker, painted, soft-close", vendor: "Sample Cabinet Co.", qty: 24, unit: "LF", costCode: "6400", neededBy: plus(21) }),
     sel("Kitchen","Quartz countertop","Countertops","Selected",{ spec: "3 cm, eased edge", qty: 58, unit: "SF" }),
@@ -299,13 +317,14 @@ function sampleState(){
     sel("Bathrooms","60 in double vanity","Plumbing fixtures","Selected",{ qty: 1, unit: "EA" }),
     sel("Exterior","Fiber-cement lap siding","Siding","Approved",{ spec: "7 in exposure, factory finish", costCode: "7460" })
   ];
-  const opt = (area, name, desc, status) => ({ id: uid(), areaId: a(area), name, desc, fileIds: [], status, rev: 1, history: [], comment: "" });
+  p.selections[1].after = [p.selections[0].id];   // the countertop follows the cabinets
+  const opt = (area, name, desc, status) => { const n = ++p.seq.OPT; return { id: p.id + "-OPT-" + pad(n), seq: n, areaId: a(area), name, desc, fileIds: [], status, rev: 1, history: [], log: [], comment: "" }; };
   p.options = [opt("Kitchen","Option A — island","Island with seating for four; range on the back wall.","In review"), opt("Kitchen","Option B — peninsula","Peninsula toward the dining room; more wall cabinets.","Draft")];
   p.checklist.forEach(c => { if (c.key === "T01") { c.status = "Done"; c.evidence = "Sample intake note"; } if (c.key === "T04") c.status = "In progress"; });
-  return { version: 2, view: "daily", current: "sample", out: "takeoff", filter: "All", projects: [p], tasks: [
-    { id: uid(), kind: "Client request", text: "Confirm countertop edge profile", projectId: "sample", due: plus(3), confirmed: false, done: false },
-    { id: uid(), kind: "Task", text: "Walk the site with the framing lead", projectId: "sample", due: plus(1), confirmed: true, done: false },
-    { id: uid(), kind: "Follow-up", text: "Cabinet shop drawings — ask for the revised set", projectId: "sample", due: plus(-1), confirmed: false, done: false }
+  return { version: 3, view: "daily", current: p.id, out: "takeoff", filter: "All", projects: [p], tasks: [
+    { id: uid(), kind: "Client request", text: "Confirm countertop edge profile", projectId: p.id, due: plus(3), confirmed: false, done: false },
+    { id: uid(), kind: "Task", text: "Walk the site with the framing lead", projectId: p.id, due: plus(1), confirmed: true, done: false },
+    { id: uid(), kind: "Follow-up", text: "Cabinet shop drawings — ask for the revised set", projectId: p.id, due: plus(-1), confirmed: false, done: false }
   ] };
 }
 
@@ -348,15 +367,19 @@ function selRow(p, s, o = {}){
   if (i === 0) act = `<button class="btn sm sec" data-act="next" data-id="${s.id}">Mark selected</button>`;
   else if (i === 1) act = `<button class="btn sm" data-act="next" data-id="${s.id}">Approve</button>`;
   else if (i < 6 && o.track) act = `<button class="btn sm sec" data-act="next" data-id="${s.id}">Mark ${STATUSES[i + 1].toLowerCase()}</button>`;
-  const h = ui.hist[s.id] ? `<div class="hist">${s.history.length ? s.history.map(x => `R${x.rev} · ${esc(x.status)} · ${esc(x.when)} — ${esc([x.spec, x.vendor, x.qty != null ? x.qty + " " + x.unit : ""].filter(Boolean).join(" · ") || "no details")}`).join("<br>") : "No earlier revisions."}</div>` : "";
+  const h = ui.hist[s.id] ? `<div class="hist"><b>Earlier revisions</b><br>${s.history.length ? s.history.map(x => `R${x.rev} · ${esc(x.status)}${x.approvedOn ? " · approved " + esc(x.approvedOn) : ""} · replaced ${esc(x.when)} — ${esc([x.spec, x.vendor, x.qty != null ? x.qty + " " + x.unit : "quantity not set", x.unitCost != null ? "unit cost " + money(x.unitCost) : "unit cost unknown", x.costCode ? "cost code " + x.costCode : "no cost code"].filter(Boolean).join(" · "))}`).join("<br>") : "None."}
+    <br><b>Events</b> — demo actions on this device, not protected approvals<br>${(s.log || []).length ? s.log.map(l => `${esc(String(l.at).slice(0, 16).replace("T", " "))} · R${l.rev} · ${esc(l.from)} → ${esc(l.to)}`).join("<br>") : "None recorded."}</div>` : "";
+  const fol = (s.after || []).map(a => (p.selections.find(x => x.id === a) || {}).name || a);
   return `<div class="row"><div class="t">${esc(s.name)} <span class="tag">R${s.rev}</span>${o.area ? ` <span class="tag">${esc(areaName(p, s.areaId))}</span>` : ""}</div>
     <div class="d">${meta || "No specification yet"}</div><div class="d">${s.qty != null ? s.qty + " " + esc(s.unit) : "quantity not set"} · ${need}${s.costCode ? " · cost code " + esc(s.costCode) : ""}</div>
+    <div class="cap" style="margin-top:2px">${esc(s.id)}${fol.length ? " · follows " + esc(fol.join(", ")) : ""}${srcName(p, s) ? " · source " + esc(srcName(p, s)) : ""}</div>
     ${stepper(s)}<div class="acts">${act}<button class="btn sm sec" data-act="edit" data-id="${s.id}">Edit</button><button class="btn sm sec" data-act="hist" data-id="${s.id}">History (${s.history.length})</button></div>${h}</div>`;
 }
 function selForm(p){
   const e = ui.editing ? p.selections.find(s => s.id === ui.editing) : null, v = k => e && e[k] != null ? esc(e[k]) : "";
   const warn = e && idx(e) >= 2 ? `<div class="empty full"><b>This selection is ${esc(e.status)}.</b>Saving a change keeps R${e.rev} in its history, creates R${e.rev + 1} and returns it to Selected for your approval.</div>` : "";
-  return `<form class="form" id="selform">${warn}
+  const others = p.selections.filter(s => !e || s.id !== e.id), srcs = p.files.filter(f => f.areaId === p.areaId), msg = ui.msg ? `<div class="empty full">${esc(ui.msg)}</div>` : "";
+  return `<form class="form" id="selform">${warn}${msg}
     <label class="full">Item<input class="in" id="s_name" value="${v("name")}" placeholder="e.g. Island pendant lights"></label>
     <label>Category<select class="in" id="s_cat">${Object.keys(SEL_CATS).map(c => `<option${e && e.category === c ? " selected" : ""}>${c}</option>`).join("")}</select></label>
     <label>Vendor<input class="in" id="s_vendor" value="${v("vendor")}"></label>
@@ -367,6 +390,8 @@ function selForm(p){
     <label>Cost code<input class="in" id="s_code" value="${v("costCode")}"></label>
     <label>Needed by<input class="in" id="s_need" type="date" value="${v("neededBy")}"></label>
     <label>Deadline<select class="in" id="s_conf"><option value="">Proposed</option><option value="1"${e && e.neededConfirmed ? " selected" : ""}>Confirmed</option></select></label>
+    <label>Must follow (optional)<select class="in" id="s_after"><option value="">Nothing</option>${others.map(s => `<option value="${esc(s.id)}"${e && (e.after || []).includes(s.id) ? " selected" : ""}>${esc(s.name)}</option>`).join("")}</select></label>
+    <label>Source document (optional)<select class="in" id="s_src"><option value="">None recorded</option>${srcs.map(f => `<option value="${f.id}"${e && e.sourceId === f.id ? " selected" : ""}>${esc(f.name)} R${f.rev}</option>`).join("")}</select></label>
     <div class="full" style="display:flex;gap:8px"><button class="btn" type="submit">${e ? "Save change" : "Add selection"}</button>${e ? '<button class="btn sec" type="button" data-act="cancel">Cancel</button>' : ""}</div></form>`;
 }
 const areaBar = p => `<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
@@ -400,15 +425,22 @@ function brief(p, areaId){
     grp("Approved — do not change", s => idx(s) >= 2) + grp("Selected — awaiting approval", s => idx(s) === 1) + grp("Under discussion", s => idx(s) === 0) +
     `\nReference files\n${files.length ? files.map(f => `- ${f.cat}: ${f.name} (R${f.rev}${f.source ? ", from " + f.source : ""})`).join("\n") : "- none uploaded"}\n\nRequest\nPropose up to three options for this area that respect the approved items. List every assumption. Flag anything that conflicts with the drawings. Do not invent dimensions, prices or product availability.`;
 }
+// Traceability: every output line names its selection, revision, approval date, source document and project.
+// A task key comes from the selection's own number, so adding or reordering items never renames an existing task.
+const taskKey = s => "DS-" + pad(s.seq || 0);
+// Predecessors: the launch plan's contract authority (T17) and release-to-build (T19) tasks, then any selection this one must follow.
+const taskDeps = (p, s) => [p.id + "-T17", p.id + "-T19", ...(s.after || []).map(a => p.selections.find(x => x.id === a)).filter(Boolean).map(x => p.id + "-" + taskKey(x))];
+function srcName(p, s){ const f = s.sourceId && p.files.find(x => x.id === s.sourceId); return f ? (f.fid || f.id) + " " + f.name + " R" + f.rev : ""; }
+const TRACE = ["Selection ID","Revision","Approved on","Source document","Project ID"], trace = s => [s.id, "R" + s.rev, s.approvedOn || "", s._src, s._p.id];
 const OUT = {
-  takeoff: ["Takeoff", ["Area","Item","Specification","Quantity","Unit"], s => [s._a, s.name, s.spec, s.qty == null ? "" : s.qty, s.unit]],
-  budget: ["Budget lines", ["Cost code","Area","Item","Quantity","Unit cost","Amount"], s => [s.costCode, s._a, s.name, s.qty == null ? "" : s.qty, s.unitCost == null ? "" : s.unitCost, s.qty != null && s.unitCost != null ? s.qty * s.unitCost : ""]],
-  proposal: ["Proposal inputs", ["Area","Line description","Quantity","Unit"], s => [s._a, s.name + (s.spec ? " — " + s.spec : ""), s.qty == null ? "" : s.qty, s.unit]],
-  procurement: ["Procurement list", ["Vendor","Item","Specification","Quantity","Unit","Lead time (days)","Needed by","Status"], s => [s.vendor, s.name, s.spec, s.qty == null ? "" : s.qty, s.unit, s.leadDays == null ? "" : s.leadDays, s.neededBy, s.status]],
-  tasks: ["Contractor tasks", ["Key","Task","Proposed trade","Status"], (s, i) => ["DS-" + String(i + 1).padStart(2, "0"), `Install ${s.name} — ${s._a}, per approved selection R${s.rev}`, SEL_CATS[s.category] || "To be assigned", "Draft"]]
+  takeoff: ["Takeoff", ["Area","Item","Specification","Quantity","Unit", ...TRACE], s => [s._a, s.name, s.spec, s.qty == null ? "" : s.qty, s.unit, ...trace(s)]],
+  budget: ["Budget lines", ["Cost code","Area","Item","Quantity","Unit cost","Amount", ...TRACE], s => [s.costCode, s._a, s.name, s.qty == null ? "" : s.qty, s.unitCost == null ? "" : s.unitCost, s.qty != null && s.unitCost != null ? s.qty * s.unitCost : "", ...trace(s)]],
+  proposal: ["Proposal inputs", ["Area","Line description","Quantity","Unit", ...TRACE], s => [s._a, s.name + (s.spec ? " — " + s.spec : ""), s.qty == null ? "" : s.qty, s.unit, ...trace(s)]],
+  procurement: ["Procurement list", ["Vendor","Item","Specification","Quantity","Unit","Lead time (days)","Needed by","Status", ...TRACE], s => [s.vendor, s.name, s.spec, s.qty == null ? "" : s.qty, s.unit, s.leadDays == null ? "" : s.leadDays, s.neededBy, s.status, ...trace(s)]],
+  tasks: ["Contractor tasks", ["Key","Task","Proposed trade","Status","Task ID","Depends on","Release", ...TRACE], s => [taskKey(s), `Install ${s.name} — ${s._a}, per approved selection R${s.rev}`, SEL_CATS[s.category] || "To be assigned", "Draft", s._p.id + "-" + taskKey(s), taskDeps(s._p, s).join("; "), "Not released", ...trace(s)]]
 };
 function outRows(p, k){
-  const l = approved(p).map(s => Object.assign({}, s, { _a: areaName(p, s.areaId) }));
+  const l = approved(p).map(s => Object.assign({}, s, { _a: areaName(p, s.areaId), _p: p, _src: srcName(p, s) }));
   if (k === "procurement") l.sort((a, b) => (a.vendor || "~").localeCompare(b.vendor || "~"));
   if (k === "budget") l.sort((a, b) => (a.costCode || "~").localeCompare(b.costCode || "~"));
   return l.map((s, i) => OUT[k][2](s, i));
@@ -426,12 +458,13 @@ function stepProject(p){
   const groups = GROUPS.filter(g => p.checklist.some(c => c.group === g));
   return `<div class="grid two"><div class="grid">
     ${card("Project", `<span class="tag">${esc(p.type)}</span>`, `<div class="form">
-      <label class="full">Address<input class="in" value="${esc(p.address)}" disabled></label>
+      <label>Project ID (shared with the launch plan)<input class="in" value="${esc(p.id)}" disabled></label>
+      <label>Address<input class="in" value="${esc(p.address)}" disabled></label>
       <label class="full">Client or owner (leave blank if not confirmed)<input class="in" id="p_client" value="${esc(p.client)}"></label></div>
       ${p.source || p.description ? `<p class="sub" style="margin-top:10px">${esc(p.source)}${p.source && p.description ? " · " : ""}${esc(p.description)}</p>` : ""}`)}
     ${p.checklist.length ? card("Development checklist", `<span class="cap">${p.checklist.filter(c => c.status === "Done").length} of ${p.checklist.length} done</span>`,
       `<p class="sub" style="margin-bottom:6px">From the standard launch template. Every item starts as Not started, with no owner and no date. Done needs evidence.</p>` +
-      groups.map(g => `<div style="margin-top:14px"><div class="cap">${g}</div><div class="rows">${p.checklist.filter(c => c.group === g).map(c => `<div class="row"><div class="chk"><div><div class="t" style="font-weight:500">${esc(c.task)} <span class="tag">${c.key}</span>${c.status === "Done" && !c.evidence ? ' <span class="tag warn">no evidence recorded</span>' : ""}</div><div class="d">Approval gate: ${esc(c.gate)}</div>
+      groups.map(g => `<div style="margin-top:14px"><div class="cap">${g}</div><div class="rows">${p.checklist.filter(c => c.group === g).map(c => `<div class="row"><div class="chk"><div><div class="t" style="font-weight:500">${esc(c.task)} <span class="tag">${esc(c.id || c.key)}</span>${c.status === "Done" && !c.evidence ? ' <span class="tag warn">no evidence recorded</span>' : ""}</div><div class="d">Approval gate: ${esc(c.gate)}${c.dependsOn ? " · after " + esc(c.dependsOn) : ""}</div>
         <input class="in" data-ev="${c.key}" value="${esc(c.evidence)}" placeholder="Evidence: document, sheet row or email" style="margin-top:8px" aria-label="Evidence for ${c.key}"></div>
         <select class="in" data-chk="${c.key}" aria-label="Status of ${c.key}">${["Not started","In progress","Done"].map(s => `<option${c.status === s ? " selected" : ""}>${s}</option>`).join("")}</select></div></div>`).join("")}</div></div>`).join("")) :
       card("Development checklist", "", `<div class="empty"><b>Not a development project</b>Construction and renovation projects go straight to sources and design. Start a development project from New Development Project to get the full checklist.</div>`)}
@@ -471,7 +504,7 @@ function stepReview(p){
     ${card("Design options to review", `<span class="cap">${o.length}</span>`, o.length ? `<div class="rows">${o.map(x => optRow(p, x, true)).join("")}</div>` : `<div class="empty"><b>Nothing to review</b>Send an option for review from Design.</div>`)}
     ${card("Selections to approve", `<span class="cap">${s.length}</span>`, s.length ? `<div class="rows">${s.map(x => selRow(p, x, { area: true })).join("")}</div>` : `<div class="empty"><b>Nothing is waiting</b>Selections marked Selected appear here.</div>`)}
     </div><div class="grid">
-    ${card("Approved", "", `<div class="rows"><div class="row"><div class="top"><span>Design options</span><b>${done.length}</b></div><div class="d">${done.map(x => esc(x.name) + " R" + x.rev).join(" · ") || "none yet"}</div></div>
+    ${card("Approved", dl("approvals", "Download history"), `<p class="sub" style="margin-bottom:6px">Approvals here are demo actions on this device. Budget approval, purchase commitment and released-for-work approval are separate.</p><div class="rows"><div class="row"><div class="top"><span>Design options</span><b>${done.length}</b></div><div class="d">${done.map(x => esc(x.name) + " R" + x.rev).join(" · ") || "none yet"}</div></div>
       <div class="row"><div class="top"><span>Selections</span><b>${approved(p).length}</b></div><div class="d">These feed the takeoff, budget, proposal inputs and work package.</div></div></div>`)}
     ${card("Blockers", `<span class="cap">${blockers(p).length}</span>`, blockers(p).length ? `<div class="rows">${blockers(p).map(b => `<div class="row" style="padding:9px 0"><div class="d" style="margin:0">${esc(b)}</div></div>`).join("")}</div>` : `<div class="empty"><b>No blockers found</b>Checks: quantity, specification and cost code on approved items; a drawing for each active area.</div>`)}
     </div></div>`;
@@ -511,7 +544,7 @@ function viewStudio(){
   const p = P(), n = p.step, ap = approved(p).length;
   const counts = [p.checklist.length ? p.checklist.filter(c => c.status === "Done").length + " of " + p.checklist.length : "details", plural(p.files.length, "file"), plural(p.options.length, "option"), waiting(p) + " waiting", ap + " approved", p.proposal.state, ap ? "by trade" : "—", approved(p).filter(s => idx(s) === 6).length + " installed"];
   const body = [stepProject, stepSources, stepDesign, stepReview, stepTakeoff, stepProposal, stepPackage, stepBuild][n - 1](p);
-  return `<header class="head"><div class="crumb">Design Studio${p.sample ? ' <span class="chip"><i></i>Made-up sample data</span>' : ""}</div><h1>${esc(p.address)}</h1><p>${esc(p.type)}${p.client ? " · " + esc(p.client) : ""}</p></header>
+  return `<header class="head"><div class="crumb">Design Studio${p.sample ? ' <span class="chip"><i></i>Made-up sample data</span>' : ""}</div><h1>${esc(p.address)}</h1><p>${esc(p.id)} · ${esc(p.type)}${p.client ? " · " + esc(p.client) : ""} · <a href="#daily" data-act="view" data-v="daily">Dashboard</a></p></header>
     <div class="flow" role="list">${FLOW.map((f, i) => `<button role="listitem" data-act="step" data-n="${i + 1}"${n === i + 1 ? ' aria-current="step"' : ""}><span class="k">${i + 1}</span><span class="nm">${f}</span><span class="c">${esc(counts[i])}</span></button>`).join("")}</div>${body}`;
 }
 
@@ -538,7 +571,7 @@ function viewDaily(){
     </div><div class="grid">
       ${card("Decisions waiting on you", `<span class="cap">${dec}</span>`, dec ? `<div class="rows">${state.projects.filter(p => waiting(p)).map(p => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(p.address)}</div><div class="d">${plural(p.options.filter(o => o.status === "In review").length, "design option")} · ${plural(p.selections.filter(s => idx(s) === 1).length, "selection")}</div></div><button class="btn sm" data-act="goto" data-id="${p.id}" data-n="4">Review</button></div></div>`).join("")}</div>` : `<div class="empty"><b>Nothing is waiting</b></div>`)}
       ${card("Deadlines", "", dls.length ? `<div class="rows">${dls.slice(0, 8).map(d => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(d.what)}</div><div class="d">${esc(d.where)} · ${esc(d.kind)}</div></div><span class="tag${d.late ? " warn" : ""}">${esc(d.date)} · ${d.confirmed ? "confirmed" : "proposed"}</span></div></div>`).join("")}</div>` : `<div class="empty"><b>No date is set</b>Dates show as proposed until you mark them confirmed.</div>`)}
-      ${card("Projects", `<button class="btn sm sec" data-act="view" data-v="new">New project</button>`, `<div class="rows">${state.projects.map(p => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(p.address)}${p.sample ? ' <span class="tag">made-up sample</span>' : ""}</div><div class="d">${esc(p.type)} · step ${p.step} of 8, ${FLOW[p.step - 1]} · ${plural(blockers(p).length, "blocker")}</div></div><button class="btn sm sec" data-act="goto" data-id="${p.id}">Open</button></div></div>`).join("")}</div>`)}
+      ${card("Projects", `<button class="btn sm sec" data-act="view" data-v="new">New project</button>`, `<div class="rows">${state.projects.map(p => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(p.address)}${p.sample ? ' <span class="tag">made-up sample</span>' : ""}</div><div class="d">${esc(p.id)} · ${esc(p.type)} · step ${p.step} of 8, ${FLOW[p.step - 1]} · ${plural(blockers(p).length, "blocker")} · ${waiting(p)} waiting</div></div><button class="btn sm sec" data-act="goto" data-id="${esc(p.id)}">Open</button></div></div>`).join("")}</div>`)}
     </div></div>`;
 }
 
@@ -548,13 +581,16 @@ function viewNew(){
   return `<header class="head"><div class="crumb">New Development Project</div><h1>Start a project by address</h1><p>One intake for a development or a construction job. It creates the project with a standard, empty structure — you fill in the facts.</p></header>
     <div class="grid two">${card("Intake", "", `<form id="newdev" class="form">
       <label class="full">Property address or site identity<input class="in" id="n_addr" autocomplete="off" placeholder="Street, city, state"></label>
-      <label class="full">Project type<select class="in" id="n_type"><option>Development — single home</option><option>Development — subdivision</option><option>Construction or renovation</option></select></label>
+      <label>Project type<select class="in" id="n_type"><option>Development — single home</option><option>Development — subdivision</option><option>Construction or renovation</option></select></label>
+      <label>Project ID (blank: made from the address)<input class="in" id="n_id" autocomplete="off" value="${esc(ui.prefill || "")}" placeholder="Letters, numbers, hyphens"></label>
       <label>Client or partner (blank if not confirmed)<input class="in" id="n_client" autocomplete="off"></label>
       <label>Source reference<input class="in" id="n_src" autocomplete="off" placeholder="Listing, email or document"></label>
       <label class="full">Opportunity description<textarea class="in" id="n_desc"></textarea></label>
       <div class="full"><button class="btn" type="submit">Create project</button> <span class="cap" id="n_err"></span></div></form>`)}
     <div class="grid">${card("What gets organised", `<span class="cap">development projects</span>`, `<div class="rows">${counts.map(c => `<div class="row" style="padding:9px 0"><div class="top"><span>${c[0]}</span><span class="cap">${c[0] === "Team responsibilities" ? "roles to name + " : ""}${plural(c[1], "item")}</span></div></div>`).join("")}</div>
       <p class="cap" style="margin-top:10px">27 items for a single home, 29 for a subdivision — the existing launch template. A subdivision adds shared infrastructure and cost allocation, kept apart from each house budget.</p>`)}
+      ${card("Continue a launch plan", "", `<p class="sub" style="margin-bottom:10px">Already made a Draft plan with the launch form? Add its file here. The project keeps the same Project ID, and its plan tasks become the checklist.</p>
+        <label class="lab">Draft export from the launch form (.json)<input class="in" id="n_import" type="file" accept=".json,application/json"></label><p class="cap" id="n_imp" style="margin-top:8px"></p>`)}
       ${card("What it does not do", "", `<div class="empty">It creates nothing in Smartsheet, assigns no one, sets no date and enters no price. Those happen after your approval, in the systems of record.</div>`)}</div></div>`;
 }
 
@@ -569,7 +605,7 @@ async function importHiggsfield({ projectId, areaId, optionId, files, link, prom
   const area = p.areas.find(a => a.id === areaId) || p.areas[0], o = optionId && p.options.find(x => x.id === optionId);
   for (const f of files) { const id = uid(), same = p.files.filter(x => x.areaId === area.id && x.name === f.name);
     await Files.put(id, f);
-    p.files.push({ id, areaId: area.id, name: f.name, cat: "Rendering", source: "Higgsfield", link: link || "", prompt: prompt || "", size: f.size, type: f.type || "", added: today(), rev: same.length + 1 });
+    p.files.push({ id, fid: p.id + "-F-" + pad(++p.seq.F), areaId: area.id, name: f.name, cat: "Rendering", source: "Higgsfield", link: link || "", prompt: prompt || "", size: f.size, type: f.type || "", added: today(), rev: same.length + 1 });
     if (o && o.status !== "Approved") o.fileIds.push(id); }
   save(); return "";
 }
@@ -601,11 +637,13 @@ function render(){
   $("#plist").innerHTML = state.projects.filter(x => !q || x.address.toLowerCase().includes(q)).map(x => `<button data-act="goto" data-id="${x.id}" aria-current="${state.view === "studio" && x.id === p.id}">${esc(x.address)}<small>${esc(x.type)}${x.sample ? " · made-up sample" : ""}</small></button>`).join("") || `<span class="cap" style="padding:6px 10px">No project matches.</span>`;
   $("#storage").textContent = persistent && Files.ok() ? "Saved in this browser on this device." : "Storage is unavailable in this view — work is kept only until the page closes.";
   $("#tabs").innerHTML = [["daily","Daily"],["studio","Studio"],["new","New"]].map(t => `<button data-act="view" data-v="${t[0]}"${state.view === t[0] ? ' aria-current="page"' : ""}><svg viewBox="0 0 24 24">${ICON[t[0]]}</svg><span>${t[1]}</span></button>`).join("") + `<button data-act="menu"><svg viewBox="0 0 24 24">${ICON.menu}</svg><span>Projects</span></button>`;
-  $("#view").innerHTML = state.view === "studio" ? viewStudio() : state.view === "new" ? viewNew() : state.view === "higgsfield" ? viewHiggs() : viewDaily();
+  $("#view").innerHTML = viewInfo(state.view); ui.msg = "";
   document.title = (state.view === "studio" ? p.address + " — Design Studio" : state.view === "new" ? "New Development Project" : state.view === "higgsfield" ? "Higgsfield designs" : "Daily Workspace") + " — Development OS prototype";
-  try { history.replaceState(null, "", "#" + (state.view === "studio" ? "studio-" + p.step : state.view)); } catch (e) {}
+  try { history.replaceState(null, "", "#" + (state.view === "studio" ? "project/" + encodeURIComponent(p.id) + "/" + p.step : state.view)); } catch (e) {}
   loadThumbs();
 }
+// The top-level views by name. "today" and "daily" are the dashboard: every project in this workspace, by Project ID.
+function viewInfo(k){ return k === "studio" ? viewStudio() : k === "new" ? viewNew() : k === "higgsfield" ? viewHiggs() : viewDaily(); }
 async function loadThumbs(){
   for (const el of document.querySelectorAll("[data-thumb]")) { const id = el.dataset.thumb; if (!id) continue;
     if (!thumbs.has(id)) { const b = await Files.get(id); if (!b) continue; thumbs.set(id, URL.createObjectURL(b)); }
@@ -615,39 +653,67 @@ async function addFiles(list){
   const p = P(), cat = ($("#f_cat") || {}).value || "Reference";
   for (const f of list) { const id = uid(), same = p.files.filter(x => x.areaId === p.areaId && x.name === f.name);
     await Files.put(id, f);
-    p.files.push({ id, areaId: p.areaId, name: f.name, cat, size: f.size, type: f.type || "", added: today(), rev: same.length + 1 }); }
+    p.files.push({ id, fid: p.id + "-F-" + pad(++p.seq.F), areaId: p.areaId, name: f.name, cat, size: f.size, type: f.type || "", added: today(), rev: same.length + 1 }); }
   save(); render();
 }
 function download(name, text, type){ const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
-const csv = rows => rows.map(r => r.map(v => { const s = String(v == null ? "" : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(",")).join("\r\n");
-function taskJson(p){ return JSON.stringify({ project: p.address, status: "Draft — not approved, not in Smartsheet", tasks: outRows(p, "tasks").map(r => ({ key: r[0], phase: "09", task: r[1], proposedRole: r[2], dependsOn: [], definitionOfDone: "Installed per the approved selection revision; photo evidence recorded", approvalGate: "Owner approval before any commitment", status: "Draft", responsible: null, dueDate: null, nextFollowUp: null, evidence: null })) }, null, 2); }
-const optHist = o => o.history.push({ rev: o.rev, status: o.status, when: today() });
+// Spreadsheet-safe CSV. Text that a spreadsheet would read as a formula (it starts with = + - @, a tab or a return, after any spaces)
+// gets a leading apostrophe, as OWASP advises. Numbers from numeric fields stay numbers. Programs should read the JSON exports instead.
+const csvCell = v => { if (typeof v === "number") return String(v); let s = String(v == null ? "" : v); if (/^\s*[=+\-@]/.test(s) || /^[\t\r]/.test(s)) s = "'" + s; return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+const csv = rows => rows.map(r => r.map(csvCell).join(",")).join("\r\n");
+function taskJson(p){
+  const ap = approved(p), rows = outRows(p, "tasks");   // task rows keep the order of the approved selections
+  return JSON.stringify({ project: p.address, projectId: p.id, status: "Draft — not approved, not released, not in Smartsheet",
+    note: "Selection approval here is a demo action on one device. Budget approval, purchase commitment and released-for-work approval are separate and are not recorded in this file.",
+    tasks: ap.map((s, i) => ({ key: rows[i][0], taskId: rows[i][4], projectId: p.id, phase: "09", task: rows[i][1], proposedRole: rows[i][2], dependsOn: taskDeps(p, s), selectionId: s.id, selectionRevision: s.rev, approvedOn: s.approvedOn || null, sourceDocument: srcName(p, s) || null,
+      definitionOfDone: "Installed per the approved selection revision; photo evidence recorded", approvalGate: "Released-for-work approval, separate from selection approval", releaseStatus: "Not released", status: "Draft", responsible: null, dueDate: null, nextFollowUp: null, evidence: null })),
+    // the same tasks as rows shaped like the launch form's plan rows, so they can join the same project plan
+    planRows: ap.map((s, i) => ({ "Task": rows[i][1], "Task ID": rows[i][4], "Project ID": p.id, "Proposed Responsible Role": rows[i][2], "Responsible": null, "Status": "Draft", "Approval Needed": "Released-for-work approval", "Depends On / Gate": taskDeps(p, s).join("; "), "Due Date": null, "Next Follow-Up": null, "Date Confidence": "Unconfirmed", "Source IDs / Link": s.id + " R" + s.rev, "Evidence Link": null })) }, null, 2);
+}
+function approvalJson(p){ return JSON.stringify({ project: p.address, projectId: p.id, note: "Demo approvals recorded on one device. They are not protected business approvals.",
+  selections: p.selections.map(s => ({ id: s.id, name: s.name, revision: s.rev, status: s.status, approvedOn: s.approvedOn || null, earlierRevisions: s.history, events: s.log || [] })),
+  designOptions: p.options.map(o => ({ id: o.id, name: o.name, revision: o.rev, status: o.status, approvedOn: o.approvedOn || null, earlierRevisions: o.history, events: o.log || [] })) }, null, 2); }
+const optHist = o => o.history.push({ rev: o.rev, status: o.status, when: today(), approvedOn: o.approvedOn || "", name: o.name, desc: o.desc, fileIds: o.fileIds.slice(), comment: o.comment });
+// The launch form's Draft export becomes a project here under the same Project ID, with its plan rows as the checklist.
+function importLaunch(j){
+  if (!j || typeof j !== "object" || !j.project || !Array.isArray(j.planRows)) return "This file is not a Draft export from the launch form.";
+  let id; try { id = normalizeProjectId(j.project.project_id); } catch (e) { return e.message; }
+  if (proj(id)) return "A project with this Project ID is already here.";
+  const kind = String(j.project.project_type || ""), type = kind === "Subdivision" ? "Development — subdivision" : kind === "Renovation" ? "Construction or renovation" : "Development — single home";
+  const np = newProject(String(j.project.address_or_site_identity || j.project.opportunity_description || id).slice(0, 120), type, { id, source: String(j.project.source_reference || ""), description: String(j.project.opportunity_description || ""), launch: { template: String(j.template || ""), version: String(j.version || "") } });
+  np.checklist = j.planRows.map(r => { const tid = String(r["Task ID"] || ""), key = tid.startsWith(id + "-") ? tid.slice(id.length + 1) : tid, t = LAUNCH_TASKS.find(x => x[0] === key);
+    return { key, id: tid, group: t ? t[1] : "Other", task: String(r["Task"] || key), gate: String(r["Approval Needed"] || ""), dependsOn: String(r["Depends On / Gate"] || ""), status: "Not started", evidence: "" }; });
+  if (j.project.pm_name) np.team[1].name = String(j.project.pm_name);
+  state.projects.push(np); state.current = np.id; state.view = "studio"; save(); return "";
+}
 
 document.addEventListener("click", async e => {
   const t = e.target.closest("[data-act]"); if (!t) return; const p = P(), act = t.dataset.act, id = t.dataset.id, s = id && p.selections.find(x => x.id === id), o = id && p.options.find(x => x.id === id);
   if (act === "menu") { $("#side").classList.toggle("open"); return; }
   if (act === "dash") { location.href = DASHBOARD; return; }
-  if (act === "view") { state.view = t.dataset.v; ui.editing = null; $("#side").classList.remove("open"); scrollTo(0, 0); }
-  else if (act === "goto") { state.current = id; state.view = "studio"; ui.editing = null; if (t.dataset.n) proj(id).step = +t.dataset.n; $("#side").classList.remove("open"); scrollTo(0, 0); }
+  if (act === "view") { state.view = t.dataset.v; ui.editing = null; $("#side").classList.remove("open"); toTop(); }
+  else if (act === "goto") { state.current = id; state.view = "studio"; ui.editing = null; if (t.dataset.n) proj(id).step = +t.dataset.n; $("#side").classList.remove("open"); toTop(); }
   else if (act === "step") { p.step = +t.dataset.n; ui.editing = null; }
   else if (act === "area") { p.areaId = id; ui.editing = null; }
   else if (act === "out") state.out = t.dataset.v;
   else if (act === "filter") state.filter = t.dataset.v;
   else if (act === "task-done") { const k = state.tasks.find(x => x.id === id); if (k) { k.done = true; k.doneOn = today(); } }
-  else if (act === "next" && s) { const i = idx(s); if (i < 6) { s.status = STATUSES[i + 1]; if (i === 1) s.approvedOn = today(); } }
+  else if (act === "next" && s) { const i = idx(s); if (i < 6) { logEvent(s, s.status, STATUSES[i + 1]); s.status = STATUSES[i + 1]; if (i === 1) s.approvedOn = today(); } }
   else if (act === "edit" && s) { ui.editing = s.id; p.areaId = s.areaId; p.step = 3; save(); render(); const c = $("#selcard"); if (c) c.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
   else if (act === "cancel") ui.editing = null;
   else if (act === "hist") ui.hist[id] = !ui.hist[id];
-  else if (act === "opt-review" && o) o.status = "In review";
-  else if (act === "opt-approve" && o) { o.status = "Approved"; o.approvedOn = today(); }
-  else if (act === "opt-changes" && o) o.status = "Changes requested";
-  else if (act === "opt-revise" && o) { optHist(o); o.rev++; o.status = "Draft"; o.comment = ""; }
+  else if (act === "opt-review" && o) { logEvent(o, o.status, "In review"); o.status = "In review"; }
+  else if (act === "opt-approve" && o) { logEvent(o, o.status, "Approved"); o.status = "Approved"; o.approvedOn = today(); }
+  else if (act === "opt-changes" && o) { logEvent(o, o.status, "Changes requested" + (o.comment ? ": " + o.comment : "")); o.status = "Changes requested"; }
+  else if (act === "opt-revise" && o) { optHist(o); logEvent(o, o.status, "Draft (revision " + (o.rev + 1) + " opened)"); o.rev++; o.status = "Draft"; o.comment = ""; o.approvedOn = ""; }
   else if (act === "opt-attach" && o) { const sel = document.querySelector(`[data-pick="${id}"]`); if (sel && sel.value) o.fileIds.push(sel.value); }
   else if (act === "open") { const b = await Files.get(id); if (b) window.open(URL.createObjectURL(b), "_blank"); return; }
   else if (act === "brief" || act === "copy") { const el = $("#brief"); el.textContent = brief(p, p.areaId); el.hidden = false;
     if (act === "copy") { try { await navigator.clipboard.writeText(el.textContent); $("#copied").textContent = "Copied."; } catch (x) { $("#copied").textContent = "Select the text to copy it."; } } return; }
-  else if (act === "dl") { const k = t.dataset.k, slug = p.address.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") || "project";
-    if (k === "tasks") download(`${slug}-draft-tasks.json`, taskJson(p), "application/json"); else download(`${slug}-${k}.csv`, csv([OUT[k][1], ...outRows(p, k)]), "text/csv"); return; }
+  else if (act === "dl") { const k = t.dataset.k || state.out, slug = p.id;
+    if (k === "tasks") download(`${slug}-draft-tasks.json`, taskJson(p), "application/json");
+    else if (k === "approvals") download(`${slug}-approval-history.json`, approvalJson(p), "application/json");
+    else download(`${slug}-${k}.csv`, csv([OUT[k][1], ...outRows(p, k)]), "text/csv"); return; }
   save(); render();
 });
 document.addEventListener("submit", e => {
@@ -655,21 +721,29 @@ document.addEventListener("submit", e => {
   if (f === "hgform") { const files = [...$("#hg_in").files];
     importHiggsfield({ projectId: $("#hg_proj").value, areaId: $("#hg_area").value, optionId: $("#hg_opt").value, files, link: $("#hg_link").value.trim(), prompt: $("#hg_prompt").value.trim() }).then(err => { if (err) $("#hg_err").textContent = err; else render(); });
     return; }
-  if (f === "newdev") { const addr = $("#n_addr").value.trim(); if (!addr) { $("#n_err").textContent = "An address is required."; $("#n_addr").focus(); return; }
+  if (f === "newproj") { const addr = $("#np_addr").value.trim(); if (!addr) { $("#np_addr").focus(); return; }
+    const same = state.projects.find(x => x.address.toLowerCase() === addr.toLowerCase());
+    if (same) state.current = same.id; else { const np = newProject(addr, $("#np_type").value || "Construction or renovation"); state.projects.push(np); state.current = np.id; }
+    state.view = "studio"; $("#np_addr").value = ""; $("#side").classList.remove("open"); }
+  else if (f === "newdev") { const addr = $("#n_addr").value.trim(); if (!addr) { $("#n_err").textContent = "An address is required."; $("#n_addr").focus(); return; }
     if (state.projects.some(x => x.address.toLowerCase() === addr.toLowerCase())) { $("#n_err").textContent = "A project with this address already exists."; return; }
-    const np = newProject(addr, $("#n_type").value, { client: $("#n_client").value.trim(), source: $("#n_src").value.trim(), description: $("#n_desc").value.trim() });
-    state.projects.push(np); state.current = np.id; state.view = "studio"; }
+    let id = $("#n_id").value.trim();
+    if (id) { try { id = normalizeProjectId(id); } catch (x) { $("#n_err").textContent = x.message; return; }
+      if (proj(id)) { $("#n_err").textContent = "A project with this Project ID already exists."; return; } }
+    const np = newProject(addr, $("#n_type").value, Object.assign({ client: $("#n_client").value.trim(), source: $("#n_src").value.trim(), description: $("#n_desc").value.trim() }, id ? { id } : {}));
+    state.projects.push(np); state.current = np.id; state.view = "studio"; ui.prefill = ""; }
   else if (f === "newtask") { const text = $("#t_text").value.trim(); if (!text) { $("#t_text").focus(); return; }
     state.tasks.push({ id: uid(), kind: $("#t_kind").value, text, projectId: $("#t_proj").value || null, due: $("#t_due").value, confirmed: !!$("#t_conf").value, done: false }); }
   else if (f === "addarea") { const n = $("#a_name").value.trim(); if (!n) return; const id = uid(); p.areas.push({ id, name: n }); p.areaId = id; }
   else if (f === "optform") { const n = $("#o_name").value.trim(); if (!n) { $("#o_name").focus(); return; }
-    p.options.push({ id: uid(), areaId: p.areaId, name: n, desc: $("#o_desc").value.trim(), fileIds: [], status: "Draft", rev: 1, history: [], comment: "" }); }
+    const k = ++p.seq.OPT; p.options.push({ id: p.id + "-OPT-" + pad(k), seq: k, areaId: p.areaId, name: n, desc: $("#o_desc").value.trim(), fileIds: [], status: "Draft", rev: 1, history: [], log: [], comment: "" }); }
   else if (f === "selform") { const name = $("#s_name").value.trim(); if (!name) { $("#s_name").focus(); return; }
-    const data = { name, category: $("#s_cat").value, vendor: $("#s_vendor").value.trim(), spec: $("#s_spec").value.trim(), qty: num($("#s_qty").value), unit: $("#s_unit").value.trim(), unitCost: num($("#s_cost").value), costCode: $("#s_code").value.trim(), neededBy: $("#s_need").value, neededConfirmed: !!$("#s_conf").value };
-    const cur = ui.editing && p.selections.find(s => s.id === ui.editing);
-    if (cur) { if (idx(cur) >= 2) { cur.history.push({ rev: cur.rev, status: cur.status, when: today(), spec: cur.spec, vendor: cur.vendor, qty: cur.qty, unit: cur.unit }); cur.rev++; cur.status = "Selected"; }
+    const cur = ui.editing && p.selections.find(s => s.id === ui.editing), aft = $("#s_after").value || "";
+    const data = { name, category: $("#s_cat").value, vendor: $("#s_vendor").value.trim(), spec: $("#s_spec").value.trim(), qty: num($("#s_qty").value), unit: $("#s_unit").value.trim(), unitCost: num($("#s_cost").value), costCode: $("#s_code").value.trim(), neededBy: $("#s_need").value, neededConfirmed: !!$("#s_conf").value, sourceId: $("#s_src").value || "", after: aft ? [aft] : [] };
+    if (cur && aft && (aft === cur.id || follows(p, aft, cur.id))) { data.after = cur.after || []; ui.msg = "That order would make a loop, so the earlier setting was kept."; }
+    if (cur) { if (idx(cur) >= 2) { cur.history.push(snapshot(cur)); logEvent(cur, cur.status, "Selected (revision " + (cur.rev + 1) + " opened)"); cur.rev++; cur.status = "Selected"; cur.approvedOn = ""; }   // the full approved revision is kept
       Object.assign(cur, data); ui.editing = null; }
-    else p.selections.push(Object.assign({ id: uid(), areaId: p.areaId, leadDays: null, status: "Discussed", rev: 1, history: [] }, data)); }
+    else { const k = ++p.seq.SEL; p.selections.push(Object.assign({ id: p.id + "-SEL-" + pad(k), seq: k, areaId: p.areaId, leadDays: null, status: "Discussed", rev: 1, history: [], log: [], approvedOn: "" }, data)); } }
   save(); render();
 });
 document.addEventListener("input", e => {
@@ -687,6 +761,7 @@ document.addEventListener("input", e => {
 document.addEventListener("change", e => {
   const t = e.target, p = P();
   if (t.id === "f_in" && t.files.length) { addFiles([...t.files]); return; }
+  if (t.id === "n_import" && t.files.length) { t.files[0].text().then(txt => { let err; try { err = importLaunch(JSON.parse(txt)); } catch (x) { err = "This file could not be read as JSON."; } if (err) $("#n_imp").textContent = err; else render(); }); return; }
   if (t.dataset.chk) { const c = p.checklist.find(x => x.key === t.dataset.chk); if (c) c.status = t.value; }
   else if (t.id === "pr_state") p.proposal.state = t.value;
   else if (t.id === "hg_proj") { ui.hgProj = t.value; ui.hgArea = null; }
@@ -707,8 +782,12 @@ const DASHBOARD = (() => { try { const d = new URLSearchParams(location.search).
   await Files.open();
   const saved = loadState();
   state = saved && saved.projects && saved.projects.length ? upgrade(saved) : sampleState();
-  const h = (location.hash || "").slice(1), m = h.match(/^studio-([1-8])$/);          // deep links: #daily, #new, #studio, #studio-4
-  if (m) { state.view = "studio"; P().step = +m[1]; } else if (["daily","studio","new","higgsfield"].includes(h)) state.view = h;
+  // deep links: #daily, #new, #higgsfield, #studio, #studio-4 and, by shared Project ID, #project/<ID> or #project/<ID>/<step>
+  const h = (location.hash || "").slice(1), m = h.match(/^studio-([1-8])$/), pm = h.match(/^project\/([^/]+)(?:\/([1-8]))?$/);
+  if (pm) { let id = ""; try { id = decodeURIComponent(pm[1]); } catch (e) {}
+    if (proj(id)) { state.current = id; state.view = "studio"; if (pm[2]) P().step = +pm[2]; }
+    else { state.view = "new"; ui.prefill = PROJECT_ID.test(id) ? id : ""; } }     // unknown ID: offer to start that project
+  else if (m) { state.view = "studio"; P().step = +m[1]; } else if (["daily","studio","new","higgsfield"].includes(h)) state.view = h;
   $("#brand").innerHTML = mark("g1") + "<div><b>Grama OS</b><span>Development OS</span></div>";
   $("#brand-m").innerHTML = mark("g2") + "<div><b>Grama OS</b><span>Development OS</span></div>";
   save(); render();
