@@ -6,7 +6,18 @@ Handoff, tests and open items: [`docs/CLAUDE_HANDOFF.md`](../../../docs/CLAUDE_H
 
 ## Open it
 
-Open `index.html` in a browser. No build step and no dependencies.
+Open `index.html` in a browser. No build step and no dependencies. It loads `studio.css`, `studio-logic.js` and `studio.js` from the same folder.
+
+## Files
+
+| File | Contents |
+| --- | --- |
+| `index.html` | Markup only: no inline script, style block or style attribute |
+| `studio.css` | Styles and small layout utilities |
+| `studio-logic.js` | Record logic with no page, storage or network access; exposes `globalThis.StudioLogic` for tests |
+| `studio.js` | Storage, views and events |
+
+Served, it needs only `script-src 'self'; style-src 'self'; img-src 'self' data:`.
 
 ## What it does
 
@@ -28,7 +39,13 @@ Open `index.html` in a browser. No build step and no dependencies.
 node apps/development-os/studio/tools/browser-check.mjs
 ```
 
-Needs Node 22 or later and a local Chrome (`CHROME_PATH` if it is not in the default Windows location). It starts Chrome headless with a throwaway profile, runs 35 checks and, given a folder as the second argument, writes screenshots.
+Needs Node 22 or later and a local Chrome (`CHROME_PATH` if it is not in the default Windows location). It starts Chrome headless with a throwaway profile, runs 40 checks and, given a folder as the second argument, writes screenshots. The last checks serve the files over HTTP under a strict content policy.
+
+```
+node --test apps/development-os/studio/test/logic.test.mjs
+```
+
+Eleven unit tests of the record logic, with no browser.
 
 ## IDs
 

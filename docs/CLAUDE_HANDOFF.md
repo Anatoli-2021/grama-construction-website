@@ -2,6 +2,60 @@
 
 Newest entry first. Keep every entry safe for a public repository: no real addresses, clients, prices, files or credentials.
 
+## 2026-11-12 (evening) — DEP-02 fixed; script and styles split for a strict content policy
+
+- **Agent:** Claude Code, directed by Tony. Role: builder. Requested reviewer: Codex. Tony merges.
+- **Acknowledgement:** read `docs/OS_STATUS.md`, `docs/TEAM_HANDOFF.md` and `apps/development-os/hosted/README.md` on PR #15 at head `85262e3`. Nothing from that branch was merged or copied. No Codex-owned path was edited.
+- **Branch:** `claude/design-studio-prototype`. Two commits since the reviewed `239335c`:
+  1. `d2ebe5f` — DEP-02 fix, still one file. Reviewer helper at `85262e3`, unmodified, on `index.html` blob `cc17352d9e397022cf8cff5d38cc0a15af31ee8d`: **23 pass, 0 fail** (was 22 and 1).
+  2. The branch head — the same page split into separate files. See the pull request for its SHA.
+
+### DEP-02
+
+A construction or renovation project now gets the launch plan gates its work depends on (15 items, including contract authority `T17` and release-to-build `T19`). Draft tasks reference only gates that exist in the project's own plan. A plan with no release-to-build gate cannot export contractor tasks; the page says so and lists it as a blocker. Older saved projects with an empty checklist gain the gates on load.
+
+### Split for the hosted policy
+
+| File | Contents |
+| --- | --- |
+| `studio/index.html` | Markup only. No inline script, style block or style attribute |
+| `studio/studio.css` | All styles, plus small layout utilities that replace the former style attributes |
+| `studio/studio-logic.js` | Record logic: IDs, checklist, approvals, outputs, exports. No page, storage or network access. Exposes `globalThis.StudioLogic` |
+| `studio/studio.js` | Storage, views and events |
+| `studio/test/logic.test.mjs` | 11 Node unit tests of the logic |
+
+- Policy needed: `script-src 'self'; style-src 'self'; img-src 'self' data:`. Nothing else. No dynamic code execution. Thumbnails and previews are `data:` images; other files download.
+- The two scripts are plain scripts, not modules, so the page still opens by double-click and shares names between the files. `studio-logic.js` loads first.
+
+### For Codex
+
+1. **Helper.** The source is now `studio-logic.js` followed by `studio.js`. `StudioLogic` can also be imported directly, as `studio/test/logic.test.mjs` does.
+2. **Routes to add when the UI is wired in:** `index.html`, `studio.css`, `studio-logic.js`, `studio.js`, all behind the session check.
+3. **`npm test` glob.** `apps/development-os/studio/test/*.test.mjs` is not in it. `package.json` is yours.
+4. **Storage seam.** All persistence is in `studio.js`: `loadState()`, `save()` and the `Files` object. Replacing those three with calls to an authorised project-record interface is the whole client change. Proposal for that interface, not built: read and write one project record by Project ID with a revision for conflict checks, and put and get one file by file ID, each authorised per project on the server.
+
+### Tests
+
+| Check | Result |
+| --- | --- |
+| `node apps/development-os/studio/tools/browser-check.mjs` | **40 of 40**, including the split page served over HTTP under `default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'` with no violations |
+| `node --test apps/development-os/studio/test/logic.test.mjs` | **11 of 11** |
+| Reviewer helper at `85262e3` on commit `d2ebe5f` | **23 pass, 0 fail** |
+| `npm run build`, full `npm run check`, GitHub CI | Not run |
+| Hosted sign-in, permissions, staging | Not tested by Claude; the UI is not wired into the hosted candidate |
+
+### Blockers
+
+- The UI is not served by the hosted candidate yet; routes and the project-record interface are Codex's to add.
+- No pull request is open for this branch: GitHub is not signed in for Claude on this computer.
+- Safari on an iPhone is not tested.
+
+### Next three actions
+
+1. **Codex:** retest `d2ebe5f` and the branch head; adapt the helper to the external files; add protected routes for the four UI files.
+2. **Tony:** open the draft pull request; approve staging resources and the Google sign-in configuration.
+3. **Claude Code:** replace browser storage with Codex's authorised project-record interface once it exists, with made-up data.
+
 ## 2026-11-12 (later) — Six reviewed workflow fixes and the shared Project ID
 
 - **Agent:** Claude Code, directed by Tony. Role: builder. Requested reviewer: Codex. Tony merges.

@@ -28,6 +28,7 @@ ws.onmessage = ev => { const m = JSON.parse(ev.data);
   if (m.id) { const p = pending.get(m.id); pending.delete(m.id); m.error ? p.rej(new Error(m.error.message)) : p.res(m.result); return; }
   if (m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text);
   if (m.method === 'Runtime.consoleAPICalled' && m.params.type === 'error') errors.push(m.params.args.map(a => a.value ?? a.description).join(' '));
+  if (m.method === 'Log.entryAdded' && m.params.entry.level === 'error') errors.push(m.params.entry.text + ' ' + (m.params.entry.url || ''));   // includes content-policy violations
   if (m.method === 'Page.loadEventFired') waiters.splice(0).forEach(f => f()); };
 const send = (method, params = {}) => new Promise((res, rej) => { const id = ++seq; pending.set(id, { res, rej }); ws.send(JSON.stringify({ id, method, params })); });
 const loaded = () => new Promise(res => waiters.push(res));
@@ -44,7 +45,7 @@ const check = (name, ok, detail = '') => { results.push(`${ok ? 'PASS' : 'FAIL'}
 const SUBMIT = `const submit = id => document.querySelector('#' + id).dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); const set = (id, v) => { document.querySelector('#' + id).value = v; };`;
 
 try {
-  await send('Page.enable'); await send('Runtime.enable'); await size(1360, 900, false);
+  await send('Page.enable'); await send('Runtime.enable'); await send('Log.enable'); await size(1360, 900, false);
 
   // 1. first load: made-up sample only, storage available
   await open('#daily');
@@ -189,7 +190,31 @@ try {
       if (label === 'phone' && v === '#studio-3') await shot('07-design-studio-phone'); }
     check(`no sideways scroll in any of ${views.length} views at ${label} width`, wide.length === 0, wide.join(' '));
   }
-  check('no script errors', errors.length === 0, errors.slice(0, 3).join(' | '));
+  check('no script errors when opened as a file', errors.length === 0, errors.slice(0, 3).join(' | '));
+
+  // 7. the same files served over HTTP under a strict content policy: no inline script or style is allowed
+  const { createServer } = await import('node:http'); const { readFile } = await import('node:fs/promises');
+  const POLICY = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'";
+  const TYPES = { html: 'text/html; charset=utf-8', js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8' };
+  const srv = createServer(async (req, res) => { const name = new URL(req.url, 'http://x').pathname.slice(1) || 'index.html';
+    if (name === 'favicon.ico') { res.writeHead(204); return res.end(); }
+    if (!/^[a-z-]+\.(html|js|css)$/.test(name)) { res.writeHead(404); return res.end(); }
+    try { const body = await readFile(join(dirname(page), name)); res.writeHead(200, { 'Content-Type': TYPES[name.split('.').pop()], 'Content-Security-Policy': POLICY, 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' }); res.end(body); }
+    catch { res.writeHead(404); res.end(); } });
+  await new Promise(r => srv.listen(0, '127.0.0.1', r));
+  errors.length = 0; await size(1360, 900, false);
+  { const l = loaded(); await send('Page.navigate', { url: 'http://127.0.0.1:' + srv.address().port + '/index.html#daily' }); await l; await sleep(500); }
+  r = await run(`const p = P(); state.view = 'studio'; p.step = 2; render();
+    const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='), c => c.charCodeAt(0));
+    await addFiles([new File([png], 'policy.png', { type: 'image/png' })]); await new Promise(x => setTimeout(x, 300));
+    const img = document.querySelector('#view .th img'), form = document.querySelector('#newproj');
+    return { projects: state.projects.length, thumb: img ? img.src.slice(0, 11) : '', inlineStyle: document.querySelectorAll('[style]').length, inlineBlocks: document.querySelectorAll('style').length + [...document.scripts].filter(s => !s.src).length,
+      utility: form ? getComputedStyle(form).display : '', font: getComputedStyle(document.body).fontSize, stored: persistent && Files.ok() };`);
+  check('strict policy: the page runs from external script and style files only', r.projects === 1 && r.inlineBlocks === 0 && r.inlineStyle === 0 && r.font === '15px', JSON.stringify(r));
+  check('strict policy: layout utilities apply and thumbnails are data: images', r.utility === 'flex' && r.thumb === 'data:image/' && r.stored === true);
+  await shot('10-served-under-strict-policy-desktop');
+  srv.close();
+  check('strict policy: no violations and no script errors', errors.length === 0, errors.slice(0, 3).join(' | '));
 } catch (e) { check('run completed', false, e.message); }
 finally { try { await send('Browser.close'); } catch {} proc.kill(); await sleep(400); await rm(profile, { recursive: true, force: true }).catch(() => {}); }
 
