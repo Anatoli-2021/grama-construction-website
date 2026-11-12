@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Development OS — workspace prototype</title>
+<!--
+  Workspace prototype: Daily Workspace, Design Studio, New Development Project.
+  Ships with made-up sample data only. Everything a person adds (projects, tasks, files, selections)
+  stays in that browser's local storage. Nothing is uploaded, sent or synchronised.
+  AI, Smartsheet, Wave and email are NOT connected.
+-->
+<link rel="stylesheet" href="studio.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side" aria-label="Navigation">
+    <div class="brand" id="brand"></div>
+    <nav class="nav" id="nav"></nav>
+    <div>
+      <h3>Projects by address</h3>
+      <input class="in" id="q" type="search" placeholder="Search address" autocomplete="off" aria-label="Search projects by address">
+      <div class="plist" id="plist"></div>
+      <form id="newproj" data-u="u1"><input class="in" id="np_addr" placeholder="Quick add: address" autocomplete="off" aria-label="Quick add a project by address"><input type="hidden" id="np_type" value="Construction or renovation"><button class="btn sm" type="submit">Add</button></form>
+    </div>
+    <div class="side-foot">
+      <span id="storage"></span>
+      <button class="ghost" id="theme" type="button">Light / dark</button>
+      <button class="ghost" id="reset" type="button">Reset prototype data</button>
+      <span>Prototype v0.2 · nothing is connected</span>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="brand" id="brand-m"></div><button class="ghost" data-act="menu" type="button">Projects</button></div>
+    <div class="wrap">
+      <div class="notice" role="note"><b>Prototype.</b> It opens with one made-up sample project. What you add stays in this browser on this device — nothing is uploaded or sent. AI, Smartsheet, Wave and email are not connected; exports are Draft files for you to review.</div>
+      <main id="view" tabindex="-1"></main>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Main areas"></nav>
+</div>
+
+<script src="studio-logic.js"></script>
+<script src="studio.js"></script>
+</body>
+</html>
