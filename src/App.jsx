@@ -29,20 +29,15 @@ function App({ initialPath } = {}) {
   const route = getRoute(initialPath ?? (typeof window === 'undefined' ? '/' : window.location.pathname)) || notFoundRoute;
   const isHome = route.type === 'home';
   const root = useRef(null);
-  const video = useRef(null);
   const dialog = useRef(null);
   const chapterState = useRef('01');
   const [motion, setMotion] = useState(() => typeof window === 'undefined' || !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [menuOpen, setMenuOpen] = useState(false);
   const [modal, setModal] = useState(null);
   const [consultationRequest, setConsultationRequest] = useState(() => typeof window === 'undefined' ? null : readEnquiryContext(window.location.search));
-  const [filmAvailable, setFilmAvailable] = useState(false);
   const [chapter, setChapter] = useState('01');
 
   useEffect(() => {
-    if (isHome) fetch('/assets/residence-film.mp4', { method: 'HEAD' })
-      .then(response => setFilmAvailable(response.ok && (response.headers.get('content-type') || '').includes('video')))
-      .catch(() => {});
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = event => { if (event.matches) setMotion(false); };
     query.addEventListener('change', update);
@@ -50,21 +45,40 @@ function App({ initialPath } = {}) {
   }, []);
 
   useEffect(() => {
-    if (!video.current) return;
-    if (motion) video.current.play().catch(() => {});
-    else video.current.pause();
-  }, [motion, filmAvailable]);
-
-  useEffect(() => {
     if (!menuOpen) return;
-    const closeOnEscape = event => {
+    const mobile = window.matchMedia('(max-width: 900px)');
+    if (!mobile.matches) { setMenuOpen(false); return; }
+    const header = root.current.querySelector('.site-header');
+    const trigger = header.querySelector('.menu-button');
+    const background = [...root.current.querySelectorAll('main, .site-footer, .skip-link, .chapter-index')];
+    const previousInert = background.map(element => element.inert);
+    const previousOverflow = document.body.style.overflow;
+    background.forEach(element => { element.inert = true; });
+    document.body.style.overflow = 'hidden';
+    header.querySelector('.main-nav a')?.focus({ preventScroll: true });
+    const onKeyDown = event => {
       if (event.key === 'Escape') {
+        event.preventDefault();
         setMenuOpen(false);
-        root.current.querySelector('.menu-button')?.focus();
+        trigger.focus({ preventScroll: true });
+      } else if (event.key === 'Tab') {
+        const targets = [...header.querySelectorAll('a[href], button')].filter(element => element.getClientRects().length && !element.disabled);
+        if (event.shiftKey && document.activeElement === targets[0]) {
+          event.preventDefault(); targets.at(-1)?.focus();
+        } else if (!event.shiftKey && document.activeElement === targets.at(-1)) {
+          event.preventDefault(); targets[0]?.focus();
+        }
       }
     };
-    document.addEventListener('keydown', closeOnEscape);
-    return () => document.removeEventListener('keydown', closeOnEscape);
+    const onResize = event => { if (!event.matches) setMenuOpen(false); };
+    document.addEventListener('keydown', onKeyDown);
+    mobile.addEventListener('change', onResize);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      mobile.removeEventListener('change', onResize);
+      background.forEach((element, index) => { element.inert = previousInert[index]; });
+      document.body.style.overflow = previousOverflow;
+    };
   }, [menuOpen]);
 
   useEffect(() => {
@@ -92,7 +106,7 @@ function App({ initialPath } = {}) {
     const mm = gsap.matchMedia();
     mm.add('all', () => {
       if (isHome) {
-      gsap.fromTo('.hero-visual', { scale: 1.045 }, { scale: 1.14, yPercent: 7, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+      gsap.to('.hero-visual', { yPercent: 3, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
       gsap.to('.hero-copy', { y: 80, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero', start: '25% top', end: 'bottom top', scrub: .6 } });
       }
       gsap.utils.toArray('.reveal').forEach(element => gsap.from(element, { y: 36, opacity: 0, duration: 1.1, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 92%', once: true } }));
@@ -116,7 +130,7 @@ function App({ initialPath } = {}) {
 
   useEffect(() => {
     if (!isHome) return;
-    const legacy = { '#services': '/about#services', '#process': '/partnerships#process', '#partnerships': '/partnerships', '#interest': '/contact' };
+    const legacy = { '#services': '/about#services', '#process': '/partnerships#process', '#partnerships': '/partnerships', '#interest': '/contact', '#architecture': '/projects/dexter-acres#architecture', '#community': '/projects/dexter-acres#community' };
     const destination = legacy[window.location.hash];
     if (destination) window.location.replace(destination);
   }, []);
@@ -134,7 +148,7 @@ function App({ initialPath } = {}) {
 
 
   return (
-    <div ref={root} className={"experience" + (isHome ? "" : " interior-page") + (route.type === 'animated' ? " animated-route" : "")} data-motion={motion ? 'on' : 'off'}>
+    <div ref={root} className={"experience" + (isHome ? " heritage-home" : " interior-page") + (route.type === 'animated' ? " animated-route" : "")} data-motion={motion ? 'on' : 'off'}>
       <a className="skip-link" href="#main-content">Skip to content</a>
       <header className={"site-header" + (isHome ? "" : " site-header--solid")}>
         <a className="brand development-lockup" href="/" aria-label="Grama Development — home" onClick={navigate}><img className="development-g" src="/assets/brand/grama-g.svg" alt="" width="100" height="100" /><img className="development-wordmark" src="/assets/brand/grama-development.svg" alt="Grama Development" width="780" height="240" /></a>
@@ -154,25 +168,22 @@ function App({ initialPath } = {}) {
         {isHome && <>
         <section className="hero" id="home" data-chapter="01" aria-labelledby="hero-title">
           <div className="hero-visual">
-            <img className="hero-image" src={assets + 'residence.webp'} alt="Architectural concept of a gabled Dexter Acres residence, with light masonry and dark rooflines" width="1536" height="1024" fetchPriority="high" />
-            {filmAvailable && <video ref={video} className="hero-video" src={assets + 'residence-film.mp4'} poster={assets + 'residence.webp'} autoPlay={motion} muted loop playsInline preload="metadata" aria-label="Animated architectural concept of a Dexter Acres residence" />}
+            <img className="hero-image" src={assets + 'original-home-hero.webp'} alt="Original Grama company photograph of three neighboring houses with masonry façades" width="1536" height="983" fetchPriority="high" />
           </div>
           <div className="hero-shade" />
-          <div className="hero-location"><span className="tiny-dot" /> Chicago & Chicagoland <span className="location-line" /> Grama Development</div>
           <div className="hero-copy">
-            <p className="eyebrow light">For investors, developers & property owners</p>
-            <h1 id="hero-title">Luxury custom homes.<br /><em>Residential development.</em></h1>
-            <p className="hero-positioning">A family business serving Chicago and Chicagoland.<br />{' '}For property owners, developers and investment partners.</p>
-            <div className="hero-actions"><a className="text-link light-link" href="/partnerships">Discuss a partnership <Arrow /></a><a className="text-link light-link" href="/projects">View completed projects <Arrow diagonal /></a></div>
+            <p className="eyebrow light">Grama Development / Chicagoland</p>
+            <h1 id="hero-title">Luxury homes.<br /><em>Complete development.</em></h1>
+            <p className="hero-positioning">From site planning and design coordination through construction.</p>
+            <div className="hero-actions"><a className="text-link light-link" href="/projects">View completed projects <Arrow diagonal /></a><a className="text-link light-link" href="/contact">Discuss your project <Arrow /></a></div>
           </div>
-          <div className="hero-bottom"><a href="#architecture" className="scroll-cue"><span />DEXTER ACRES / 14 PLANNED HOMES</a><span className="image-disclosure">Architectural concept{filmAvailable ? ' · AI-animated visualization' : ' rendering'}</span><button className="motion-button" onClick={() => setMotion(!motion)} aria-label={motion ? 'Pause motion' : 'Enable motion'}><MotionIcon paused={!motion} /><span>{motion ? 'PAUSE MOTION' : 'PLAY MOTION'}</span></button></div>
+          <div className="hero-bottom"><a href="#properties" className="scroll-cue"><span />EXPLORE COMPLETED WORK</a><span className="image-disclosure">Original company photography</span><button className="motion-button" onClick={() => setMotion(!motion)} aria-label={motion ? 'Pause motion' : 'Enable motion'}><MotionIcon paused={!motion} /><span>{motion ? 'PAUSE MOTION' : 'PLAY MOTION'}</span></button></div>
         </section>
         <AboutGrama onConsultation={() => openConsultation()} />
-        <PropertyCollection motion={motion} />
-        <DexterExperience motion={motion} onView={setModal} onConsultation={openConsultation} />
-        <section className="animated-invitation"><div><p className="eyebrow light">ANIMATED EXPERIENCE</p><h2>A closer look at the architecture.</h2><p>Explore the residence, its layers and the proposed neighborhood.</p><a className="text-link light-link" href="/animated-experience">Enter the experience <Arrow diagonal /></a></div><a href="/animated-experience" tabIndex={-1} aria-hidden="true"><img src="/assets/animated/house-complete.webp" alt="" width="1672" height="941" loading="lazy" /></a></section>
+        <PropertyCollection motion={motion} showConceptPreview={false} />
+        <section className="animated-invitation animated-invitation--text"><div><p className="eyebrow light">ARCHITECTURAL CONCEPT STUDY</p><h2>A closer look at the architecture.</h2><p>Explore the separate Animated Experience and proposed Dexter Acres project. Concept visualizations are distinct from the completed-project photography shown here.</p><a className="text-link light-link" href="/animated-experience">Enter the concept experience <Arrow diagonal /></a></div><a className="text-link light-link" href="/projects/dexter-acres">Explore Dexter Acres and the lot plan <Arrow diagonal /></a></section>
         <TrustedPartners />
-        <section className="page-invitation section-pad" data-chapter="08"><p className="eyebrow">WORK WITH GRAMA DEVELOPMENT</p><h2 className="display">A site, a home<br /><em>or a development.</em></h2><p>Meet the team, review our work and tell us about your project.</p><div><a className="button button-dark" href="/partnerships">Development partnerships <Arrow diagonal /></a><a className="text-link" href="/contact">Contact Grama Development <Arrow diagonal /></a></div></section>
+        <section className="page-invitation section-pad" data-chapter="08"><p className="eyebrow">WORK WITH GRAMA DEVELOPMENT</p><h2 className="display">A site, a home<br /><em>or a development.</em></h2><p>Meet the team, review our work and tell us about your project.</p><ul className="opportunity-links"><li><a href={enquiryHref({path:'development',topic:'Landowner opportunity'})}>I have land <Arrow diagonal /></a></li><li><a href={enquiryHref({path:'development',topic:'Development partnership'})}>I have a development <Arrow diagonal /></a></li><li><a href={enquiryHref({path:'development',topic:'Investment partnership'})}>I’m interested in partnering <Arrow diagonal /></a></li></ul><div><a className="button button-dark" href="/partnerships">Development partnerships <Arrow diagonal /></a><a className="text-link" href="/contact">Contact Grama Development <Arrow diagonal /></a></div></section>
         </>}
         {route.type === 'animated' && <AnimatedExperience motion={motion} />}
         {route.type === 'about' && <AboutPage onConsultation={openConsultation} />}

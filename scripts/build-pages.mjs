@@ -19,14 +19,14 @@ assert.equal(new Set(siteRoutes.map(route => route.description)).size, siteRoute
 const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
 function renderDocument(route, markup) {
   const canonical = new URL(route.path, origin.origin).href;
-  const image = route.image || 'residence.webp';
+  const image = route.image || 'original-home-hero.webp';
   const imageUrl = new URL(/^(?:https?:\/\/|\/)/.test(image) ? image : '/assets/' + image, origin.origin).href;
   let html = template
     .replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, () => '<title>' + escapeHtml(route.title) + '</title>')
     .replace(/\s*<meta\b(?=[^>]*\bname\s*=\s*["'](?:description|twitter:[^"']*)["'])[^>]*>/gi, '')
     .replace(/\s*<meta\b(?=[^>]*\bproperty\s*=\s*["']og:[^"']*["'])[^>]*>/gi, '')
     .replace(/\s*<link\b(?=[^>]*\brel\s*=\s*["']canonical["'])[^>]*>/gi, '');
-  // The concept hero belongs to the homepage. Other documents let their actual
+  // The restored original company photograph belongs to the homepage. Other documents let their actual
   // above-the-fold images (and React's resource hints) drive image loading.
   if (route.path !== '/') html = html.replace(/\s*<link\b(?=[^>]*\brel\s*=\s*["']preload["'])(?=[^>]*\bas\s*=\s*["']image["'])[^>]*>/gi, '');
   const metadata = [
