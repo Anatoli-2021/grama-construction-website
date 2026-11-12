@@ -1,22 +1,44 @@
 # Grama Construction development workspace
 
-One private repository for the existing React/Vite/GSAP website and the reusable Development OS launch tool. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
+One shared repository for the existing React/Vite/GSAP website and the reusable Development OS launch tool. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
 
 Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Owner: **Anatoli-2021**.
 
-Public review preview: [Grama / Dexter Acres](https://grama-dexter-acres-preview.anatoli-gram-1564.chatgpt.site). The current company domain remains separate.
+Website review preview: [Grama Construction on Railway](https://grama-construction-website-production.up.railway.app/). The current company domain remains separate. The investor/developer showcase restores the official company portraits, completed-project archive and partner logos while preserving Dexter Acres motion and the 14-lot plan.
+
+Hosted enquiries use a server-only Resend integration when the approved sender, recipient, origin and secret key are configured and delivery is explicitly enabled. Unconfigured previews offer a clearly labelled browser-only draft without submitting personal fields. Localhost retains its existing local-save workflow. See [contact delivery setup and verification](docs/CONTACT-DELIVERY.md); do not call inbox delivery verified until a real test is received. Sold-home totals, closing values and company revenue are omitted until supported by approved records.
+
+## Multipage website
+
+Current implementation: `6fb4308` / [PR9](https://github.com/Anatoli-2021/grama-construction-website/pull/9), branch `feature/multipage-website`. The existing Railway review service follows this branch; the PR records its actual deployed SHA and status.
+
+The review website now has fourteen prerendered public pages. Normal document links and direct URL refreshes work without a catch-all homepage response. Build with `npm run build`; the build emits each page’s HTML, title, description, canonical and sharing metadata. Preview indexing remains disabled.
+
+| Page | Route |
+| --- | --- |
+| Company homepage | `/` |
+| About and family | `/about` |
+| Project index and status filters | `/projects` |
+| Eight individual completed cases | `/projects/<project-slug>` |
+| Dexter Acres cinematic and14-lot plan | `/projects/dexter-acres` |
+| Development partnerships and process | `/partnerships` |
+| Contact and contextual enquiry | `/contact` |
+
+Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Unknown URLs return a real404. Runtime hosting serves `dist` plus the explicit contact-delivery and individually authorized presentation APIs; repository files, the OS and local enquiry API remain unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Missing delivery configuration cannot report a successful submission.
 
 ## Two products, separate boundaries
 
 | Product | Source | Start locally | Data / hosting status |
 | --- | --- | --- | --- |
-| Public website | Root `src/`, `public/`, `server.mjs` | `npm run dev` → port 5173 | Public static preview; hosted enquiry delivery not connected |
+| Public website | Root `src/`, `public/`, `server.mjs` | `npm run dev` → port 5173 | Hosted contact delivery is disabled until configured; local development saves synthetic enquiries locally |
 | Development OS | `apps/development-os/` | `npm run dev:os` → port 5180 | Loopback-only blank launch tool; no live data or authentication |
 | Shared utility | `packages/shared/` | Used by OS / Node tests | Project ID validation; no company records |
 
-For the prepared OS work, check out `feature/unified-development` until its PR is approved and merged. For the existing web preview work, see PR #1. `main` remains the stable starting version.
+Current integration candidate: `feature/private-investor-presentation`, including `feature/multipage-website` / PR9 and earlier showcase work in PR7. Review the stack before merging to stable main. The public preview and completed checks are recorded in the candidate PR and team handoff.
 
 Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
+
+The [ordered implementation queue](docs/IMPLEMENTATION-QUEUE.md) records all current requests. The [investor content brief](docs/INVESTOR-CONTENT-BRIEF.md) supplies portable context for Nail's agent. `/presentation` is a separate login shell with server-enforced individual deck access; actual figures and account records stay outside Git and the static build. See [private presentation setup](docs/INVESTOR-PRESENTATION.md). A local private review runs with `npm run dev:presentation` at port 5190 after building and supplying the approved local data. Hosted access remains closed until actual recipients are approved and provisioned.
 
 ## Start on another computer
 
@@ -86,12 +108,13 @@ Visit the same localhost URL. Rebuild after source edits before restarting produ
 | src/components/SitePlan.jsx | Fourteen C5-derived lots and drawing-reported areas |
 | src/styles.css, src/refinement.css, component CSS | Desktop/mobile styling |
 | server.mjs | Local server, API validation and local enquiry storage |
+| scripts/contact-delivery.mjs | Hosted enquiry validation, limits, deduplication and server-only email delivery |
 | public/assets/ | Optimized runtime photographs, concepts, logos, font and sequence |
 | package-lock.json | Reproducible npm dependency installation |
 
 ## Local data and excluded files
 
-On hosted preview addresses, the consultation section provides Grama's direct telephone link and clearly states that online enquiry delivery is not connected. Personal-information forms appear only on localhost/loopback, where the local API can save them. Publishing the static preview does not copy local enquiry records or connect email/CRM delivery.
+Hosted forms check delivery availability before enabling submission. A configured server sends a plain-text notification only to its approved recipient; visitor email addresses are used as validated Reply-To values. A successful response means the provider accepted that notification, not guaranteed inbox delivery or a reservation. No enquiry records are stored in the website filesystem and no automatic messages are sent to visitors. If delivery is unavailable, phone contact and an explicitly selected browser-only draft remain available. Localhost/loopback retains its consented local-save API. Deployment never copies local enquiry records.
 
 The consented enquiry forms append to **.data/interest.jsonl on the developer's computer**. There is no email/CRM delivery, reservation, allocation or production lead service. Client and development-partner enquiries have separate types; lots are accepted only for Dexter Acres home enquiries.
 

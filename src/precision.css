@@ -1,0 +1,67 @@
+/* Public-site refinement: existing information and imagery, clearer typography. */
+:root{--paper:#f7f7f9;--ink:#1d1d1f;--muted:#6e6e73;--line:#dedee3;background:#f7f7f9;color:#1d1d1f}
+.experience{font-family:General Sans,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow:clip}
+.experience :is(h1,h2,h3,.display,.cinema__title){font-family:General Sans,Arial,sans-serif;font-weight:500;font-style:normal;letter-spacing:-.048em}
+.experience :is(h1,h2,h3,.display,.cinema__title) em{font-family:inherit;font-style:normal;font-weight:inherit;letter-spacing:inherit}
+.experience :is(.company-page,.projects-page,.project-case,.page-masthead) :is(h1,h2,h3){font-family:General Sans,Arial,sans-serif;font-weight:500;font-style:normal}
+.experience :is(.company-contact-phone>span:last-child,.projects-page-contact>p,.project-case-navigation strong){font-family:General Sans,Arial,sans-serif;font-weight:500;font-style:normal}
+.experience :is(.consultation-paths strong,.about-lead,.about-philosophy>p,.consultation-success>h4,.lot-number strong,.tiny-number,.enquiry-draft>h4){font-family:General Sans,Arial,sans-serif;font-style:normal;font-weight:500;letter-spacing:-.035em}
+.experience :is(.about-grama,.community,.development-process,.partnerships,.consultation){background-color:#f7f7f9}
+.experience .property-collection{background-color:#eeeeF1}
+.experience :is(.eyebrow,.section-kicker,.cinema__eyebrow){letter-spacing:.025em;line-height:1.6;font-size:12px}
+.experience .hero-location{font-size:11px;letter-spacing:.02em;background:transparent;border:0;backdrop-filter:none;padding:0}
+.experience .hero-copy>.eyebrow{font-size:12px;letter-spacing:.015em;margin-bottom:25px}
+.experience .hero-copy>.eyebrow:before{display:none}
+.experience .hero h1{font-size:clamp(60px,6.4vw,100px);line-height:1.025;letter-spacing:-.06em;font-weight:500;max-width:1030px}
+.experience .hero h1 em{color:#f0f0ef}
+.experience .hero-description{font-size:17px;line-height:1.7;max-width:570px}
+.experience :is(.brand-section-title,.collection-title,.process-title,.consultation-title,.partnership-title){letter-spacing:-.05em}
+.experience .button{border-radius:999px;letter-spacing:.01em;min-height:48px}
+.experience .text-link{letter-spacing:.01em}
+.experience .hero-actions .text-link,.experience .main-nav .nav-cta{border-radius:999px}
+.experience .cinema{--cinema-ivory:#f5f5f7;--cinema-bronze:#c8d4ce;--cinema-charcoal:#18211d}
+.experience .cinema__title{font-size:clamp(54px,5.4vw,84px);line-height:1.04;text-shadow:none;letter-spacing:-.06em}
+.experience .cinema__title em{color:#e3e8e4}
+.experience .cinema__eyebrow{font-size:12px;letter-spacing:.015em;color:#d8dfda;margin-bottom:20px}
+.experience .cinema__body{font-size:15px;line-height:1.7;max-width:440px;color:#f1f1f1d9}
+.experience .cinema__copy--2 .cinema__title{font-size:clamp(43px,4.4vw,68px)}
+.experience .cinema__copy--2 .cinema__eyebrow{font-size:12px;margin-bottom:16px}
+.experience .cinema__copy--2 .cinema__body{font-size:14px;max-width:580px;line-height:1.7}
+.experience .cinema__copy--2{top:104px}
+.experience .cinema__copy--2 .cinema__eyebrow{display:none}
+.experience .cinema__chapter-button{font-size:12px;letter-spacing:0;min-height:48px}
+.experience .cinema__chapter-number{font-size:10px}
+.experience .cinema__disclosure{font-size:10px;letter-spacing:0;line-height:1.6}
+.experience .cinema__progress{height:2px}
+.experience .cinema__panel--1{background:#eeeeF1}
+.experience .cinema__panel--1 .cinema__body{color:#67676d}
+.experience .cinema__panel--1 :is(.cinema__eyebrow,.cinema__title em){color:#536159}
+@media(max-width:1000px){.experience .hero h1{font-size:clamp(55px,7.6vw,78px)}}
+@media(max-width:899px){
+  .experience .cinema--enhanced{height:350svh}
+  .experience .cinema__stage{height:100svh;min-height:620px}
+  .experience .cinema__copy{left:6vw;right:6vw;width:auto;bottom:21%;max-width:600px}
+  .experience .cinema__copy--1{bottom:23%}
+  .experience .cinema__title{font-size:clamp(43px,7.8vw,64px);line-height:1.03}
+  .experience .cinema__body{font-size:14px;line-height:1.65;max-width:360px;margin-top:22px}
+  .experience .cinema__copy--2{left:50%;right:auto;top:104px;bottom:auto;width:88%;max-width:680px;text-align:center}
+  .experience .cinema__copy--2 .cinema__title{font-size:clamp(36px,6.3vw,54px)}
+  .experience .cinema__copy--2 .cinema__title br{display:block}
+  .experience .cinema__copy--2 .cinema__title em:before{content:none}
+  .experience .cinema__copy--2 .cinema__body{font-size:13px;line-height:1.65;margin-top:18px}
+  .experience .cinema__bottom{left:6vw;right:6vw;bottom:28px;display:block}
+  .experience .cinema__navigation{justify-content:space-between;gap:14px;width:100%}
+  .experience .cinema__chapter-button{font-size:11px;gap:7px}
+  .experience .cinema__disclosure{font-size:10px;margin-top:16px;margin-bottom:0}
+}
+@media(max-width:600px){
+  .experience .hero h1{font-size:clamp(40px,10.6vw,61px);line-height:1.07;letter-spacing:-.05em;max-width:470px}
+  .experience .hero-copy>.eyebrow{font-size:11px;line-height:1.7;max-width:310px;letter-spacing:0}
+  .experience .hero-location{font-size:9px;letter-spacing:0}
+  .experience .hero-description{font-size:15px;line-height:1.7}
+  .experience :is(.eyebrow,.section-kicker){font-size:11px;letter-spacing:.02em}
+  .experience .cinema__copy--2 .cinema__title{font-size:37px}
+  .experience .cinema__copy--2 .cinema__body{font-size:13px;max-width:330px}
+  .experience .cinema__panel-copy .cinema__title{font-size:44px}
+  .experience .cinema__panel-copy .cinema__body{font-size:14px}
+}
