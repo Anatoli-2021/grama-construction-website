@@ -4,11 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>Design Studio — Development OS prototype</title>
+<title>Development OS — workspace prototype</title>
 <!--
-  Design Studio prototype. Ships with made-up sample data only.
-  Everything a person adds (projects, files, selections, notes) stays in that browser's local storage.
-  Nothing is uploaded, sent or synchronised. AI and Smartsheet are NOT connected.
+  Workspace prototype: Daily Workspace, Design Studio, New Development Project.
+  Ships with made-up sample data only. Everything a person adds (projects, tasks, files, selections)
+  stays in that browser's local storage. Nothing is uploaded, sent or synchronised.
+  AI, Smartsheet, Wave and email are NOT connected.
 -->
 <style>
 :root{
@@ -16,7 +17,7 @@
   --page:#f5f5f7; --surface:#ffffff; --inset:#f5f5f7; --glass:rgba(250,250,252,.78);
   --ink:#1d1d1f; --ink-2:#515154; --muted:#86868b; --line:#e8e8ed; --line-2:#d2d2d7;
   --accent:#0066cc; --accent-fill:#0071e3; --on-accent:#fff; --hover:rgba(0,0,0,.05);
-  --st-good:#0ca30c; --st-ready:#2a78d6; --st-wait:#ec835a; --st-over:#d03b3b; --st-none:#aeaeb2;
+  --st-good:#0ca30c; --st-ready:#2a78d6; --st-over:#d03b3b;
   --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 32px -20px rgba(0,0,0,.18);
   --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text","Segoe UI",system-ui,Roboto,sans-serif;
 }
@@ -25,45 +26,43 @@
     color-scheme:dark;
     --page:#0b0b0d; --surface:#1c1c1e; --inset:#2a2a2d; --glass:rgba(28,28,30,.78);
     --ink:#f5f5f7; --ink-2:#c7c7cc; --muted:#8e8e93; --line:#2c2c2e; --line-2:#3a3a3c;
-    --accent:#4aa3ff; --accent-fill:#0a84ff; --hover:rgba(255,255,255,.07);
-    --st-ready:#3987e5; --st-wait:#d95926; --st-none:#636366; --shadow:none;
+    --accent:#4aa3ff; --accent-fill:#0a84ff; --hover:rgba(255,255,255,.07); --st-ready:#3987e5; --shadow:none;
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
   --page:#0b0b0d; --surface:#1c1c1e; --inset:#2a2a2d; --glass:rgba(28,28,30,.78);
   --ink:#f5f5f7; --ink-2:#c7c7cc; --muted:#8e8e93; --line:#2c2c2e; --line-2:#3a3a3c;
-  --accent:#4aa3ff; --accent-fill:#0a84ff; --hover:rgba(255,255,255,.07);
-  --st-ready:#3987e5; --st-wait:#d95926; --st-none:#636366; --shadow:none;
+  --accent:#4aa3ff; --accent-fill:#0a84ff; --hover:rgba(255,255,255,.07); --st-ready:#3987e5; --shadow:none;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--page);color:var(--ink);font:15px/1.47 var(--sans);-webkit-font-smoothing:antialiased;letter-spacing:-.006em}
 button,select,input,textarea{font:inherit;color:inherit;letter-spacing:inherit}
-a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+a{color:var(--accent);text-decoration:none}
 h1,h2,h3,p{margin:0}
 :focus-visible{outline:2px solid var(--accent-fill);outline-offset:2px;border-radius:6px}
-.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100%}
+.app{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100%}
 .side{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:16px;padding:22px 14px 18px;background:var(--glass);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-right:1px solid var(--line);overflow-y:auto}
 .brand{display:flex;align-items:center;gap:11px;padding:2px 8px 4px}
 .brand svg{width:34px;height:34px;flex:none}
 .brand b{display:block;font-size:16px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
 .brand span{font-size:11.5px;color:var(--muted)}
 .nav{display:flex;flex-direction:column;gap:1px}
-.nav button{display:flex;align-items:center;gap:11px;padding:8px 10px;border:0;border-radius:9px;background:none;color:var(--ink);font-size:14.5px;cursor:pointer;text-align:left;width:100%}
-.nav button:hover{background:var(--hover)}
+.nav button{display:flex;align-items:center;gap:11px;padding:9px 10px;border:0;border-radius:9px;background:none;color:var(--ink);font-size:14.5px;cursor:pointer;text-align:left;width:100%}
+.nav button:hover,.plist button:hover{background:var(--hover)}
 .nav svg{width:19px;height:19px;flex:none;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .nav button[aria-current="page"]{background:var(--hover);font-weight:600}
+.nav .n{margin-left:auto;font-size:11.5px;font-weight:600;color:var(--muted)}
 .cap{font-size:12px;color:var(--muted)}
 .sub{font-size:13px;color:var(--ink-2)}
 .side h3{font-size:11px;font-weight:500;color:var(--muted);padding:0 10px;margin-bottom:4px}
-.plist{display:flex;flex-direction:column;gap:1px;max-height:34vh;overflow-y:auto}
+.plist{display:flex;flex-direction:column;gap:1px;max-height:32vh;overflow-y:auto;margin-top:6px}
 .plist button{display:block;width:100%;text-align:left;padding:7px 10px;border:0;border-radius:9px;background:none;cursor:pointer;font-size:13.5px}
-.plist button:hover{background:var(--hover)}
 .plist button[aria-current="true"]{background:var(--hover);font-weight:600}
 .plist small{display:block;color:var(--muted);font-weight:400;font-size:11.5px}
 .in{padding:9px 11px;border:1px solid var(--line-2);border-radius:10px;background:var(--surface);min-width:0;width:100%}
-textarea.in{min-height:84px;resize:vertical}
+textarea.in{min-height:80px;resize:vertical}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 15px;border:0;border-radius:980px;background:var(--accent-fill);color:var(--on-accent);font-weight:500;font-size:14px;cursor:pointer;white-space:nowrap}
 .btn:hover{filter:brightness(1.07)}
 .btn.sec{background:var(--inset);color:var(--ink)}
@@ -73,10 +72,10 @@ textarea.in{min-height:84px;resize:vertical}
 .main{min-width:0;padding:0 clamp(16px,3.2vw,44px) 110px}
 .wrap{max-width:1160px;margin:0 auto}
 .topbar{display:none}
-.notice{display:flex;gap:10px;align-items:flex-start;margin:18px 0 0;padding:11px 14px;border-radius:12px;background:var(--surface);box-shadow:var(--shadow);font-size:13px;color:var(--ink-2)}
+.notice{margin:18px 0 0;padding:11px 14px;border-radius:12px;background:var(--surface);box-shadow:var(--shadow);font-size:13px;color:var(--ink-2)}
 .notice b{color:var(--ink);font-weight:600}
-.head{padding:30px 0 18px}
-.head .crumb{font-size:13px;color:var(--muted);margin-bottom:6px}
+.head{padding:28px 0 16px}
+.head .crumb{font-size:13px;color:var(--muted);margin-bottom:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .head h1{font-size:clamp(26px,3vw,36px);font-weight:600;letter-spacing:-.028em;line-height:1.12}
 .head p{color:var(--ink-2);margin-top:6px}
 .grid{display:grid;gap:16px}
@@ -88,17 +87,25 @@ textarea.in{min-height:84px;resize:vertical}
 .card-b{padding:0 22px 20px}
 .kpi{padding:16px 22px}
 .kpi .lbl{font-size:13px;color:var(--ink-2)}
-.kpi .val{font-size:38px;font-weight:600;letter-spacing:-.035em;line-height:1.1;margin:4px 0}
+.kpi .val{font-size:36px;font-weight:600;letter-spacing:-.035em;line-height:1.1;margin:4px 0}
 .kpi .val small{font-size:15px;font-weight:500;color:var(--muted)}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:980px;background:var(--inset);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
 .chip i{width:7px;height:7px;border-radius:2px;box-shadow:inset 0 0 0 2px var(--muted)}
 .tag{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:6px;background:var(--inset);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
 .tag.warn{background:transparent;box-shadow:inset 0 0 0 1px var(--st-over);color:var(--ink)}
+.tag.ok{background:transparent;box-shadow:inset 0 0 0 1px var(--st-good);color:var(--ink)}
 .segctl{display:inline-flex;gap:2px;padding:3px;border-radius:11px;background:var(--line);max-width:100%;overflow-x:auto}
 .segctl button{padding:7px 14px;border:0;border-radius:8px;background:none;cursor:pointer;color:var(--ink);font-size:13.5px;white-space:nowrap}
 .segctl button[aria-selected="true"]{background:var(--surface);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.flow{display:grid;grid-template-columns:repeat(8,minmax(104px,1fr));gap:2px;overflow-x:auto;margin:4px 0 20px;padding-bottom:4px}
+.flow button{display:flex;flex-direction:column;gap:3px;align-items:flex-start;padding:10px 10px 11px;border:0;background:var(--surface);cursor:pointer;text-align:left;min-height:66px}
+.flow button:first-child{border-radius:12px 0 0 12px}.flow button:last-child{border-radius:0 12px 12px 0}
+.flow .k{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.flow .nm{font-size:12.5px;font-weight:600;line-height:1.25;letter-spacing:-.01em}
+.flow .c{font-size:11px;color:var(--ink-2);margin-top:auto}
+.flow button[aria-current="step"]{box-shadow:inset 0 -3px 0 var(--accent-fill)}
 .rows{display:flex;flex-direction:column}
-.row{padding:14px 0;border-top:1px solid var(--line)}
+.row{padding:13px 0;border-top:1px solid var(--line)}
 .row:first-child{border-top:0}
 .row .top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
 .row .t{font-weight:600;letter-spacing:-.01em}
@@ -116,13 +123,15 @@ textarea.in{min-height:84px;resize:vertical}
 .drop.over{border-color:var(--accent-fill);background:var(--inset)}
 .files{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:14px}
 .file{border-radius:12px;background:var(--inset);overflow:hidden;font-size:12.5px;cursor:pointer;border:0;text-align:left;padding:0;color:inherit}
-.file .th{height:92px;display:flex;align-items:center;justify-content:center;background:var(--line);color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
-.file .th img{width:100%;height:100%;object-fit:cover;display:block}
+.th{height:92px;display:flex;align-items:center;justify-content:center;background:var(--line);color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase;overflow:hidden}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
 .file .m{padding:8px 10px}
 .file .n{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:10px}
+.board .th{height:96px;border-radius:10px}
 .form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .form .full{grid-column:1/-1}
-.form label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-2)}
+.form label,.lab{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-2)}
 .tbl{width:100%;border-collapse:collapse;font-size:13.5px}
 .tbl th{font-size:11.5px;color:var(--muted);font-weight:500;text-align:left;padding:8px 14px 8px 0;border-bottom:1px solid var(--line-2);white-space:nowrap}
 .tbl td{padding:10px 14px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
@@ -130,9 +139,8 @@ textarea.in{min-height:84px;resize:vertical}
 .tbl .num{text-align:right;font-variant-numeric:tabular-nums;padding-right:0}
 .scroll{overflow-x:auto}
 pre.brief{white-space:pre-wrap;font:13px/1.5 ui-monospace,"SF Mono",Consolas,monospace;background:var(--inset);padding:14px;border-radius:12px;margin:10px 0 0;max-height:320px;overflow:auto}
-.navmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
-.navmap div{padding:12px 14px;border-radius:12px;background:var(--inset);font-size:13px;color:var(--ink-2)}
-.navmap b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+.chk{display:grid;grid-template-columns:minmax(0,1fr) 132px;gap:8px 12px;align-items:start}
+.nine{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:10px}
 .tabs{display:none}
 @media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:860px){
@@ -145,7 +153,7 @@ pre.brief{white-space:pre-wrap;font:13px/1.5 ui-monospace,"SF Mono",Consolas,mon
   .tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .tabs button[aria-current="page"]{color:var(--accent)}
   .head{padding:22px 0 14px} .card-h,.card-b,.kpi{padding-left:18px;padding-right:18px}
-  .form{grid-template-columns:minmax(0,1fr)} .kpi .val{font-size:32px}
+  .form{grid-template-columns:minmax(0,1fr)} .kpi .val{font-size:30px} .chk{grid-template-columns:minmax(0,1fr)}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -158,27 +166,23 @@ pre.brief{white-space:pre-wrap;font:13px/1.5 ui-monospace,"SF Mono",Consolas,mon
     <div>
       <h3>Projects by address</h3>
       <input class="in" id="q" type="search" placeholder="Search address" autocomplete="off" aria-label="Search projects by address">
-      <div class="plist" id="plist" style="margin-top:6px"></div>
-      <form id="newproj" style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
-        <input class="in" id="np_addr" placeholder="New project address" autocomplete="off" aria-label="New project address">
-        <div style="display:flex;gap:6px"><select class="in" id="np_type" aria-label="Project type"><option>Single home</option><option>Renovation</option><option>Subdivision lot</option></select><button class="btn sm" type="submit">Add</button></div>
-      </form>
+      <div class="plist" id="plist"></div>
     </div>
     <div class="side-foot">
       <span id="storage"></span>
       <button class="ghost" id="theme" type="button">Light / dark</button>
       <button class="ghost" id="reset" type="button">Reset prototype data</button>
-      <span>Prototype v0.1 · AI and Smartsheet not connected</span>
+      <span>Prototype v0.2 · nothing is connected</span>
     </div>
   </aside>
   <div class="main">
-    <div class="topbar"><div class="brand" id="brand-m"></div><button class="ghost" id="menu" type="button">Projects</button></div>
+    <div class="topbar"><div class="brand" id="brand-m"></div><button class="ghost" data-act="menu" type="button">Projects</button></div>
     <div class="wrap">
-      <div class="notice" role="note"><div><b>Prototype.</b> It opens with one made-up sample project. What you add stays in this browser on this device — nothing is uploaded or sent. AI and Smartsheet are not connected; exports are Draft files for you to review.</div></div>
+      <div class="notice" role="note"><b>Prototype.</b> It opens with one made-up sample project. What you add stays in this browser on this device — nothing is uploaded or sent. AI, Smartsheet, Wave and email are not connected; exports are Draft files for you to review.</div>
       <main id="view" tabindex="-1"></main>
     </div>
   </div>
-  <nav class="tabs" id="tabs" aria-label="Studio sections"></nav>
+  <nav class="tabs" id="tabs" aria-label="Main areas"></nav>
 </div>
 
 <script>
@@ -191,18 +195,55 @@ const SEL_CATS = { // category -> proposed trade (a suggestion, never an assignm
   "Windows & doors":"Carpenter","Siding":"Siding installer","Roofing":"Roofer","Landscape":"Landscaper","Other":"To be assigned"
 };
 const DEFAULT_AREAS = ["Kitchen","Bathrooms","Exterior","Interior finishes","Site & landscape"];
-const NAV = [
-  ["today","Today",'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'],
-  ["projects","Projects",'<path d="M4 20V10l8-5.5 8 5.5v10"/><path d="M9.5 20v-6h5v6"/>'],
-  ["studio","Design Studio",'<path d="M4 17.5L15.5 6l2.5 2.5L6.5 20H4z"/><path d="M13.5 8l2.5 2.5M15 19h5"/>'],
-  ["decisions","Decisions",'<circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 4.9-5.2"/>'],
-  ["documents","Documents",'<path d="M7 3.5h7l4 4V20.5H7z"/><path d="M14 3.5v4h4M9.8 12.5h5.4M9.8 16h5.4"/>'],
-  ["finance","Financial risks",'<rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 017 0v2.5"/>'],
-  ["status","AI & connections",'<path d="M5 12a7 7 0 0114 0M8 12a4 4 0 018 0"/><circle cx="12" cy="12.4" r="1.2"/><path d="M12 14v5.5"/>']
+const ROLES = ["Owner / approver","Project lead","Design lead","Estimator","Site lead","Office / admin"];
+const FLOW = ["Project","Upload sources","Design","Review & approve","Takeoff & budget","Client proposal","Work package","Construction"];
+const PROPOSAL_STATES = ["Not started","Drafted in Wave","Sent to client","Accepted by client"];
+const TASK_KINDS = ["Task","Client request","Follow-up"];
+// Development checklist: the task list of the existing blank launch template (launch-template.json), grouped for this view.
+// [key, group, task, appliesTo, approval gate]
+const LAUNCH_TASKS = [
+ ["T01","Feasibility","Identify opportunity and check duplicates","All","PM intake approval"],
+ ["T04","Feasibility","Test use, yield and program alternatives","All","Investment screening"],
+ ["T05","Feasibility","Validate sales or rental basis","All","Market assumptions review"],
+ ["T06","Feasibility","Build cost, cash and downside feasibility","All","Go / hold / reject"],
+ ["T07","Partners","Agree entity, funding, roles and authority","All","Principal / partner approval"],
+ ["T02","Legal documents","Verify title, legal description and acquisition terms","All","Acquisition decision by authorized principal"],
+ ["T08","Legal documents","Coordinate and execute required agreements","All","Authorized signature"],
+ ["T03","Architecture","Verify survey and site constraints","All","Professional scope approval"],
+ ["T09","Architecture","Confirm zoning and entitlement path","All","Agency decisions and principal review"],
+ ["S01","Architecture","Define shared infrastructure and lot release gates","Subdivision","Shared infrastructure / phasing approval"],
+ ["T10","Architecture","Set design program and drawing control","All","Owner design review; professional responsibility"],
+ ["T11","Architecture","Coordinate survey, civil, structural and MEP","All","Professional release for intended use"],
+ ["T12","Permits","Track permits and review comments","All","Required agency approvals"],
+ ["T13","Permits","Track each utility and offsite requirement","All","Provider / agency release; commitment approval"],
+ ["T14","Budgets","Measure quantities and build cost-code estimate","All","Estimator quantity check"],
+ ["T15","Budgets","Level bids and reconcile complete scope","All","Quote selection; no purchase implied"],
+ ["S02","Budgets","Approve shared-cost allocation and portfolio elimination","Subdivision","Allocation-method approval"],
+ ["T16","Budgets","Approve budget, contingency and funding baseline","All","Separate budget approval"],
+ ["T22","Budgets","Reconcile incurred costs and cost-to-complete","All","Finance review; no posting or payment implied"],
+ ["T23","Budgets","Review cash, funding and payment requests","All","Authorized payment / capital decisions"],
+ ["T18","Schedules","Build master schedule and lookahead","All","Schedule baseline approval"],
+ ["T19","Schedules","Verify release-to-build readiness","All","Human release-to-build"],
+ ["T20","Schedules","Track progress, quality and inspections","All","Professional / agency inspections"],
+ ["T21","Schedules","Control RFIs and cost / schedule changes","All","Change approval before commitment"],
+ ["T17","Team responsibilities","Authorize contracts and purchase orders","All","Per-commitment authority"],
+ ["T24","Closeout","Complete inspections, punch list and turnover","All","Agency / owner acceptance"],
+ ["T25","Closeout","Close sale or lease and reconcile distributions","All","Commercial closing / distribution approval"],
+ ["T26","Closeout","Assign warranty and security-release obligations","All","Warranty / agency closure"],
+ ["T27","Closeout","Archive evidence and reusable cost lessons","All","Final archive verification"]
 ];
+const GROUPS = ["Partners","Legal documents","Feasibility","Architecture","Permits","Budgets","Schedules","Team responsibilities","Closeout"];
+const ICON = {
+  daily:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  studio:'<path d="M4 17.5L15.5 6l2.5 2.5L6.5 20H4z"/><path d="M13.5 8l2.5 2.5M15 19h5"/>',
+  "new":'<circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/>',
+  higgsfield:'<rect x="4" y="5" width="16" height="14" rx="2.5"/><path d="M4 15.5l4.5-4 4 3.5 3-2.5 4.5 4"/><circle cx="15.5" cy="9.5" r="1.2"/>',
+  menu:'<path d="M4 20V10l8-5.5 8 5.5v10"/><path d="M9.5 20v-6h5v6"/>'
+};
+const AREAS3 = [["daily","Daily Workspace"],["studio","Design Studio"],["new","New Development Project"],["higgsfield","Higgsfield designs"]];
 const mark = id => '<svg viewBox="0 0 512 512" aria-hidden="true"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b3e44"/><stop offset="1" stop-color="#17181b"/></linearGradient></defs><rect width="512" height="512" rx="116" fill="url(#'+id+')"/><path d="M329.5 182.5A104 104 0 1 0 360 256" fill="none" stroke="#f5f5f7" stroke-width="38" stroke-linecap="round"/><path d="M360 256H266" fill="none" stroke="#c9a36b" stroke-width="38" stroke-linecap="round"/></svg>';
 
-/* ============ storage: state in localStorage, file contents in IndexedDB; both fall back to memory ============ */
+/* ============ storage: records in localStorage, file contents in IndexedDB; both fall back to memory ============ */
 const KEY = "dev-os-design-studio-v1";
 let persistent = true;
 const Files = (() => {
@@ -224,193 +265,345 @@ const Files = (() => {
 function loadState(){ try { const s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; } catch (e) { persistent = false; return null; } }
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { persistent = false; } }
 
-/* ============ made-up sample data ============ */
+/* ============ helpers ============ */
 const uid = () => Math.random().toString(36).slice(2, 10);
-function sampleState(){
-  const areas = DEFAULT_AREAS.map(n => ({ id: uid(), name: n }));
-  const a = n => areas.find(x => x.name === n).id;
-  const sel = (area, name, category, status, o = {}) => Object.assign({ id: uid(), areaId: a(area), name, category, spec: "", vendor: "", qty: null, unit: "", unitCost: null, costCode: "", leadDays: null, neededBy: "", neededConfirmed: false, note: "", status, rev: 1, history: [] }, o);
-  return { version: 1, current: "sample", tab: "design", out: "takeoff", projects: [{
-    id: "sample", address: "1200 Sample Lane", type: "Single home", sample: true, areaId: a("Kitchen"), areas, files: [], notes: {},
-    selections: [
-      sel("Kitchen","Base and wall cabinets","Cabinets","Approved",{ spec: "Shaker, painted, soft-close", vendor: "Sample Cabinet Co.", qty: 24, unit: "LF", costCode: "6400" }),
-      sel("Kitchen","Quartz countertop","Countertops","Selected",{ spec: "3 cm, eased edge", qty: 58, unit: "SF" }),
-      sel("Kitchen","36 in range","Appliances","Ordered",{ spec: "Dual fuel, stainless", vendor: "Sample Supply Co.", qty: 1, unit: "EA", unitCost: 4200, costCode: "11300", leadDays: 21 }),
-      sel("Kitchen","Backsplash tile","Tile","Discussed",{ spec: "Handmade-look ceramic, 3x12" }),
-      sel("Bathrooms","60 in double vanity","Plumbing fixtures","Selected",{ qty: 1, unit: "EA" }),
-      sel("Exterior","Fiber-cement lap siding","Siding","Approved",{ spec: "7 in exposure, factory finish", costCode: "7460" })
-    ] }] };
-}
-
-/* ============ state + helpers ============ */
-let state = null, ui = { q: "", editing: null, hist: {}, info: null };
-const thumbs = new Map();
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const num = v => { const t = String(v == null ? "" : v).trim(); return t !== "" && isFinite(+t) ? +t : null; };
 const money = n => "$" + n.toLocaleString("en-US", { maximumFractionDigits: 2 });
+const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const today = () => iso(new Date());
+const plus = n => { const d = new Date(); d.setDate(d.getDate() + n); return iso(d); };
+const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+function checklist(type){ return type.startsWith("Development") ? LAUNCH_TASKS.filter(t => t[3] === "All" || type.includes("subdivision")).map(t => ({ key: t[0], group: t[1], task: t[2], gate: t[4], status: "Not started", evidence: "" })) : []; }
+function newProject(address, type, extra){
+  const areas = DEFAULT_AREAS.map(n => ({ id: uid(), name: n }));
+  return Object.assign({ id: uid(), address, type, client: "", source: "", description: "", step: 1, areaId: areas[0].id, areas, files: [], notes: {}, selections: [], options: [],
+    team: ROLES.map(r => ({ role: r, name: "" })), checklist: checklist(type), proposal: { state: PROPOSAL_STATES[0], waveNo: "" } }, extra || {});
+}
+function upgrade(s){ // older saved data gains the newer fields; nothing is dropped
+  s.version = 2; s.view = ["daily","studio","new","higgsfield"].includes(s.view) ? s.view : "daily"; s.tasks = s.tasks || []; s.filter = s.filter || "All"; s.out = s.out === "budget" ? "budget" : "takeoff";
+  for (const p of s.projects) { p.step = p.step || 1; p.options = p.options || []; p.client = p.client || ""; p.team = p.team || ROLES.map(r => ({ role: r, name: "" }));
+    p.checklist = p.checklist || []; p.proposal = p.proposal || { state: PROPOSAL_STATES[0], waveNo: "" }; }
+  return s;
+}
+function sampleState(){
+  const p = newProject("1200 Sample Lane", "Development — single home", { id: "sample", sample: true });
+  const a = n => p.areas.find(x => x.name === n).id;
+  const sel = (area, name, category, status, o = {}) => Object.assign({ id: uid(), areaId: a(area), name, category, spec: "", vendor: "", qty: null, unit: "", unitCost: null, costCode: "", leadDays: null, neededBy: "", neededConfirmed: false, status, rev: 1, history: [] }, o);
+  p.selections = [
+    sel("Kitchen","Base and wall cabinets","Cabinets","Approved",{ spec: "Shaker, painted, soft-close", vendor: "Sample Cabinet Co.", qty: 24, unit: "LF", costCode: "6400", neededBy: plus(21) }),
+    sel("Kitchen","Quartz countertop","Countertops","Selected",{ spec: "3 cm, eased edge", qty: 58, unit: "SF" }),
+    sel("Kitchen","36 in range","Appliances","Ordered",{ spec: "Dual fuel, stainless", vendor: "Sample Supply Co.", qty: 1, unit: "EA", unitCost: 4200, costCode: "11300", leadDays: 21, neededBy: plus(30), neededConfirmed: true }),
+    sel("Kitchen","Backsplash tile","Tile","Discussed",{ spec: "Handmade-look ceramic, 3x12" }),
+    sel("Bathrooms","60 in double vanity","Plumbing fixtures","Selected",{ qty: 1, unit: "EA" }),
+    sel("Exterior","Fiber-cement lap siding","Siding","Approved",{ spec: "7 in exposure, factory finish", costCode: "7460" })
+  ];
+  const opt = (area, name, desc, status) => ({ id: uid(), areaId: a(area), name, desc, fileIds: [], status, rev: 1, history: [], comment: "" });
+  p.options = [opt("Kitchen","Option A — island","Island with seating for four; range on the back wall.","In review"), opt("Kitchen","Option B — peninsula","Peninsula toward the dining room; more wall cabinets.","Draft")];
+  p.checklist.forEach(c => { if (c.key === "T01") { c.status = "Done"; c.evidence = "Sample intake note"; } if (c.key === "T04") c.status = "In progress"; });
+  return { version: 2, view: "daily", current: "sample", out: "takeoff", filter: "All", projects: [p], tasks: [
+    { id: uid(), kind: "Client request", text: "Confirm countertop edge profile", projectId: "sample", due: plus(3), confirmed: false, done: false },
+    { id: uid(), kind: "Task", text: "Walk the site with the framing lead", projectId: "sample", due: plus(1), confirmed: true, done: false },
+    { id: uid(), kind: "Follow-up", text: "Cabinet shop drawings — ask for the revised set", projectId: "sample", due: plus(-1), confirmed: false, done: false }
+  ] };
+}
+
+/* ============ derived data ============ */
+let state = null, ui = { q: "", editing: null, hist: {} };
+const thumbs = new Map();
 const P = () => state.projects.find(p => p.id === state.current) || state.projects[0];
+const proj = id => state.projects.find(p => p.id === id);
 const areaName = (p, id) => (p.areas.find(a => a.id === id) || {}).name || "";
 const idx = s => STATUSES.indexOf(s.status);
 const approved = p => p.selections.filter(s => idx(s) >= 2);
+const waiting = p => p.options.filter(o => o.status === "In review").length + p.selections.filter(s => idx(s) === 1).length;
 function blockers(p){
   const out = [];
   for (const s of approved(p)) {
-    if (s.qty == null) out.push([s, "Approved without a quantity — takeoff cannot be issued"]);
-    if (!s.spec) out.push([s, "Approved without a specification or model"]);
-    if (!s.costCode) out.push([s, "No cost code — cannot map to the budget"]);
+    if (s.qty == null) out.push(s.name + ": approved without a quantity");
+    if (!s.spec) out.push(s.name + ": approved without a specification or model");
+    if (!s.costCode) out.push(s.name + ": no cost code, cannot map to the budget");
   }
-  for (const a of p.areas) {
-    const has = p.selections.some(s => s.areaId === a.id && idx(s) >= 1);
-    if (has && !p.files.some(f => f.areaId === a.id && f.cat === "Drawing")) out.push([null, a.name + ": selections exist but no drawing is uploaded"]);
-  }
+  for (const a of p.areas) if (p.selections.some(s => s.areaId === a.id && idx(s) >= 1) && !p.files.some(f => f.areaId === a.id && f.cat === "Drawing")) out.push(a.name + ": selections exist but no drawing is uploaded");
   return out;
 }
+function deadlines(){ // tasks and selections with a date, across all projects
+  const t = today(), list = [];
+  for (const k of state.tasks) if (k.due && !k.done) list.push({ date: k.due, what: k.text, where: (proj(k.projectId) || {}).address || "No project", confirmed: k.confirmed, kind: k.kind });
+  for (const p of state.projects) for (const s of p.selections) if (s.neededBy && idx(s) < 6) list.push({ date: s.neededBy, what: s.name + " — " + s.status, where: p.address, confirmed: s.neededConfirmed, kind: "Selection" });
+  return list.sort((a, b) => a.date.localeCompare(b.date)).map(d => Object.assign(d, { late: d.date < t }));
+}
 
-/* ============ views ============ */
+/* ============ shared pieces ============ */
 function stepper(s){
   const i = idx(s);
-  return `<div class="steps" role="img" aria-label="Status ${esc(s.status)}, step ${i + 1} of ${STATUSES.length}">${STATUSES.map((_, k) => `<i class="${k <= i ? (i >= 2 ? "ok" : "on") : ""}"></i>`).join("")}</div>
+  return `<div class="steps" role="img" aria-label="Status ${esc(s.status)}, step ${i + 1} of 7">${STATUSES.map((_, k) => `<i class="${k <= i ? (i >= 2 ? "ok" : "on") : ""}"></i>`).join("")}</div>
     <div class="steplbl"><span><b>${esc(s.status)}</b></span><span>${i < 6 ? "next: " + STATUSES[i + 1] : "complete"}</span></div>`;
 }
-function selRow(p, s, showArea){
+function selRow(p, s, o = {}){
   const i = idx(s), meta = [s.category, s.spec, s.vendor].filter(Boolean).map(esc).join(" · ");
-  const qty = s.qty != null ? `${s.qty} ${esc(s.unit)}` : "quantity not set";
   const need = s.neededBy ? `needed ${esc(s.neededBy)} (${s.neededConfirmed ? "confirmed" : "proposed"})` : "no deadline set";
   let act = "";
   if (i === 0) act = `<button class="btn sm sec" data-act="next" data-id="${s.id}">Mark selected</button>`;
   else if (i === 1) act = `<button class="btn sm" data-act="next" data-id="${s.id}">Approve</button>`;
-  else if (i < 6) act = `<button class="btn sm sec" data-act="next" data-id="${s.id}">Mark ${STATUSES[i + 1].toLowerCase()}</button>`;
+  else if (i < 6 && o.track) act = `<button class="btn sm sec" data-act="next" data-id="${s.id}">Mark ${STATUSES[i + 1].toLowerCase()}</button>`;
   const h = ui.hist[s.id] ? `<div class="hist">${s.history.length ? s.history.map(x => `R${x.rev} · ${esc(x.status)} · ${esc(x.when)} — ${esc([x.spec, x.vendor, x.qty != null ? x.qty + " " + x.unit : ""].filter(Boolean).join(" · ") || "no details")}`).join("<br>") : "No earlier revisions."}</div>` : "";
-  return `<div class="row"><div class="top"><div><div class="t">${esc(s.name)} <span class="tag">R${s.rev}</span>${showArea ? ` <span class="tag">${esc(areaName(p, s.areaId))}</span>` : ""}</div>
-    <div class="d">${meta || "No specification yet"}</div><div class="d">${qty} · ${need}${s.costCode ? " · cost code " + esc(s.costCode) : ""}</div></div></div>
+  return `<div class="row"><div class="t">${esc(s.name)} <span class="tag">R${s.rev}</span>${o.area ? ` <span class="tag">${esc(areaName(p, s.areaId))}</span>` : ""}</div>
+    <div class="d">${meta || "No specification yet"}</div><div class="d">${s.qty != null ? s.qty + " " + esc(s.unit) : "quantity not set"} · ${need}${s.costCode ? " · cost code " + esc(s.costCode) : ""}</div>
     ${stepper(s)}<div class="acts">${act}<button class="btn sm sec" data-act="edit" data-id="${s.id}">Edit</button><button class="btn sm sec" data-act="hist" data-id="${s.id}">History (${s.history.length})</button></div>${h}</div>`;
 }
 function selForm(p){
   const e = ui.editing ? p.selections.find(s => s.id === ui.editing) : null, v = k => e && e[k] != null ? esc(e[k]) : "";
   const warn = e && idx(e) >= 2 ? `<div class="empty full"><b>This selection is ${esc(e.status)}.</b>Saving a change keeps R${e.rev} in its history, creates R${e.rev + 1} and returns it to Selected for your approval.</div>` : "";
   return `<form class="form" id="selform">${warn}
-    <label class="full">Item<input class="in" id="s_name" required value="${v("name")}" placeholder="e.g. Island pendant lights"></label>
+    <label class="full">Item<input class="in" id="s_name" value="${v("name")}" placeholder="e.g. Island pendant lights"></label>
     <label>Category<select class="in" id="s_cat">${Object.keys(SEL_CATS).map(c => `<option${e && e.category === c ? " selected" : ""}>${c}</option>`).join("")}</select></label>
     <label>Vendor<input class="in" id="s_vendor" value="${v("vendor")}"></label>
     <label class="full">Specification or model<input class="in" id="s_spec" value="${v("spec")}"></label>
     <label>Quantity<input class="in" id="s_qty" inputmode="decimal" value="${v("qty")}"></label>
     <label>Unit<input class="in" id="s_unit" value="${v("unit")}" placeholder="EA, SF, LF"></label>
-    <label>Unit cost (leave blank if unknown)<input class="in" id="s_cost" inputmode="decimal" value="${v("unitCost")}"></label>
+    <label>Unit cost (blank if unknown)<input class="in" id="s_cost" inputmode="decimal" value="${v("unitCost")}"></label>
     <label>Cost code<input class="in" id="s_code" value="${v("costCode")}"></label>
     <label>Needed by<input class="in" id="s_need" type="date" value="${v("neededBy")}"></label>
     <label>Deadline<select class="in" id="s_conf"><option value="">Proposed</option><option value="1"${e && e.neededConfirmed ? " selected" : ""}>Confirmed</option></select></label>
     <div class="full" style="display:flex;gap:8px"><button class="btn" type="submit">${e ? "Save change" : "Add selection"}</button>${e ? '<button class="btn sec" type="button" data-act="cancel">Cancel</button>' : ""}</div></form>`;
 }
+const areaBar = p => `<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+  <div class="segctl" role="tablist">${p.areas.map(x => `<button role="tab" aria-selected="${x.id === p.areaId}" data-act="area" data-id="${x.id}">${esc(x.name)}</button>`).join("")}</div>
+  <form id="addarea" style="display:flex;gap:6px"><input class="in" id="a_name" placeholder="Add area" style="width:130px" aria-label="New area name"><button class="btn sm sec" type="submit">Add</button></form></div>`;
 function fileGrid(p, areaId){
   const list = p.files.filter(f => f.areaId === areaId);
   if (!list.length) return `<div class="empty" style="margin-top:14px"><b>No files yet</b>Add the survey, drawings, photos, references and specifications for this area.</div>`;
-  return `<div class="files">${list.map(f => `<button class="file" data-act="open" data-id="${f.id}" title="Open ${esc(f.name)}"><div class="th" data-thumb="${f.type.startsWith("image/") ? f.id : ""}">${esc(f.cat)}</div><div class="m"><div class="n">${esc(f.name)}</div><div class="cap">${esc(f.cat)} · R${f.rev} · ${Math.max(1, Math.round(f.size / 1024))} KB</div></div></button>`).join("")}</div>`;
+  return `<div class="files">${list.map(f => `<button class="file" data-act="open" data-id="${f.id}" title="Open ${esc(f.name)}"><div class="th" data-thumb="${f.type.startsWith("image/") ? f.id : ""}">${esc(f.cat)}</div><div class="m"><div class="n">${esc(f.name)}</div><div class="cap">${esc(f.cat)} · R${f.rev}${f.source ? " · " + esc(f.source) : ""} · ${Math.max(1, Math.round(f.size / 1024))} KB</div></div></button>`).join("")}</div>`;
+}
+function optRow(p, o, review){
+  const imgs = o.fileIds.map(id => p.files.find(f => f.id === id)).filter(Boolean), pick = p.files.filter(f => f.areaId === o.areaId && !o.fileIds.includes(f.id));
+  const cls = o.status === "Approved" ? " ok" : o.status === "Changes requested" ? " warn" : "";
+  let act = "";
+  if (o.status === "Draft" || o.status === "Changes requested") act = `<button class="btn sm" data-act="opt-review" data-id="${o.id}">Send for review</button>`;
+  else if (o.status === "In review") act = `<button class="btn sm" data-act="opt-approve" data-id="${o.id}">Approve</button><button class="btn sm sec" data-act="opt-changes" data-id="${o.id}">Request changes</button>`;
+  else act = `<button class="btn sm sec" data-act="opt-revise" data-id="${o.id}">Start revision R${o.rev + 1}</button>`;
+  return `<div class="row"><div class="top"><div><div class="t">${esc(o.name)} <span class="tag">R${o.rev}</span>${review ? ` <span class="tag">${esc(areaName(p, o.areaId))}</span>` : ""}</div><div class="d">${esc(o.desc) || "No description"}</div></div><span class="tag${cls}">${esc(o.status)}</span></div>
+    ${imgs.length ? `<div class="board">${imgs.map(f => `<div class="th" data-thumb="${f.type.startsWith("image/") ? f.id : ""}" title="${esc(f.name)}">${esc(f.cat)}</div>`).join("")}</div>` : `<div class="cap" style="margin-top:8px">No drawing or image attached yet.</div>`}
+    ${o.comment ? `<div class="hist">Review note: ${esc(o.comment)}</div>` : ""}
+    ${o.history.length ? `<div class="cap" style="margin-top:6px">Earlier: ${o.history.map(h => `R${h.rev} ${esc(h.status)} (${esc(h.when)})`).join(" · ")}</div>` : ""}
+    <div class="acts">${act}${o.status === "In review" ? `<input class="in" data-oc="${o.id}" value="${esc(o.comment)}" placeholder="Review note (optional)" style="width:220px" aria-label="Review note">` : ""}
+      ${!review && o.status !== "Approved" && pick.length ? `<select class="in" data-pick="${o.id}" style="width:auto" aria-label="File to attach">${pick.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join("")}</select><button class="btn sm sec" data-act="opt-attach" data-id="${o.id}">Attach</button>` : ""}</div></div>`;
 }
 function brief(p, areaId){
   const sels = p.selections.filter(s => s.areaId === areaId), line = s => `- ${s.name}${s.spec ? ": " + s.spec : ""}${s.qty != null ? " (" + s.qty + " " + s.unit + ")" : ""}`;
   const grp = (label, f) => { const l = sels.filter(f); return l.length ? `\n${label}\n${l.map(line).join("\n")}\n` : ""; };
-  const files = p.files.filter(f => f.areaId === areaId);
+  const files = p.files.filter(f => f.areaId === areaId), opts = p.options.filter(o => o.areaId === areaId);
   return `Design brief — ${areaName(p, areaId)} — ${p.address}\n\nGoal and notes\n${(p.notes[areaId] || "(none written yet)").trim()}\n` +
+    (opts.length ? `\nDesign options so far\n${opts.map(o => `- ${o.name} (R${o.rev}, ${o.status})${o.desc ? ": " + o.desc : ""}`).join("\n")}\n` : "") +
     grp("Approved — do not change", s => idx(s) >= 2) + grp("Selected — awaiting approval", s => idx(s) === 1) + grp("Under discussion", s => idx(s) === 0) +
-    `\nReference files\n${files.length ? files.map(f => `- ${f.cat}: ${f.name} (R${f.rev})`).join("\n") : "- none uploaded"}\n\nRequest\nPropose up to three options for this area that respect the approved items. List every assumption. Flag anything that conflicts with the drawings. Do not invent dimensions, prices or product availability.`;
-}
-function viewDesign(p){
-  const a = p.areaId, sels = p.selections.filter(s => s.areaId === a);
-  return `<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
-      <div class="segctl" role="tablist">${p.areas.map(x => `<button role="tab" aria-selected="${x.id === a}" data-act="area" data-id="${x.id}">${esc(x.name)}</button>`).join("")}</div>
-      <form id="addarea" style="display:flex;gap:6px"><input class="in" id="a_name" placeholder="Add area" style="width:130px" aria-label="New area name"><button class="btn sm sec" type="submit">Add</button></form></div>
-    <div class="grid two"><div class="grid">
-      <section class="card"><div class="card-h"><h2>Selections — ${esc(areaName(p, a))}</h2><span class="cap">${sels.length} item${sels.length === 1 ? "" : "s"}</span></div><div class="card-b">
-        ${sels.length ? `<div class="rows">${sels.map(s => selRow(p, s)).join("")}</div>` : `<div class="empty"><b>No selections yet</b>Add the first item below.</div>`}</div></section>
-      <section class="card" id="selcard"><div class="card-h"><h2>${ui.editing ? "Edit selection" : "Add a selection"}</h2></div><div class="card-b">${selForm(p)}</div></section>
-    </div><div class="grid">
-      <section class="card"><div class="card-h"><h2>Files</h2><span class="cap">Kept on this device</span></div><div class="card-b">
-        <div class="drop" id="drop"><span>Drop files here, or</span>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><select class="in" id="f_cat" style="width:auto" aria-label="File type">${FILE_CATS.map(c => `<option>${c}</option>`).join("")}</select>
-          <label class="btn sm">Choose files<input id="f_in" type="file" multiple hidden></label></div>
-          <span class="cap">A file with the same name is kept as a new revision. Nothing is removed.</span></div>
-        ${fileGrid(p, a)}</div></section>
-      <section class="card"><div class="card-h"><h2>AI design brief</h2><span class="chip"><i></i>AI not connected</span></div><div class="card-b">
-        <p class="sub" style="margin-bottom:8px">Write what you want. The brief gathers your notes, the selections and the file list into one request you can paste into your AI tool.</p>
-        <textarea class="in" id="notes" placeholder="e.g. Warm modern kitchen, island seating for four, keep the range wall as drawn.">${esc(p.notes[a] || "")}</textarea>
-        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn sm" data-act="brief">Build brief</button><button class="btn sm sec" data-act="copy">Copy</button><span class="cap" id="copied" style="align-self:center"></span></div>
-        <pre class="brief" id="brief" hidden></pre></div></section>
-    </div></div>`;
+    `\nReference files\n${files.length ? files.map(f => `- ${f.cat}: ${f.name} (R${f.rev}${f.source ? ", from " + f.source : ""})`).join("\n") : "- none uploaded"}\n\nRequest\nPropose up to three options for this area that respect the approved items. List every assumption. Flag anything that conflicts with the drawings. Do not invent dimensions, prices or product availability.`;
 }
 const OUT = {
   takeoff: ["Takeoff", ["Area","Item","Specification","Quantity","Unit"], s => [s._a, s.name, s.spec, s.qty == null ? "" : s.qty, s.unit]],
   budget: ["Budget lines", ["Cost code","Area","Item","Quantity","Unit cost","Amount"], s => [s.costCode, s._a, s.name, s.qty == null ? "" : s.qty, s.unitCost == null ? "" : s.unitCost, s.qty != null && s.unitCost != null ? s.qty * s.unitCost : ""]],
   proposal: ["Proposal inputs", ["Area","Line description","Quantity","Unit"], s => [s._a, s.name + (s.spec ? " — " + s.spec : ""), s.qty == null ? "" : s.qty, s.unit]],
-  procurement: ["Procurement package", ["Vendor","Item","Specification","Quantity","Unit","Lead time (days)","Needed by","Status"], s => [s.vendor, s.name, s.spec, s.qty == null ? "" : s.qty, s.unit, s.leadDays == null ? "" : s.leadDays, s.neededBy, s.status]],
-  tasks: ["Contractor tasks", ["Key","Task","Proposed trade","Status","Responsible","Due"], (s, i) => ["DS-" + String(i + 1).padStart(2, "0"), `Install ${s.name} — ${s._a}, per approved selection R${s.rev}`, SEL_CATS[s.category] || "To be assigned", "Draft", "", ""]]
-};
-const OUT_NOTE = {
-  takeoff: "Quantities are what you entered. A blank quantity is unknown, not zero.",
-  budget: "Amount is quantity × unit cost only where both are known. Unknown stays blank and is not counted.",
-  proposal: "Line items to enter in Wave. Wave remains the record for estimates, proposals and invoices; this is not a proposal document.",
-  procurement: "Grouped by vendor. No order is placed from here.",
-  tasks: "Draft tasks in the same shape as the New Project Launch template, for Smartsheet after your approval. The trade is a suggestion, not an assignment; no owner or date is set."
+  procurement: ["Procurement list", ["Vendor","Item","Specification","Quantity","Unit","Lead time (days)","Needed by","Status"], s => [s.vendor, s.name, s.spec, s.qty == null ? "" : s.qty, s.unit, s.leadDays == null ? "" : s.leadDays, s.neededBy, s.status]],
+  tasks: ["Contractor tasks", ["Key","Task","Proposed trade","Status"], (s, i) => ["DS-" + String(i + 1).padStart(2, "0"), `Install ${s.name} — ${s._a}, per approved selection R${s.rev}`, SEL_CATS[s.category] || "To be assigned", "Draft"]]
 };
 function outRows(p, k){
-  let l = approved(p).map(s => Object.assign({}, s, { _a: areaName(p, s.areaId) }));
+  const l = approved(p).map(s => Object.assign({}, s, { _a: areaName(p, s.areaId) }));
   if (k === "procurement") l.sort((a, b) => (a.vendor || "~").localeCompare(b.vendor || "~"));
   if (k === "budget") l.sort((a, b) => (a.costCode || "~").localeCompare(b.costCode || "~"));
   return l.map((s, i) => OUT[k][2](s, i));
 }
-function viewOutputs(p){
-  const k = state.out, rows = outRows(p, k), cols = OUT[k][1];
-  let foot = "";
-  if (k === "budget") { const known = rows.filter(r => r[5] !== ""), sum = known.reduce((t, r) => t + r[5], 0);
-    foot = `<p class="sub" style="margin-top:12px"><b>${money(sum)}</b> across ${known.length} line${known.length === 1 ? "" : "s"} with a known amount. ${rows.length - known.length} line${rows.length - known.length === 1 ? " has" : "s have"} no amount yet and ${rows.length - known.length === 1 ? "is" : "are"} not included.</p>`; }
+function table(k, rows){
+  const cols = OUT[k][1], isNum = c => /Quantity|cost|Amount|Lead/.test(c);
   const cell = (c, v) => c === "Amount" || c === "Unit cost" ? (v === "" ? "<span class='cap'>unknown</span>" : money(v)) : (v === "" ? "<span class='cap'>—</span>" : esc(v));
-  return `<p class="sub" style="margin-bottom:12px">Built only from selections you have approved (${approved(p).length}). Each line carries its revision, so a later change does not silently alter what was issued.</p>
-    <div class="segctl" role="tablist" style="margin-bottom:16px">${Object.keys(OUT).map(x => `<button role="tab" aria-selected="${x === k}" data-act="out" data-v="${x}">${OUT[x][0]}</button>`).join("")}</div>
-    <section class="card"><div class="card-h"><h2>${OUT[k][0]}</h2><button class="btn sm sec" data-act="dl">Download ${k === "tasks" ? "JSON" : "CSV"}</button></div><div class="card-b">
-      <p class="sub" style="margin-bottom:10px">${OUT_NOTE[k]}</p>
-      ${rows.length ? `<div class="scroll"><table class="tbl"><thead><tr>${cols.map(c => `<th${/Quantity|cost|Amount/.test(c) ? ' class="num"' : ""}>${c}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((v, i) => `<td${/Quantity|cost|Amount/.test(cols[i]) ? ' class="num"' : ""}>${cell(cols[i], v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : `<div class="empty"><b>Nothing approved yet</b>Approve a selection in Design and it appears here.</div>`}${foot}</div></section>`;
+  return rows.length ? `<div class="scroll"><table class="tbl"><thead><tr>${cols.map(c => `<th${isNum(c) ? ' class="num"' : ""}>${c}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((v, i) => `<td${isNum(cols[i]) ? ' class="num"' : ""}>${cell(cols[i], v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : `<div class="empty"><b>Nothing approved yet</b>Approve a selection in Review &amp; approve and it appears here.</div>`;
 }
-function viewStatus(p){
-  const wait = p.selections.filter(s => idx(s) === 1), bl = blockers(p), dl = p.selections.filter(s => s.neededBy).sort((a, b) => a.neededBy.localeCompare(b.neededBy));
+const card = (title, right, body, id) => `<section class="card"${id ? ` id="${id}"` : ""}><div class="card-h"><h2>${title}</h2>${right || ""}</div><div class="card-b">${body}</div></section>`;
+const dl = (k, label) => `<button class="btn sm sec" data-act="dl" data-k="${k}">${label}</button>`;
+
+/* ============ Design Studio: the eight steps ============ */
+function stepProject(p){
+  const groups = GROUPS.filter(g => p.checklist.some(c => c.group === g));
   return `<div class="grid two"><div class="grid">
-      <section class="card"><div class="card-h"><h2>Decisions waiting on you</h2><span class="cap">${wait.length}</span></div><div class="card-b">${wait.length ? `<div class="rows">${wait.map(s => selRow(p, s, true)).join("")}</div>` : `<div class="empty"><b>Nothing is waiting</b>Selections marked Selected appear here for approval.</div>`}</div></section>
+    ${card("Project", `<span class="tag">${esc(p.type)}</span>`, `<div class="form">
+      <label class="full">Address<input class="in" value="${esc(p.address)}" disabled></label>
+      <label class="full">Client or owner (leave blank if not confirmed)<input class="in" id="p_client" value="${esc(p.client)}"></label></div>
+      ${p.source || p.description ? `<p class="sub" style="margin-top:10px">${esc(p.source)}${p.source && p.description ? " · " : ""}${esc(p.description)}</p>` : ""}`)}
+    ${p.checklist.length ? card("Development checklist", `<span class="cap">${p.checklist.filter(c => c.status === "Done").length} of ${p.checklist.length} done</span>`,
+      `<p class="sub" style="margin-bottom:6px">From the standard launch template. Every item starts as Not started, with no owner and no date. Done needs evidence.</p>` +
+      groups.map(g => `<div style="margin-top:14px"><div class="cap">${g}</div><div class="rows">${p.checklist.filter(c => c.group === g).map(c => `<div class="row"><div class="chk"><div><div class="t" style="font-weight:500">${esc(c.task)} <span class="tag">${c.key}</span>${c.status === "Done" && !c.evidence ? ' <span class="tag warn">no evidence recorded</span>' : ""}</div><div class="d">Approval gate: ${esc(c.gate)}</div>
+        <input class="in" data-ev="${c.key}" value="${esc(c.evidence)}" placeholder="Evidence: document, sheet row or email" style="margin-top:8px" aria-label="Evidence for ${c.key}"></div>
+        <select class="in" data-chk="${c.key}" aria-label="Status of ${c.key}">${["Not started","In progress","Done"].map(s => `<option${c.status === s ? " selected" : ""}>${s}</option>`).join("")}</select></div></div>`).join("")}</div></div>`).join("")) :
+      card("Development checklist", "", `<div class="empty"><b>Not a development project</b>Construction and renovation projects go straight to sources and design. Start a development project from New Development Project to get the full checklist.</div>`)}
     </div><div class="grid">
-      <section class="card"><div class="card-h"><h2>Blockers</h2><span class="cap">${bl.length}</span></div><div class="card-b">${bl.length ? `<div class="rows">${bl.map(b => `<div class="row"><div class="t" style="font-weight:500">${esc(b[0] ? b[0].name : "Files")}</div><div class="d">${esc(b[1])}</div></div>`).join("")}</div>` : `<div class="empty"><b>No blockers found</b>Checks: quantity, specification and cost code on approved items; a drawing for each active area.</div>`}</div></section>
-      <section class="card"><div class="card-h"><h2>Deadlines</h2></div><div class="card-b">${dl.length ? `<div class="rows">${dl.map(s => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(s.name)}</div><div class="d">${esc(areaName(p, s.areaId))} · ${esc(s.status)}</div></div><span class="tag${s.neededConfirmed ? "" : " warn"}">${esc(s.neededBy)} · ${s.neededConfirmed ? "confirmed" : "proposed"}</span></div></div>`).join("")}</div>` : `<div class="empty"><b>No deadline is set</b>Add a needed-by date on a selection. It shows as proposed until you mark it confirmed.</div>`}</div></section>
+    ${card("Team responsibilities", `<span class="cap">Names you enter. None is assumed.</span>`, `<div class="rows">${p.team.map((t, i) => `<div class="row" style="padding:9px 0"><label class="lab">${esc(t.role)}<input class="in" data-team="${i}" value="${esc(t.name)}" placeholder="Not assigned"></label></div>`).join("")}</div>`)}
+    ${card("Where this project stands", "", `<div class="rows">
+      <div class="row"><div class="top"><span>Waiting for your approval</span><b>${waiting(p)}</b></div></div>
+      <div class="row"><div class="top"><span>Approved selections</span><b>${approved(p).length} of ${p.selections.length}</b></div></div>
+      <div class="row"><div class="top"><span>Files</span><b>${p.files.length}</b></div></div>
+      <div class="row"><div class="top"><span>Blockers</span><b>${blockers(p).length}</b></div></div></div>`)}
     </div></div>`;
 }
-function viewInfo(k){
-  const label = NAV.find(n => n[0] === k)[1];
-  return `<header class="head"><div class="crumb">Proposed navigation</div><h1>${label}</h1><p>This section belongs to the dashboard, which is a separate private prototype for now. In the application both are one workspace with this same menu.</p></header>
-    <section class="card"><div class="card-h"><h2>One workspace — proposed navigation</h2></div><div class="card-b"><div class="navmap">
-      <div><b>Today</b>Next actions, decisions waiting, projects needing attention.</div>
-      <div><b>Projects</b>Open any project by address. Stage, status, owner, next action, blockers.</div>
-      <div><b>Design Studio</b>Files, selections, AI briefs by area. Approved designs become takeoff, budget lines, proposal inputs, procurement and Draft tasks.</div>
-      <div><b>Decisions</b>Everything waiting for approval, design selections included.</div>
-      <div><b>Documents</b>Missing items, templates, where each record lives.</div>
-      <div><b>Financial risks</b>Owner only.</div>
-      <div><b>AI &amp; connections</b>What is connected and what is not.</div>
-    </div><p style="margin-top:14px"><button class="btn sm" data-act="nav" data-k="studio">Back to Design Studio</button></p></div></section>`;
+function stepSources(p){
+  return areaBar(p) + card(`Sources — ${esc(areaName(p, p.areaId))}`, `<span class="cap">Kept on this device</span>`, `<div class="drop" id="drop"><span>Drop surveys, drawings, photos, references and specifications here, or</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><select class="in" id="f_cat" style="width:auto" aria-label="File type">${FILE_CATS.map(c => `<option>${c}</option>`).join("")}</select>
+    <label class="btn sm">Choose files<input id="f_in" type="file" multiple hidden></label></div>
+    <span class="cap">A file added again under the same name is kept as a new revision. Nothing is removed.</span></div>${fileGrid(p, p.areaId)}`);
 }
-function render(){
-  const p = P();
-  $("#nav").innerHTML = NAV.map(n => `<button data-act="nav" data-k="${n[0]}"${(ui.info ? ui.info === n[0] : n[0] === "studio") ? ' aria-current="page"' : ""}><svg viewBox="0 0 24 24">${n[2]}</svg><span>${n[1]}</span></button>`).join("");
-  const q = ui.q.trim().toLowerCase();
-  $("#plist").innerHTML = state.projects.filter(x => !q || x.address.toLowerCase().includes(q)).map(x => `<button data-act="proj" data-id="${x.id}" aria-current="${x.id === p.id}">${esc(x.address)}<small>${esc(x.type)}${x.sample ? " · made-up sample" : ""}</small></button>`).join("") || `<span class="cap" style="padding:6px 10px">No project matches.</span>`;
-  $("#storage").textContent = persistent && Files.ok() ? "Saved in this browser on this device." : "Storage is unavailable in this view — work is kept only until the page closes.";
-  const st = [["design","Design",'<path d="M4 17.5L15.5 6l2.5 2.5L6.5 20H4z"/>'],["outputs","Outputs",'<path d="M5 6h14M5 12h14M5 18h9"/>'],["status","Status",'<circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 4.9-5.2"/>'],["menu","Projects",'<path d="M4 20V10l8-5.5 8 5.5v10"/>']];
-  $("#tabs").innerHTML = st.map(t => `<button data-act="${t[0] === "menu" ? "menu" : "tab"}" data-v="${t[0]}"${!ui.info && state.tab === t[0] ? ' aria-current="page"' : ""}><svg viewBox="0 0 24 24">${t[2]}</svg><span>${t[1]}</span></button>`).join("");
-  if (ui.info) { $("#view").innerHTML = viewInfo(ui.info); return; }
-  const wait = p.selections.filter(s => idx(s) === 1).length, ap = approved(p), inst = ap.filter(s => idx(s) === 6).length;
-  $("#view").innerHTML = `<header class="head"><div class="crumb">Design Studio${p.sample ? ' · <span class="chip"><i></i>Made-up sample data</span>' : ""}</div><h1>${esc(p.address)}</h1><p>${esc(p.type)} · design to production in one place.</p></header>
+function stepDesign(p){
+  const a = p.areaId, sels = p.selections.filter(s => s.areaId === a), opts = p.options.filter(o => o.areaId === a);
+  return areaBar(p) + `<div class="grid two"><div class="grid">
+    ${card(`Design options — ${esc(areaName(p, a))}`, `<span class="cap">${plural(opts.length, "option")}</span>`, (opts.length ? `<div class="rows">${opts.map(o => optRow(p, o)).join("")}</div>` : `<div class="empty"><b>No options yet</b>Add a layout or rendering option, attach its images, then send it for review.</div>`) +
+      `<form id="optform" class="form" style="margin-top:14px"><label>Option name<input class="in" id="o_name" placeholder="e.g. Option C — galley"></label><label>What it is<input class="in" id="o_desc"></label><div class="full"><button class="btn sm" type="submit">Add option</button></div></form>`)}
+    ${card(`Material selections — ${esc(areaName(p, a))}`, `<span class="cap">${plural(sels.length, "item")}</span>`, sels.length ? `<div class="rows">${sels.map(s => selRow(p, s)).join("")}</div>` : `<div class="empty"><b>No selections yet</b>Add the first item below.</div>`)}
+    ${card(ui.editing ? "Edit selection" : "Add a selection", "", selForm(p), "selcard")}
+    </div><div class="grid">
+    ${card("AI design brief", `<span class="chip"><i></i>AI not connected</span>`, `<p class="sub" style="margin-bottom:8px">Write what you want. The brief gathers your notes, options, selections and file list into one request to paste into your AI tool.</p>
+      <textarea class="in" id="notes" placeholder="e.g. Warm modern kitchen, island seating for four, keep the range wall as drawn.">${esc(p.notes[a] || "")}</textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn sm" data-act="brief">Build brief</button><button class="btn sm sec" data-act="copy">Copy</button><span class="cap" id="copied" style="align-self:center"></span></div>
+      <pre class="brief" id="brief" hidden></pre>`)}
+    ${card("Sources for this area", `<button class="btn sm sec" data-act="step" data-n="2">Upload</button>`, fileGrid(p, a))}
+    </div></div>`;
+}
+function stepReview(p){
+  const o = p.options.filter(x => x.status === "In review"), s = p.selections.filter(x => idx(x) === 1), done = p.options.filter(x => x.status === "Approved");
+  return `<p class="sub" style="margin-bottom:14px">Only you approve. An approved option or selection is locked at its revision; changing it starts the next revision and brings it back here.</p><div class="grid two"><div class="grid">
+    ${card("Design options to review", `<span class="cap">${o.length}</span>`, o.length ? `<div class="rows">${o.map(x => optRow(p, x, true)).join("")}</div>` : `<div class="empty"><b>Nothing to review</b>Send an option for review from Design.</div>`)}
+    ${card("Selections to approve", `<span class="cap">${s.length}</span>`, s.length ? `<div class="rows">${s.map(x => selRow(p, x, { area: true })).join("")}</div>` : `<div class="empty"><b>Nothing is waiting</b>Selections marked Selected appear here.</div>`)}
+    </div><div class="grid">
+    ${card("Approved", "", `<div class="rows"><div class="row"><div class="top"><span>Design options</span><b>${done.length}</b></div><div class="d">${done.map(x => esc(x.name) + " R" + x.rev).join(" · ") || "none yet"}</div></div>
+      <div class="row"><div class="top"><span>Selections</span><b>${approved(p).length}</b></div><div class="d">These feed the takeoff, budget, proposal inputs and work package.</div></div></div>`)}
+    ${card("Blockers", `<span class="cap">${blockers(p).length}</span>`, blockers(p).length ? `<div class="rows">${blockers(p).map(b => `<div class="row" style="padding:9px 0"><div class="d" style="margin:0">${esc(b)}</div></div>`).join("")}</div>` : `<div class="empty"><b>No blockers found</b>Checks: quantity, specification and cost code on approved items; a drawing for each active area.</div>`)}
+    </div></div>`;
+}
+function stepTakeoff(p){
+  const k = state.out, rows = outRows(p, k); let foot = "";
+  if (k === "budget") { const known = rows.filter(r => r[5] !== ""), n = rows.length - known.length;
+    foot = `<p class="sub" style="margin-top:12px"><b>${money(known.reduce((t, r) => t + r[5], 0))}</b> across ${plural(known.length, "line")} with a known amount. ${n} ${n === 1 ? "line has" : "lines have"} no amount yet and ${n === 1 ? "is" : "are"} not included. This is not an approved budget.</p>`; }
+  return `<div class="segctl" role="tablist" style="margin-bottom:16px">${["takeoff","budget"].map(x => `<button role="tab" aria-selected="${x === k}" data-act="out" data-v="${x}">${OUT[x][0]}</button>`).join("")}</div>` +
+    card(OUT[k][0], dl(k, "Download CSV"), `<p class="sub" style="margin-bottom:10px">${k === "takeoff" ? "Built only from approved selections. A blank quantity is unknown, not zero." : "Amount is quantity × unit cost only where both are known. Unknown stays blank and is not counted."}</p>${table(k, rows)}${foot}`);
+}
+function stepProposal(p){
+  return `<div class="grid two">${card("Proposal inputs", dl("proposal", "Download CSV"), `<p class="sub" style="margin-bottom:10px">Line items to enter in Wave. Wave stays the record for estimates, proposals and invoices. This page does not produce a proposal document or a price.</p>${table("proposal", outRows(p, "proposal"))}`)}
+    ${card("Proposal status", `<span class="chip"><i></i>Wave not connected</span>`, `<div class="form"><label class="full">Where the proposal stands (you set this by hand)<select class="in" id="pr_state">${PROPOSAL_STATES.map(s => `<option${p.proposal.state === s ? " selected" : ""}>${s}</option>`).join("")}</select></label>
+      <label class="full">Wave document number<input class="in" id="pr_no" value="${esc(p.proposal.waveNo)}" placeholder="Enter after you create it in Wave"></label></div>
+      ${p.proposal.state !== "Not started" && !p.proposal.waveNo ? `<p style="margin-top:10px"><span class="tag warn">No Wave document number recorded</span></p>` : ""}`)}</div>`;
+}
+function stepPackage(p){
+  const ap = approved(p), trades = [...new Set(ap.map(s => SEL_CATS[s.category] || "To be assigned"))];
+  const pk = trades.map(t => { const items = ap.filter(s => (SEL_CATS[s.category] || "To be assigned") === t), areas = [...new Set(items.map(s => s.areaId))];
+    const nine = [["Scope", items.every(s => s.spec)], ["Drawings", areas.every(a => p.files.some(f => f.areaId === a && f.cat === "Drawing"))], ["Quantities", items.every(s => s.qty != null)],
+      ["Quotations", items.every(s => s.vendor && s.unitCost != null)], ["Budget", items.every(s => s.costCode)], ["Approvals", true], ["Schedule", items.every(s => s.neededBy && s.neededConfirmed)], ["Quality requirements", null], ["Completion records", items.every(s => idx(s) === 6)]];
+    return `<div class="row"><div class="top"><div><div class="t">${esc(t)} <span class="tag">proposed trade</span></div><div class="d">${items.map(s => esc(s.name) + " R" + s.rev).join(" · ")}</div></div><span class="cap">${plural(items.length, "item")}</span></div>
+      <div class="nine">${nine.map(n => `<span class="tag${n[1] === true ? " ok" : n[1] === false ? " warn" : ""}">${n[0]}: ${n[1] === true ? "ready" : n[1] === false ? "missing" : "not recorded"}</span>`).join("")}</div></div>`; });
+  return `<p class="sub" style="margin-bottom:14px">One package per trade, built from approved selections. Each shows the nine things a work package needs. The trade is a suggestion; no contractor is assigned and nothing is ordered from here.</p><div class="grid two"><div class="grid">
+    ${card("Work packages", `<span class="cap">${pk.length}</span>`, pk.length ? `<div class="rows">${pk.join("")}</div>` : `<div class="empty"><b>Nothing approved yet</b>Packages appear once selections are approved.</div>`)}
+    ${card("Draft contractor tasks", dl("tasks", "Download JSON"), `<p class="sub" style="margin-bottom:10px">Same fields as the launch template tasks, for Smartsheet after your approval. No owner or date is set.</p>${table("tasks", outRows(p, "tasks"))}`)}
+    </div><div class="grid">${card("Procurement list", dl("procurement", "Download CSV"), table("procurement", outRows(p, "procurement")))}</div></div>`;
+}
+function stepBuild(p){
+  const ap = approved(p);
+  return `<p class="sub" style="margin-bottom:14px">Approved items only. Counts, not percentages. Smartsheet remains the record of field progress; this view is for the design items you approved.</p>
+    <div class="grid kpis" style="margin-bottom:16px">${["Approved","Ordered","Received","Paid"].map(s => `<div class="card kpi"><div class="lbl">${s}</div><div class="val">${ap.filter(x => x.status === s).length}</div></div>`).join("")}</div>
+    ${card("Tracking", `<span class="cap">${ap.filter(x => idx(x) === 6).length} of ${ap.length} installed</span>`, ap.length ? `<div class="rows">${ap.map(s => selRow(p, s, { area: true, track: true })).join("")}</div>` : `<div class="empty"><b>Nothing approved yet</b></div>`)}`;
+}
+function viewStudio(){
+  const p = P(), n = p.step, ap = approved(p).length;
+  const counts = [p.checklist.length ? p.checklist.filter(c => c.status === "Done").length + " of " + p.checklist.length : "details", plural(p.files.length, "file"), plural(p.options.length, "option"), waiting(p) + " waiting", ap + " approved", p.proposal.state, ap ? "by trade" : "—", approved(p).filter(s => idx(s) === 6).length + " installed"];
+  const body = [stepProject, stepSources, stepDesign, stepReview, stepTakeoff, stepProposal, stepPackage, stepBuild][n - 1](p);
+  return `<header class="head"><div class="crumb">Design Studio${p.sample ? ' <span class="chip"><i></i>Made-up sample data</span>' : ""}</div><h1>${esc(p.address)}</h1><p>${esc(p.type)}${p.client ? " · " + esc(p.client) : ""}</p></header>
+    <div class="flow" role="list">${FLOW.map((f, i) => `<button role="listitem" data-act="step" data-n="${i + 1}"${n === i + 1 ? ' aria-current="step"' : ""}><span class="k">${i + 1}</span><span class="nm">${f}</span><span class="c">${esc(counts[i])}</span></button>`).join("")}</div>${body}`;
+}
+
+/* ============ Daily Workspace ============ */
+function viewDaily(){
+  const t = today(), open = state.tasks.filter(k => !k.done), dls = deadlines(), dec = state.projects.reduce((n, p) => n + waiting(p), 0);
+  const list = open.filter(k => state.filter === "All" || k.kind === state.filter).sort((a, b) => (a.due || "9").localeCompare(b.due || "9"));
+  return `<header class="head"><div class="crumb">Daily Workspace</div><h1>${new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}</h1><p>Your priorities, requests, deadlines and decisions across every project in this workspace.</p></header>
     <div class="grid kpis">
-      <div class="card kpi"><div class="lbl">Waiting for your approval</div><div class="val">${wait}</div><div class="cap">selections marked Selected</div></div>
-      <div class="card kpi"><div class="lbl">Approved</div><div class="val">${ap.length}<small> of ${p.selections.length}</small></div><div class="cap">feed takeoff, budget and tasks</div></div>
-      <div class="card kpi"><div class="lbl">Installed</div><div class="val">${inst}<small> of ${ap.length}</small></div><div class="cap">approved items completed</div></div>
-      <div class="card kpi"><div class="lbl">Blockers</div><div class="val">${blockers(p).length}</div><div class="cap">${p.files.length} file${p.files.length === 1 ? "" : "s"} on this project</div></div>
+      <div class="card kpi"><div class="lbl">Decisions waiting</div><div class="val">${dec}</div><div class="cap">options and selections to approve</div></div>
+      <div class="card kpi"><div class="lbl">Open tasks</div><div class="val">${open.length}</div><div class="cap">${open.filter(k => k.kind === "Client request").length} client requests · ${open.filter(k => k.kind === "Follow-up").length} follow-ups</div></div>
+      <div class="card kpi"><div class="lbl">Past their date</div><div class="val">${dls.filter(d => d.late).length}</div><div class="cap">confirmed and proposed dates</div></div>
+      <div class="card kpi"><div class="lbl">Projects</div><div class="val">${state.projects.length}</div><div class="cap">${state.projects.reduce((n, p) => n + blockers(p).length, 0)} blockers in total</div></div>
     </div>
-    <div class="segctl" role="tablist" style="margin:20px 0 18px">${[["design","Design"],["outputs","Outputs"],["status","Status"]].map(t => `<button role="tab" aria-selected="${state.tab === t[0]}" data-act="tab" data-v="${t[0]}">${t[1]}</button>`).join("")}</div>
-    ${state.tab === "outputs" ? viewOutputs(p) : state.tab === "status" ? viewStatus(p) : viewDesign(p)}`;
+    <div class="grid two" style="margin-top:16px"><div class="grid">
+      ${card("Priorities and active tasks", `<div class="segctl" role="tablist">${["All", ...TASK_KINDS].map(f => `<button role="tab" aria-selected="${state.filter === f}" data-act="filter" data-v="${f}">${f === "All" ? "All" : f + "s"}</button>`).join("")}</div>`,
+        (list.length ? `<div class="rows">${list.map(k => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(k.text)}</div><div class="d">${esc((proj(k.projectId) || {}).address || "No project")} · ${k.due ? esc(k.due) + " (" + (k.confirmed ? "confirmed" : "proposed") + ")" : "no date set"}</div></div>
+          <span style="display:flex;gap:6px;align-items:center"><span class="tag${k.due && k.due < t ? " warn" : ""}">${k.due && k.due < t ? "Past date · " : ""}${esc(k.kind)}</span><button class="btn sm sec" data-act="task-done" data-id="${k.id}">Done</button></span></div></div>`).join("")}</div>` : `<div class="empty"><b>Nothing open here</b>Add a task, a client request or a follow-up below.</div>`) +
+        `<form id="newtask" class="form" style="margin-top:14px"><label class="full">What needs doing<input class="in" id="t_text" placeholder="e.g. Call the client about the vanity"></label>
+          <label>Type<select class="in" id="t_kind">${TASK_KINDS.map(k => `<option>${k}</option>`).join("")}</select></label>
+          <label>Project<select class="in" id="t_proj"><option value="">No project</option>${state.projects.map(p => `<option value="${p.id}">${esc(p.address)}</option>`).join("")}</select></label>
+          <label>Date<input class="in" id="t_due" type="date"></label><label>Date is<select class="in" id="t_conf"><option value="">Proposed</option><option value="1">Confirmed</option></select></label>
+          <div class="full"><button class="btn sm" type="submit">Add</button> <span class="cap">Client requests are typed in by hand. Email is not connected.</span></div></form>`)}
+    </div><div class="grid">
+      ${card("Decisions waiting on you", `<span class="cap">${dec}</span>`, dec ? `<div class="rows">${state.projects.filter(p => waiting(p)).map(p => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(p.address)}</div><div class="d">${plural(p.options.filter(o => o.status === "In review").length, "design option")} · ${plural(p.selections.filter(s => idx(s) === 1).length, "selection")}</div></div><button class="btn sm" data-act="goto" data-id="${p.id}" data-n="4">Review</button></div></div>`).join("")}</div>` : `<div class="empty"><b>Nothing is waiting</b></div>`)}
+      ${card("Deadlines", "", dls.length ? `<div class="rows">${dls.slice(0, 8).map(d => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(d.what)}</div><div class="d">${esc(d.where)} · ${esc(d.kind)}</div></div><span class="tag${d.late ? " warn" : ""}">${esc(d.date)} · ${d.confirmed ? "confirmed" : "proposed"}</span></div></div>`).join("")}</div>` : `<div class="empty"><b>No date is set</b>Dates show as proposed until you mark them confirmed.</div>`)}
+      ${card("Projects", `<button class="btn sm sec" data-act="view" data-v="new">New project</button>`, `<div class="rows">${state.projects.map(p => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(p.address)}${p.sample ? ' <span class="tag">made-up sample</span>' : ""}</div><div class="d">${esc(p.type)} · step ${p.step} of 8, ${FLOW[p.step - 1]} · ${plural(blockers(p).length, "blocker")}</div></div><button class="btn sm sec" data-act="goto" data-id="${p.id}">Open</button></div></div>`).join("")}</div>`)}
+    </div></div>`;
+}
+
+/* ============ New Development Project ============ */
+function viewNew(){
+  const counts = GROUPS.map(g => [g, LAUNCH_TASKS.filter(t => t[1] === g && t[3] === "All").length]);
+  return `<header class="head"><div class="crumb">New Development Project</div><h1>Start a project by address</h1><p>One intake for a development or a construction job. It creates the project with a standard, empty structure — you fill in the facts.</p></header>
+    <div class="grid two">${card("Intake", "", `<form id="newdev" class="form">
+      <label class="full">Property address or site identity<input class="in" id="n_addr" autocomplete="off" placeholder="Street, city, state"></label>
+      <label class="full">Project type<select class="in" id="n_type"><option>Development — single home</option><option>Development — subdivision</option><option>Construction or renovation</option></select></label>
+      <label>Client or partner (blank if not confirmed)<input class="in" id="n_client" autocomplete="off"></label>
+      <label>Source reference<input class="in" id="n_src" autocomplete="off" placeholder="Listing, email or document"></label>
+      <label class="full">Opportunity description<textarea class="in" id="n_desc"></textarea></label>
+      <div class="full"><button class="btn" type="submit">Create project</button> <span class="cap" id="n_err"></span></div></form>`)}
+    <div class="grid">${card("What gets organised", `<span class="cap">development projects</span>`, `<div class="rows">${counts.map(c => `<div class="row" style="padding:9px 0"><div class="top"><span>${c[0]}</span><span class="cap">${c[0] === "Team responsibilities" ? "roles to name + " : ""}${plural(c[1], "item")}</span></div></div>`).join("")}</div>
+      <p class="cap" style="margin-top:10px">27 items for a single home, 29 for a subdivision — the existing launch template. A subdivision adds shared infrastructure and cost allocation, kept apart from each house budget.</p>`)}
+      ${card("What it does not do", "", `<div class="empty">It creates nothing in Smartsheet, assigns no one, sets no date and enters no price. Those happen after your approval, in the systems of record.</div>`)}</div></div>`;
+}
+
+/* ============ Higgsfield designs ============ */
+// Designs made in Higgsfield land in a project as Rendering files marked "Higgsfield". The page itself cannot talk to Higgsfield;
+// an AI assistant with the Higgsfield connection, or the person, brings the image in. Only higgsfield.ai links are accepted.
+const HG_LINK = /^https:\/\/([a-z0-9-]+\.)*higgsfield\.ai(\/|$)/i;
+async function importHiggsfield({ projectId, areaId, optionId, files, link, prompt }){
+  const p = proj(projectId); if (!p) return "Choose a project.";
+  if (!files || !files.length) return "Add at least one image saved from Higgsfield.";
+  if (link && !HG_LINK.test(link)) return "The link must be a higgsfield.ai address.";
+  const area = p.areas.find(a => a.id === areaId) || p.areas[0], o = optionId && p.options.find(x => x.id === optionId);
+  for (const f of files) { const id = uid(), same = p.files.filter(x => x.areaId === area.id && x.name === f.name);
+    await Files.put(id, f);
+    p.files.push({ id, areaId: area.id, name: f.name, cat: "Rendering", source: "Higgsfield", link: link || "", prompt: prompt || "", size: f.size, type: f.type || "", added: today(), rev: same.length + 1 });
+    if (o && o.status !== "Approved") o.fileIds.push(id); }
+  save(); return "";
+}
+function viewHiggs(){
+  const p = proj(ui.hgProj) || P(), area = p.areas.find(a => a.id === ui.hgArea) || p.areas[0], opts = p.options.filter(o => o.areaId === area.id && o.status !== "Approved");
+  const all = state.projects.flatMap(x => x.files.filter(f => f.source === "Higgsfield").map(f => ({ f, x })));
+  return `<header class="head"><div class="crumb">Higgsfield designs <span class="chip"><i></i>Higgsfield not connected to this page</span></div><h1>Bring a Higgsfield design into a project</h1><p>Renderings and layouts made in Higgsfield become project files, marked as Higgsfield, ready to attach to a design option and review.</p></header>
+    <div class="grid two">${card("Add a design", "", `<form id="hgform" class="form">
+      <label>Project<select class="in" id="hg_proj">${state.projects.map(x => `<option value="${x.id}"${x.id === p.id ? " selected" : ""}>${esc(x.address)}</option>`).join("")}</select></label>
+      <label>Area<select class="in" id="hg_area">${p.areas.map(a => `<option value="${a.id}"${a.id === area.id ? " selected" : ""}>${esc(a.name)}</option>`).join("")}</select></label>
+      <label class="full">Attach to a design option<select class="in" id="hg_opt"><option value="">Do not attach yet</option>${opts.map(o => `<option value="${o.id}">${esc(o.name)} (R${o.rev}, ${esc(o.status)})</option>`).join("")}</select></label>
+      <label class="full">Images saved from Higgsfield<input class="in" id="hg_in" type="file" accept="image/*" multiple></label>
+      <label class="full">Higgsfield link (optional)<input class="in" id="hg_link" placeholder="https://higgsfield.ai/…" autocomplete="off"></label>
+      <label class="full">Prompt or notes used (optional)<textarea class="in" id="hg_prompt"></textarea></label>
+      <div class="full"><button class="btn" type="submit">Add to project</button> <span class="cap" id="hg_err"></span></div></form>`)}
+    <div class="grid">${card("How designs get here", "", `<div class="rows">
+      <div class="row"><div class="t" style="font-weight:500">By hand, today</div><div class="d">Save the image from Higgsfield and add it on the left.</div></div>
+      <div class="row"><div class="t" style="font-weight:500">Through your AI assistant</div><div class="d">Once the Higgsfield connection is authorised for the assistant, it can fetch a design you name and file it in the project you choose. This page does not connect to Higgsfield itself.</div></div>
+      <div class="row"><div class="t" style="font-weight:500">Then</div><div class="d">Attach it to a design option, send the option for review, and approve it in step 4.</div></div></div>`)}</div></div>
+    <div style="height:16px"></div>${card("Designs from Higgsfield", `<span class="cap">${all.length}</span>`, all.length ? `<div class="files">${all.map(({ f, x }) => `<button class="file" data-act="open" data-id="${f.id}" title="Open ${esc(f.name)}"><div class="th" data-thumb="${f.type.startsWith("image/") ? f.id : ""}">Rendering</div><div class="m"><div class="n">${esc(f.name)}</div><div class="cap">${esc(x.address)} · ${esc(areaName(x, f.areaId))} · R${f.rev}${f.link ? " · link saved" : ""}</div></div></button>`).join("")}</div>` : `<div class="empty"><b>None yet</b>Designs you add appear here and in the sources of the project.</div>`)}`;
+}
+
+/* ============ shell ============ */
+function render(){
+  const p = P(), dec = state.projects.reduce((n, x) => n + waiting(x), 0);
+  $("#nav").innerHTML = AREAS3.map(a => `<button data-act="view" data-v="${a[0]}"${state.view === a[0] ? ' aria-current="page"' : ""}><svg viewBox="0 0 24 24">${ICON[a[0]]}</svg><span>${a[1]}</span>${a[0] === "daily" && dec ? `<span class="n">${dec}</span>` : ""}</button>`).join("") +
+    (DASHBOARD ? `<button data-act="dash"><svg viewBox="0 0 24 24">${ICON.menu}</svg><span>Dashboard</span></button>` : "");
+  const q = ui.q.trim().toLowerCase();
+  $("#plist").innerHTML = state.projects.filter(x => !q || x.address.toLowerCase().includes(q)).map(x => `<button data-act="goto" data-id="${x.id}" aria-current="${state.view === "studio" && x.id === p.id}">${esc(x.address)}<small>${esc(x.type)}${x.sample ? " · made-up sample" : ""}</small></button>`).join("") || `<span class="cap" style="padding:6px 10px">No project matches.</span>`;
+  $("#storage").textContent = persistent && Files.ok() ? "Saved in this browser on this device." : "Storage is unavailable in this view — work is kept only until the page closes.";
+  $("#tabs").innerHTML = [["daily","Daily"],["studio","Studio"],["new","New"]].map(t => `<button data-act="view" data-v="${t[0]}"${state.view === t[0] ? ' aria-current="page"' : ""}><svg viewBox="0 0 24 24">${ICON[t[0]]}</svg><span>${t[1]}</span></button>`).join("") + `<button data-act="menu"><svg viewBox="0 0 24 24">${ICON.menu}</svg><span>Projects</span></button>`;
+  $("#view").innerHTML = state.view === "studio" ? viewStudio() : state.view === "new" ? viewNew() : state.view === "higgsfield" ? viewHiggs() : viewDaily();
+  document.title = (state.view === "studio" ? p.address + " — Design Studio" : state.view === "new" ? "New Development Project" : state.view === "higgsfield" ? "Higgsfield designs" : "Daily Workspace") + " — Development OS prototype";
+  try { history.replaceState(null, "", "#" + (state.view === "studio" ? "studio-" + p.step : state.view)); } catch (e) {}
   loadThumbs();
 }
 async function loadThumbs(){
@@ -418,75 +611,106 @@ async function loadThumbs(){
     if (!thumbs.has(id)) { const b = await Files.get(id); if (!b) continue; thumbs.set(id, URL.createObjectURL(b)); }
     if (el.isConnected) el.innerHTML = `<img alt="" src="${thumbs.get(id)}">`; }
 }
-
-/* ============ actions ============ */
 async function addFiles(list){
   const p = P(), cat = ($("#f_cat") || {}).value || "Reference";
   for (const f of list) { const id = uid(), same = p.files.filter(x => x.areaId === p.areaId && x.name === f.name);
     await Files.put(id, f);
-    p.files.push({ id, areaId: p.areaId, name: f.name, cat, size: f.size, type: f.type || "", added: new Date().toISOString().slice(0, 10), rev: same.length + 1 }); }
+    p.files.push({ id, areaId: p.areaId, name: f.name, cat, size: f.size, type: f.type || "", added: today(), rev: same.length + 1 }); }
   save(); render();
 }
 function download(name, text, type){ const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
 const csv = rows => rows.map(r => r.map(v => { const s = String(v == null ? "" : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(",")).join("\r\n");
+function taskJson(p){ return JSON.stringify({ project: p.address, status: "Draft — not approved, not in Smartsheet", tasks: outRows(p, "tasks").map(r => ({ key: r[0], phase: "09", task: r[1], proposedRole: r[2], dependsOn: [], definitionOfDone: "Installed per the approved selection revision; photo evidence recorded", approvalGate: "Owner approval before any commitment", status: "Draft", responsible: null, dueDate: null, nextFollowUp: null, evidence: null })) }, null, 2); }
+const optHist = o => o.history.push({ rev: o.rev, status: o.status, when: today() });
+
 document.addEventListener("click", async e => {
-  const t = e.target.closest("[data-act]"); if (!t) return; const p = P(), act = t.dataset.act, s = t.dataset.id && p.selections.find(x => x.id === t.dataset.id);
-  if (act === "nav") { const k = t.dataset.k;
-    if (k !== "studio" && DASHBOARD) { location.href = DASHBOARD + "#" + k; return; }
-    ui.info = k === "studio" ? null : k; $("#side").classList.remove("open"); }
-  else if (act === "proj") { state.current = t.dataset.id; ui.editing = null; ui.info = null; $("#side").classList.remove("open"); }
-  else if (act === "tab") { state.tab = t.dataset.v; ui.info = null; }
-  else if (act === "menu") { $("#side").classList.toggle("open"); return; }
-  else if (act === "area") { p.areaId = t.dataset.id; ui.editing = null; }
+  const t = e.target.closest("[data-act]"); if (!t) return; const p = P(), act = t.dataset.act, id = t.dataset.id, s = id && p.selections.find(x => x.id === id), o = id && p.options.find(x => x.id === id);
+  if (act === "menu") { $("#side").classList.toggle("open"); return; }
+  if (act === "dash") { location.href = DASHBOARD; return; }
+  if (act === "view") { state.view = t.dataset.v; ui.editing = null; $("#side").classList.remove("open"); scrollTo(0, 0); }
+  else if (act === "goto") { state.current = id; state.view = "studio"; ui.editing = null; if (t.dataset.n) proj(id).step = +t.dataset.n; $("#side").classList.remove("open"); scrollTo(0, 0); }
+  else if (act === "step") { p.step = +t.dataset.n; ui.editing = null; }
+  else if (act === "area") { p.areaId = id; ui.editing = null; }
   else if (act === "out") state.out = t.dataset.v;
-  else if (act === "next" && s) { const i = idx(s); if (i < 6) { s.status = STATUSES[i + 1]; if (i === 1) s.approvedOn = new Date().toISOString().slice(0, 10); } }
-  else if (act === "edit" && s) { ui.editing = s.id; p.areaId = s.areaId; state.tab = "design"; save(); render(); $("#selcard").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  else if (act === "filter") state.filter = t.dataset.v;
+  else if (act === "task-done") { const k = state.tasks.find(x => x.id === id); if (k) { k.done = true; k.doneOn = today(); } }
+  else if (act === "next" && s) { const i = idx(s); if (i < 6) { s.status = STATUSES[i + 1]; if (i === 1) s.approvedOn = today(); } }
+  else if (act === "edit" && s) { ui.editing = s.id; p.areaId = s.areaId; p.step = 3; save(); render(); const c = $("#selcard"); if (c) c.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
   else if (act === "cancel") ui.editing = null;
-  else if (act === "hist") ui.hist[t.dataset.id] = !ui.hist[t.dataset.id];
-  else if (act === "open") { const b = await Files.get(t.dataset.id); if (b) window.open(URL.createObjectURL(b), "_blank"); return; }
+  else if (act === "hist") ui.hist[id] = !ui.hist[id];
+  else if (act === "opt-review" && o) o.status = "In review";
+  else if (act === "opt-approve" && o) { o.status = "Approved"; o.approvedOn = today(); }
+  else if (act === "opt-changes" && o) o.status = "Changes requested";
+  else if (act === "opt-revise" && o) { optHist(o); o.rev++; o.status = "Draft"; o.comment = ""; }
+  else if (act === "opt-attach" && o) { const sel = document.querySelector(`[data-pick="${id}"]`); if (sel && sel.value) o.fileIds.push(sel.value); }
+  else if (act === "open") { const b = await Files.get(id); if (b) window.open(URL.createObjectURL(b), "_blank"); return; }
   else if (act === "brief" || act === "copy") { const el = $("#brief"); el.textContent = brief(p, p.areaId); el.hidden = false;
     if (act === "copy") { try { await navigator.clipboard.writeText(el.textContent); $("#copied").textContent = "Copied."; } catch (x) { $("#copied").textContent = "Select the text to copy it."; } } return; }
-  else if (act === "dl") { const k = state.out, slug = p.address.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") || "project";
-    if (k === "tasks") download(`${slug}-draft-tasks.json`, JSON.stringify({ project: p.address, status: "Draft — not approved, not in Smartsheet", tasks: outRows(p, k).map(r => ({ key: r[0], phase: "09", task: r[1], proposedRole: r[2], dependsOn: [], definitionOfDone: "Installed per the approved selection revision; photo evidence recorded", approvalGate: "Owner approval before any commitment", status: "Draft", responsible: null, dueDate: null, nextFollowUp: null, evidence: null })) }, null, 2), "application/json");
-    else download(`${slug}-${k}.csv`, csv([OUT[k][1], ...outRows(p, k)]), "text/csv"); return; }
+  else if (act === "dl") { const k = t.dataset.k, slug = p.address.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") || "project";
+    if (k === "tasks") download(`${slug}-draft-tasks.json`, taskJson(p), "application/json"); else download(`${slug}-${k}.csv`, csv([OUT[k][1], ...outRows(p, k)]), "text/csv"); return; }
   save(); render();
 });
 document.addEventListener("submit", e => {
-  e.preventDefault(); const p = P();
-  if (e.target.id === "newproj") { const addr = $("#np_addr").value.trim(); if (!addr) { $("#np_addr").focus(); return; }
-    const areas = DEFAULT_AREAS.map(n => ({ id: uid(), name: n })), id = uid();
-    state.projects.push({ id, address: addr, type: $("#np_type").value, areaId: areas[0].id, areas, files: [], notes: {}, selections: [] });
-    state.current = id; state.tab = "design"; ui.info = null; ui.editing = null; $("#np_addr").value = ""; $("#side").classList.remove("open"); }
-  else if (e.target.id === "addarea") { const n = $("#a_name").value.trim(); if (!n) return; const id = uid(); p.areas.push({ id, name: n }); p.areaId = id; }
-  else if (e.target.id === "selform") { const name = $("#s_name").value.trim(); if (!name) { $("#s_name").focus(); return; }
+  e.preventDefault(); const p = P(), f = e.target.id;
+  if (f === "hgform") { const files = [...$("#hg_in").files];
+    importHiggsfield({ projectId: $("#hg_proj").value, areaId: $("#hg_area").value, optionId: $("#hg_opt").value, files, link: $("#hg_link").value.trim(), prompt: $("#hg_prompt").value.trim() }).then(err => { if (err) $("#hg_err").textContent = err; else render(); });
+    return; }
+  if (f === "newdev") { const addr = $("#n_addr").value.trim(); if (!addr) { $("#n_err").textContent = "An address is required."; $("#n_addr").focus(); return; }
+    if (state.projects.some(x => x.address.toLowerCase() === addr.toLowerCase())) { $("#n_err").textContent = "A project with this address already exists."; return; }
+    const np = newProject(addr, $("#n_type").value, { client: $("#n_client").value.trim(), source: $("#n_src").value.trim(), description: $("#n_desc").value.trim() });
+    state.projects.push(np); state.current = np.id; state.view = "studio"; }
+  else if (f === "newtask") { const text = $("#t_text").value.trim(); if (!text) { $("#t_text").focus(); return; }
+    state.tasks.push({ id: uid(), kind: $("#t_kind").value, text, projectId: $("#t_proj").value || null, due: $("#t_due").value, confirmed: !!$("#t_conf").value, done: false }); }
+  else if (f === "addarea") { const n = $("#a_name").value.trim(); if (!n) return; const id = uid(); p.areas.push({ id, name: n }); p.areaId = id; }
+  else if (f === "optform") { const n = $("#o_name").value.trim(); if (!n) { $("#o_name").focus(); return; }
+    p.options.push({ id: uid(), areaId: p.areaId, name: n, desc: $("#o_desc").value.trim(), fileIds: [], status: "Draft", rev: 1, history: [], comment: "" }); }
+  else if (f === "selform") { const name = $("#s_name").value.trim(); if (!name) { $("#s_name").focus(); return; }
     const data = { name, category: $("#s_cat").value, vendor: $("#s_vendor").value.trim(), spec: $("#s_spec").value.trim(), qty: num($("#s_qty").value), unit: $("#s_unit").value.trim(), unitCost: num($("#s_cost").value), costCode: $("#s_code").value.trim(), neededBy: $("#s_need").value, neededConfirmed: !!$("#s_conf").value };
     const cur = ui.editing && p.selections.find(s => s.id === ui.editing);
-    if (cur) { if (idx(cur) >= 2) { cur.history.push({ rev: cur.rev, status: cur.status, when: new Date().toISOString().slice(0, 10), spec: cur.spec, vendor: cur.vendor, qty: cur.qty, unit: cur.unit }); cur.rev++; cur.status = "Selected"; }
+    if (cur) { if (idx(cur) >= 2) { cur.history.push({ rev: cur.rev, status: cur.status, when: today(), spec: cur.spec, vendor: cur.vendor, qty: cur.qty, unit: cur.unit }); cur.rev++; cur.status = "Selected"; }
       Object.assign(cur, data); ui.editing = null; }
-    else p.selections.push(Object.assign({ id: uid(), areaId: p.areaId, leadDays: null, note: "", status: "Discussed", rev: 1, history: [] }, data)); }
+    else p.selections.push(Object.assign({ id: uid(), areaId: p.areaId, leadDays: null, status: "Discussed", rev: 1, history: [] }, data)); }
   save(); render();
 });
 document.addEventListener("input", e => {
-  if (e.target.id === "q") { ui.q = e.target.value; render(); const q = $("#q"); q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
-  else if (e.target.id === "notes") { const p = P(); p.notes[p.areaId] = e.target.value; save(); }
+  const t = e.target, p = P();
+  if (t.id === "q") { ui.q = t.value; render(); const q = $("#q"); q.focus(); q.setSelectionRange(q.value.length, q.value.length); return; }
+  if (t.id === "notes") p.notes[p.areaId] = t.value;
+  else if (t.id === "p_client") p.client = t.value;
+  else if (t.id === "pr_no") p.proposal.waveNo = t.value.trim();
+  else if (t.dataset.team != null) p.team[+t.dataset.team].name = t.value;
+  else if (t.dataset.ev) { const c = p.checklist.find(x => x.key === t.dataset.ev); if (c) c.evidence = t.value; }
+  else if (t.dataset.oc) { const o = p.options.find(x => x.id === t.dataset.oc); if (o) o.comment = t.value; }
+  else return;
+  save();
 });
-document.addEventListener("change", e => { if (e.target.id === "f_in" && e.target.files.length) addFiles([...e.target.files]); });
+document.addEventListener("change", e => {
+  const t = e.target, p = P();
+  if (t.id === "f_in" && t.files.length) { addFiles([...t.files]); return; }
+  if (t.dataset.chk) { const c = p.checklist.find(x => x.key === t.dataset.chk); if (c) c.status = t.value; }
+  else if (t.id === "pr_state") p.proposal.state = t.value;
+  else if (t.id === "hg_proj") { ui.hgProj = t.value; ui.hgArea = null; }
+  else if (t.id === "hg_area") ui.hgArea = t.value;
+  else return;
+  save(); render();
+});
 document.addEventListener("dragover", e => { const d = e.target.closest && e.target.closest("#drop"); if (d) { e.preventDefault(); d.classList.add("over"); } });
 document.addEventListener("dragleave", e => { const d = e.target.closest && e.target.closest("#drop"); if (d) d.classList.remove("over"); });
 document.addEventListener("drop", e => { const d = e.target.closest && e.target.closest("#drop"); if (d) { e.preventDefault(); d.classList.remove("over"); if (e.dataTransfer.files.length) addFiles([...e.dataTransfer.files]); } });
-$("#menu").addEventListener("click", () => $("#side").classList.toggle("open"));
 $("#theme").addEventListener("click", () => { const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light"); document.documentElement.dataset.theme = cur === "dark" ? "light" : "dark"; });
-$("#reset").addEventListener("click", async () => { if (!confirm("Remove everything added in this prototype on this device and restore the made-up sample?")) return; await Files.clear(); thumbs.clear(); state = sampleState(); ui = { q: "", editing: null, hist: {}, info: null }; save(); render(); });
+$("#reset").addEventListener("click", async () => { if (!confirm("Remove everything added in this prototype on this device and restore the made-up sample?")) return; await Files.clear(); thumbs.clear(); state = sampleState(); ui = { q: "", editing: null, hist: {} }; save(); render(); });
 
 /* Optional link back to a dashboard page: ?dashboard=<relative .html path>. Only a plain relative path is accepted. */
 const DASHBOARD = (() => { try { const d = new URLSearchParams(location.search).get("dashboard"); return d && /^[A-Za-z0-9 ._()\/-]+\.html$/.test(d) && !d.includes("//") ? d : null; } catch (e) { return null; } })();
 
 (async () => {
   await Files.open();
-  state = loadState() || sampleState();
-  if (!state.projects || !state.projects.length) state = sampleState();
-  $("#brand").innerHTML = mark("g1") + "<div><b>Grama OS</b><span>Design Studio</span></div>";
-  $("#brand-m").innerHTML = mark("g2") + "<div><b>Grama OS</b><span>Design Studio</span></div>";
+  const saved = loadState();
+  state = saved && saved.projects && saved.projects.length ? upgrade(saved) : sampleState();
+  const h = (location.hash || "").slice(1), m = h.match(/^studio-([1-8])$/);          // deep links: #daily, #new, #studio, #studio-4
+  if (m) { state.view = "studio"; P().step = +m[1]; } else if (["daily","studio","new","higgsfield"].includes(h)) state.view = h;
+  $("#brand").innerHTML = mark("g1") + "<div><b>Grama OS</b><span>Development OS</span></div>";
+  $("#brand-m").innerHTML = mark("g2") + "<div><b>Grama OS</b><span>Development OS</span></div>";
   save(); render();
 })();
 </script>
