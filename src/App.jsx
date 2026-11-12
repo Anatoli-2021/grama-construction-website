@@ -47,14 +47,42 @@ function App({ initialPath } = {}) {
 
   useEffect(() => {
     if (!menuOpen) return;
-    const closeOnEscape = event => {
+    const mobile = window.matchMedia('(max-width: 600px)');
+    if (!mobile.matches) { setMenuOpen(false); return; }
+    const header = root.current.querySelector('.site-header');
+    const trigger = header.querySelector('.menu-button');
+    const background = [...root.current.querySelectorAll('main, .site-footer, .skip-link, .chapter-index')];
+    const previousInert = background.map(element => element.inert);
+    const previousOverflow = document.body.style.overflow;
+    background.forEach(element => { element.inert = true; });
+    document.body.style.overflow = 'hidden';
+    const links = () => [...header.querySelectorAll('a[href], button')].filter(element => element.getClientRects().length && !element.disabled);
+    header.querySelector('.main-nav a')?.focus({ preventScroll: true });
+    const onKeyDown = event => {
       if (event.key === 'Escape') {
+        event.preventDefault();
         setMenuOpen(false);
-        root.current.querySelector('.menu-button')?.focus();
+        trigger.focus({ preventScroll: true });
+      } else if (event.key === 'Tab') {
+        const targets = links();
+        const first = targets[0];
+        const last = targets.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault(); last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault(); first?.focus();
+        }
       }
     };
-    document.addEventListener('keydown', closeOnEscape);
-    return () => document.removeEventListener('keydown', closeOnEscape);
+    const onResize = event => { if (!event.matches) setMenuOpen(false); };
+    document.addEventListener('keydown', onKeyDown);
+    mobile.addEventListener('change', onResize);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      mobile.removeEventListener('change', onResize);
+      background.forEach((element, index) => { element.inert = previousInert[index]; });
+      document.body.style.overflow = previousOverflow;
+    };
   }, [menuOpen]);
 
   useEffect(() => {
@@ -149,7 +177,7 @@ function App({ initialPath } = {}) {
         <SignatureResidences motion={motion} />
         <DexterExperience motion={motion} onView={setModal} onConsultation={openConsultation} />
         <TrustedPartners />
-        <section className="page-invitation section-pad" data-chapter="08"><p className="eyebrow">WORK WITH GRAMA</p><h2 className="display">A site, a home<br /><em>or a development.</em></h2><p>Meet the team, review our work and tell us about your project.</p><div><a className="button button-dark" href="/partnerships">Development partnerships <Arrow diagonal /></a><a className="text-link" href="/contact">Contact Grama <Arrow diagonal /></a></div></section>
+        <section className="page-invitation section-pad" data-chapter="08" aria-labelledby="opportunities-title"><p className="eyebrow">DEVELOPMENT OPPORTUNITIES</p><h2 className="display" id="opportunities-title">A site, a home<br /><em>or a development.</em></h2><p>Discuss your site, project scope or interest in working with Grama. Each partnership begins with a conversation.</p><ul className="opportunity-links"><li><a href={enquiryHref({path:'development',topic:'Landowner opportunity'})}>I have land <Arrow diagonal /></a></li><li><a href={enquiryHref({path:'development',topic:'Development partnership'})}>I have a development <Arrow diagonal /></a></li><li><a href={enquiryHref({path:'development',topic:'Investment partnership'})}>I’m interested in partnering <Arrow diagonal /></a></li></ul><div><a className="button button-dark" href="/partnerships">Explore our development process <Arrow diagonal /></a><a className="text-link" href={enquiryHref({path:'home',topic:'Custom home'})}>Discuss a custom home <Arrow diagonal /></a></div></section>
         </>}
         {route.type === 'brand-review' && <BrandReview />}
         {route.type === 'about' && <AboutPage onConsultation={openConsultation} />}

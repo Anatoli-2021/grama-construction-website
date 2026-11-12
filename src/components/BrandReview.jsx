@@ -83,7 +83,7 @@ export function BrandReview() {
   return <article className="brand-review">
     <header className="br-intro">
       <p className="br-overline">GRAMA / IDENTITY STUDY / 2026</p>
-      <div className="br-intro-heading"><h1>GRAMA.<br /><em>Development.</em></h1><div><p>Three original identities for Grama’s proposed development positioning.</p><p className="br-approval">CONCEPT REVIEW — AWAITING TONY’S APPROVAL.<br />Grama Construction remains the current public brand and legal-name changes are not authorized.</p></div></div>
+      <div className="br-intro-heading"><h1>GRAMA.<br /><em>Development.</em></h1><div><p>Three original identities for Grama’s development positioning.</p><p className="br-approval">SPELLING CONFIRMED: Grama Development.<br />Design and production release await Tony’s approval. Grama Construction remains the current public brand and legal-name changes are not authorized.</p></div></div>
       <nav className="br-section-nav" aria-label="Brand review sections"><a href="#brand-concepts">The identities</a><a href="#brand-master">Recommended master</a><a href="#brand-system">The system</a><a href="#brand-applications">13 applications</a></nav>
     </header>
 
@@ -113,7 +113,7 @@ export function BrandReview() {
       <div className="br-application-grid">{applications.map(([kind,title,note],index) => <figure className={'br-application br-application--' + kind} key={kind}><div className="br-artwork"><span className="br-concept-stamp">CONCEPT</span><ApplicationArtwork kind={kind} /></div><figcaption><span>{String(index + 1).padStart(2,'0')} / {title}</span><p>{note}</p></figcaption></figure>)}</div>
     </section>
 
-    <footer className="br-review-footer"><div><p className="br-overline">NEXT DECISION / CLIENT REVIEW</p><h2>Choose the identity.<br /><em>Confirm the name.</em></h2><p>Concept A is recommended. Tony’s approval is required before replacing the public identity, changing a legal name or deploying this rebrand to the production website.</p></div><div><a href="/">Return to website preview ↗</a><a href="/projects">Explore the existing project portfolio ↗</a><p>Photography sources: <a href="https://www.gramaconstruction.com/projects/1847-dexter-des-plaines" target="_blank" rel="noreferrer">1847 Dexter Lane</a> and <a href="https://www.gramaconstruction.com/projects/prospect-ln-des-plaines-il-60018" target="_blank" rel="noreferrer">1171 Prospect Lane</a>. Dexter Acres: existing supplied concept asset, not a completed project.</p></div></footer>
+    <footer className="br-review-footer"><div><p className="br-overline">NEXT DECISION / CLIENT REVIEW</p><h2>Choose the identity.<br /><em>Review the experience.</em></h2><p>Concept A is recommended. Tony’s approval is required before replacing the public identity, changing a legal name or deploying this rebrand to the production website.</p></div><div><a href="/">Return to website preview ↗</a><a href="/projects">Explore the existing project portfolio ↗</a><p>Photography sources: <a href="https://www.gramaconstruction.com/projects/1847-dexter-des-plaines" target="_blank" rel="noreferrer">1847 Dexter Lane</a> and <a href="https://www.gramaconstruction.com/projects/prospect-ln-des-plaines-il-60018" target="_blank" rel="noreferrer">1171 Prospect Lane</a>. Dexter Acres: existing supplied concept asset, not a completed project.</p></div></footer>
   </article>;
 }
 

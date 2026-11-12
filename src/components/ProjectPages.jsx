@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { projects } from '../data/projects.js';
+import { enquiryHref } from '../enquiry-context.js';
 import './ProjectPages.css';
 
 function Arrow({ reverse = false }) {
@@ -93,7 +94,7 @@ export function ProjectCase({ project, onView }) {
           <div className="project-case-gallery-heading"><p className="eyebrow">PROJECT PHOTOGRAPHY</p><h2 id="project-gallery-title">A closer look.</h2></div>
           <div className="project-case-gallery-grid">{project.gallery.map((photo, photoIndex) => <figure key={photo.image}><button type="button" onClick={() => openGallery(photoIndex)} aria-label={'Enlarge ' + photo.caption}><img src={'/assets/' + photo.image} alt={photo.alt} width="1600" height="1067" loading="lazy" /><span><Arrow /></span></button><figcaption>{photo.caption}</figcaption></figure>)}</div>
         </section>
-        <section className="project-case-cta" aria-labelledby="project-contact-title"><div><p className="eyebrow">BUILD WITH GRAMA</p><h2 id="project-contact-title">Discuss your home<br /><em>or development.</em></h2></div><a className="text-link" href="/contact">Talk to Grama <Arrow /></a></section>
+        <section className="project-case-cta" aria-labelledby="project-contact-title"><div><p className="eyebrow">BUILD WITH GRAMA</p><h2 id="project-contact-title">Let’s talk about<br /><em>your custom home.</em></h2><p>Tell us about the home and site you have in mind.</p></div><div className="project-case-enquiry-links"><a className="text-link" href={enquiryHref({path:'home',topic:'Custom home'})}>Discuss a custom home <Arrow /></a><a className="text-link" href={enquiryHref({path:'development',topic:'Development partnership'})}>Discuss a development <Arrow /></a></div></section>
         <nav className="project-case-navigation" aria-label="More completed projects"><a href={'/projects/' + previous.slug}><span>PREVIOUS PROJECT</span><strong><Arrow reverse />{previous.name}</strong></a><a href={'/projects/' + next.slug}><span>NEXT PROJECT</span><strong>{next.name}<Arrow /></strong></a></nav>
       </div>
     </article>

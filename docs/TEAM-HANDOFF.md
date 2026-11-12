@@ -1,3 +1,34 @@
+# Website team handoff — November 12, 2026
+
+## Current website task
+
+- Objective: evolve the existing website toward Grama Development's luxury-home and residential-development positioning; preserve working pages, enquiry safeguards and private access boundaries. No rebuild.
+- Tony confirmed exact spelling **Grama Development** on November 12 in the Grama Website chat. Identity design and production release still require Tony's approval. This task's production gate supersedes the older November 10 deployment instruction preserved below.
+- Branch: `feature/website-mobile-enquiry-2026-11-12`, based on Nail's `feature/architectural-flagship` at `7e5c4a192a9162069ad563a6b835beaa29c29e5b` / PR #14. Use a stacked PR to review the incremental change without re-reviewing the full existing site.
+- Scope and six-competitor study: [website review](WEBSITE-REVIEW-2026-11-12.md). Implementation: mobile navigation focus/inert/scroll cleanup; portfolio keyboard/resize behavior; specific homeowner and development enquiry paths; luxury-home/scope copy; confirmed-spelling review status. Grama uses its existing photographs and original code/assets.
+- Validation: Node 24; `npm run check` passes build, 140 tests and public-artifact policy; `VERIFY_URL=http://localhost:5274 npm run verify` passes all 9 API/asset checks; `git diff --check` passes. Local browser checks at 320/390/1280 CSS pixels showed no horizontal overflow. Focus entry/wrap/Escape, scroll/inert restoration after resize, Home/End/Arrow Right portfolio navigation, homeowner and landowner/partner context, disabled delivery and confirmed spelling were checked. Browser prefers reduced motion; that fallback was exercised. No captured warning/error logs. Physical-device checks, Lighthouse/Core Web Vitals and email inbox receipt are not claimed.
+- Current deployment checkpoint: PR/deployment recording follows after staging verification. Target only existing `humorous-delight` (`ee093a0e-93c7-4a86-8965-78e151adeb64`) in `staging-website` (`68266b74-e9b9-448c-99b2-c38241f0484b`), project `earnest-wisdom` (`ffb7baed-e751-41be-9874-c4eb4c4ae290`). No new service, production-variable copy, OS data or paid upgrade.
+- Production was inspected at Contact source `bf33cf4035c27fceca3f21c5c7a635c62c02336f`, branch `feature/contact-enquiry-delivery`; its existing domains include the Railway address and `gramadevelopment.com`. This task does not alter production or DNS. Contact activation still needs provider/sender configuration and real receipt evidence; staging must remain disabled.
+
+## Ownership and coordination
+
+- Nail / `axmatea`: owns Animated Experience, branch `feature/animated-experience`, inspected at `aa8eb97`. The new architectural homepage and that branch diverge after the Contact checkpoint. No animation source, assets or history is overwritten or merged. Coordination request posted to PR #14; acknowledgement and integration checkpoint remain pending.
+- Claude Code: owns Development OS. The OS infrastructure chat acknowledged the boundary and staging-website purpose. Its locked package files, `apps/development-os/**`, `infra/staging/**`, QA helper, AGENTS/CLAUDE and central OS documents remain untouched. The existing staging-os patch is outside this task and remains untouched.
+- Central **OS** coordination is [docs/TEAM_HANDOFF.md on PR #15's branch](https://github.com/Anatoli-2021/grama-construction-website/blob/feature/infrastructure-readiness-2026-11-12/docs/TEAM_HANDOFF.md) (underscore). Preserve the OS task's historical/pointer lines when reconciling its branch; this hyphenated file records current website work. [PR #15](https://github.com/Anatoli-2021/grama-construction-website/pull/15), [infrastructure readiness](https://github.com/Anatoli-2021/grama-construction-website/blob/feature/infrastructure-readiness-2026-11-12/docs/INFRASTRUCTURE-READINESS.md), [OS task handoff](https://github.com/Anatoli-2021/grama-construction-website/blob/feature/infrastructure-readiness-2026-11-12/docs/handoffs/infrastructure-2026-11-12.md) and [Claude next task](https://github.com/Anatoli-2021/grama-construction-website/blob/feature/infrastructure-readiness-2026-11-12/docs/CLAUDE-INFRA-HANDOFF.md) remain branch-qualified while unmerged.
+- Open PRs inspected: #2 legacy setup, #10 private presentation, #12 live Contact, #14 architectural candidate and #15 OS coordination. Search omitted #12/#14, so both were verified directly. No merges, force pushes or reviewer approval are claimed.
+
+## Next actions / owners
+
+1. Tony: review staging and choose/approve the identity direction and proposed design changes. Exact spelling is already confirmed. Production release requires approval of an exact commit.
+2. Nail + website lead: acknowledge the Animated Experience checkpoint, reconcile its shared App/routes/brand files with the architectural candidate, and verify mobile/reduced-motion behavior in a separate focused PR.
+3. Website lead + Tony: resolve the stacked PR release order and plan real Contact delivery configuration/receipt verification before activation. Keep Claude's OS work separate.
+
+---
+
+# Historical website handoff — November 11, 2026
+
+The following record is preserved as evidence. Its older source, domain and deployment instructions are superseded where the current November 12 website facts above differ.
+
 # Developer team handoff — November 11, 2026
 
 ## Verified live website
