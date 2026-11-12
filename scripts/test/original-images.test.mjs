@@ -16,7 +16,7 @@ test('the complete original image/font/plan register and restored hero retain th
 });
 
 test('Nail’s animation implementation and existing media remain unchanged at the production checkpoint',async()=>{
-  assert.equal(manifest.protectedAnimationFiles.length,17);
+  assert.equal(manifest.protectedAnimationFiles.length,20);
   for(const asset of manifest.protectedAnimationFiles)assert.equal(hash(await readFile(asset.path)),asset.sha256,asset.path);
 });
 

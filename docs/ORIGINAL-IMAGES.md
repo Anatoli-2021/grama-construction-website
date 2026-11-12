@@ -4,7 +4,7 @@
 
 Tony approved the Grama Development naming and refined minimalist logo direction on November 12, 2026. He explicitly rejected replacing original architectural photographs and visuals with generated houses, stock imagery or invented projects. This refinement restores the original company homepage photograph and preserves existing authorized photographs, portraits, partner marks, project information and enquiry behavior.
 
-The original-image manifest is [original-assets.json](original-assets.json). Its baseline is commit `d45e546fe0d1b8673039b45b3db34c5a7d0b784a`, the inspected Nail Animated Experience checkpoint. The manifest records SHA-256 hashes for 31 original assets (29 photographs/partner images, the supplied plan and the existing font), 17 protected animation files (five source files and twelve media files), and the restored original hero. Each baseline file was read from Git and compared with its working-copy bytes when this record was prepared. No generated replacement image is introduced.
+The original-image manifest is [original-assets.json](original-assets.json). Its baseline is commit `f7e9546d24ac38fe8e38cd95062da234e1304475`, the inspected Nail Animated Experience checkpoint. The manifest records SHA-256 hashes for 31 original assets (29 photographs/partner images, the supplied plan and the existing font), 20 protected animation files (seven source files and thirteen media files), and the restored original hero. Each baseline file was read from Git and compared with its working-copy bytes when this record was prepared. No generated replacement image is introduced.
 
 ## Restored original homepage hero
 
@@ -51,9 +51,9 @@ All sixteen existing project photographs remain byte for byte unchanged from the
 
 ## Legacy concepts and Nail's ownership
 
-Existing owner-supplied `residence.webp`, `residence-angle.webp` and `residence-garden.webp` are architectural concepts, not completed-project photographs. `community.webp`, `residence-film.mp4` and `sequence/*` are documented legacy AI concept visuals. They are retained on the dedicated project/animation experiences with their concept distinctions; they do not replace the restored original homepage photograph or completed-project photography.
+Existing owner-supplied `residence.webp`, `residence-angle.webp` and `residence-garden.webp` are architectural concepts, not completed-project photographs. `community.webp`, `residence-film.mp4` and `sequence/*` are documented legacy AI concept visuals. The files remain preserved, and displayed concept sequences stay on the dedicated project/animation experiences with their concept distinctions; they do not replace the restored original homepage photograph or completed-project photography.
 
-Nail owns Animated Experience. Its protected source files are `AnimatedExperience.css`, `AnimatedExperience.jsx`, `ArtlistHouseSequence.jsx`, `animated-timeline.js` and `artlist-house-sequence.js` under `src/components/`. The manifest also protects the four layer images and eight desktop/mobile Artlist atlas sheets under `public/assets/animated/`.
+Nail owns Animated Experience. Its protected source files are `AnimatedExperience.css`, `AnimatedExperience.jsx`, `ArtlistHouseSequence.jsx`, `animated-timeline.js`, `artlist-house-sequence.js`, `HouseAnimationPlayer.css` and `HouseAnimationPlayer.jsx` under `src/components/`. The manifest also protects the four layer images, eight desktop/mobile Artlist atlas sheets and the existing production playback MP4 under `public/assets/animated/`.
 
 Those existing animation assets are documented generated concept derivatives, not original architectural photography. They are retained only within the dedicated project/animation experience and remain labelled as concepts. Their preservation does not approve their use as replacement company photography. This branding refinement does not overwrite Nail's animation code or media and does not modify Development OS.
 

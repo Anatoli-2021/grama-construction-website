@@ -1,5 +1,5 @@
 {
-  "baselineCommit": "d45e546fe0d1b8673039b45b3db34c5a7d0b784a",
+  "baselineCommit": "f7e9546d24ac38fe8e38cd95062da234e1304475",
   "originalAssets": [
     {
       "path": "public/assets/portfolio-dexter.webp",
@@ -129,11 +129,11 @@
   "protectedAnimationFiles": [
     {
       "path": "src/components/AnimatedExperience.css",
-      "sha256": "ee11f02e2e5c755201644ee4da71e35ac82b6931f99d0451d53fc854ec9a61cf"
+      "sha256": "78f66925dc952e21fc0ab68ffde91757142d17d40935f2abae1772c01bb3848d"
     },
     {
       "path": "src/components/AnimatedExperience.jsx",
-      "sha256": "2e3f5adcdbba4d6b460c279cfa88386e556203f48222ac6f5932607ad74683f3"
+      "sha256": "cc3deafb5c4c831ff192b3c93693ed12f718fba9cd7c71d9fdf17b8440654519"
     },
     {
       "path": "src/components/ArtlistHouseSequence.jsx",
@@ -194,6 +194,18 @@
     {
       "path": "public/assets/animated/roof.png",
       "sha256": "f686ac59c0b920fe3ee94b8370de49e7824066f67ed3564e85b5ac834d4d7cc3"
+    },
+    {
+      "path": "src/components/HouseAnimationPlayer.css",
+      "sha256": "22011646b9308a6a8293d2e97daa13c39f41b05689f2bccdbf5a6ca8ffb17dfb"
+    },
+    {
+      "path": "src/components/HouseAnimationPlayer.jsx",
+      "sha256": "0015d2eda1d8acb5d7ed8555a83c64fe65318e7ea95221f2a9a9ff8bf9f4b787"
+    },
+    {
+      "path": "public/assets/animated/house-motion-loop.mp4",
+      "sha256": "76ffdbdea79f590f7baf20647271f523633b5159472d0cd4bda4f466f1c33cee"
     }
   ],
   "restoredHero": {

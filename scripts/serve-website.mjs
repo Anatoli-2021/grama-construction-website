@@ -9,6 +9,24 @@ const dist = resolve(fileURLToPath(new URL('../dist/', import.meta.url)));
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.mp4': 'video/mp4' };
 const presentation = createPresentationHandler({ secureCookies: process.env.NODE_ENV === 'production' || process.argv.includes('--hosted') });
 const contact = createContactHandler();
+
+// Only single byte ranges are needed by the native MP4 player. Parse bounds
+// before converting to Number so oversized header values cannot wrap or round.
+function videoRange(value, length) {
+  const match = typeof value === 'string' && /^bytes=(\d*)-(\d*)$/.exec(value);
+  if (!match || (!match[1] && !match[2]) || length === 0) return null;
+  const total = BigInt(length);
+  if (!match[1]) {
+    const suffix = BigInt(match[2]);
+    if (suffix === 0n) return null;
+    return { start: Number(suffix >= total ? 0n : total - suffix), end: length - 1 };
+  }
+  const start = BigInt(match[1]);
+  const end = match[2] ? BigInt(match[2]) : total - 1n;
+  if (start >= total || end < start) return null;
+  return { start: Number(start), end: Number(end >= total ? total - 1n : end) };
+}
+
 export async function serveWebsiteRequest(req, res, { localApi = false, contactHandler = contact } = {}) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -45,7 +63,24 @@ export async function serveWebsiteRequest(req, res, { localApi = false, contactH
       else if (!entry.isFile()) return notFound();
       let content = await readFile(path);
       if (!localApi && path.endsWith('.html')) content = Buffer.from(content.toString('utf8').replace('name="grama-runtime" content="local-api"', 'name="grama-runtime" content="static-preview"'));
-      res.writeHead(path === resolve(dist, '404.html') ? 404 : 200, { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600', 'Content-Length': content.length });
+      const headers = { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600', 'Content-Length': content.length };
+      if (extname(path) === '.mp4') {
+        headers['Accept-Ranges'] = 'bytes';
+        // Range applies to GET only. Without entity validators, an If-Range
+        // request receives the full representation instead of a stale slice.
+        if (req.method === 'GET' && req.headers.range !== undefined && req.headers['if-range'] === undefined) {
+          const range = videoRange(req.headers.range, content.length);
+          if (!range) {
+            res.writeHead(416, { ...headers, 'Cache-Control': 'no-store', 'Content-Range': `bytes */${content.length}`, 'Content-Length': 0 });
+            return res.end();
+          }
+          headers['Content-Range'] = `bytes ${range.start}-${range.end}/${content.length}`;
+          headers['Content-Length'] = range.end - range.start + 1;
+          res.writeHead(206, headers);
+          return res.end(content.subarray(range.start, range.end + 1));
+        }
+      }
+      res.writeHead(path === resolve(dist, '404.html') ? 404 : 200, headers);
       res.end(req.method === 'HEAD' ? undefined : content);
     } catch { return notFound(); }
 }

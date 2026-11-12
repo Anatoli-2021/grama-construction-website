@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { enquiryHref } from '../enquiry-context.js';
 import { EXPERIENCE_CHAPTERS, clampProgress, getAnimatedPose, poseStyles } from './animated-timeline.js';
 import ArtlistHouseSequence from './ArtlistHouseSequence.jsx';
+import HouseAnimationPlayer from './HouseAnimationPlayer.jsx';
 import { getHouseClipProgress } from './artlist-house-sequence.js';
 import './AnimatedExperience.css';
 
@@ -46,16 +47,19 @@ export default function AnimatedExperience({ motion = true }) {
   const sequenceRef = useRef(null);
   const chapterButtonRefs = useRef([]);
   const seekRef = useRef(null);
+  const pendingStartRef = useRef(false);
   const progressRef = useRef(0);
   const chapterRef = useRef(0);
   const [chapter, setChapter] = useState(0);
   const [clientReady, setClientReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [motionOptIn, setMotionOptIn] = useState(false);
   const [paused, setPaused] = useState(false);
   const [viewMode, setViewMode] = useState('scroll');
   const [mediaStatus, setMediaStatus] = useState('loading');
   const [artlistStatus, setArtlistStatus] = useState('idle');
-  const wantsMotion = clientReady && motion && !reducedMotion && viewMode === 'scroll';
+  const motionAllowed = motionOptIn || (motion && !reducedMotion);
+  const wantsMotion = clientReady && motionAllowed && viewMode === 'scroll';
   const canAnimate = mediaStatus !== 'unavailable' || artlistStatus === 'loading' || artlistStatus === 'ready';
   const scrollMode = wantsMotion && canAnimate;
   const filmReady = scrollMode && artlistStatus === 'ready';
@@ -64,7 +68,13 @@ export default function AnimatedExperience({ motion = true }) {
 
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReducedMotion(preference.matches);
+    const update = () => {
+      setReducedMotion(preference.matches);
+      if (preference.matches) {
+        setMotionOptIn(false);
+        pendingStartRef.current = false;
+      }
+    };
     update();
     setClientReady(true);
     preference.addEventListener('change', update);
@@ -139,6 +149,12 @@ export default function AnimatedExperience({ motion = true }) {
     };
   }, [scrollMode, paused]);
 
+  useEffect(() => {
+    if (!scrollMode || !pendingStartRef.current) return;
+    pendingStartRef.current = false;
+    seekRef.current?.(0);
+  }, [scrollMode]);
+
   function jumpTo(index) {
     seekRef.current?.(EXPERIENCE_CHAPTERS[index].target);
   }
@@ -150,9 +166,18 @@ export default function AnimatedExperience({ motion = true }) {
     jumpTo(next);
   }
   function showStills() {
+    pendingStartRef.current = false;
+    setMotionOptIn(false);
     setViewMode('stills');
     setPaused(false);
     window.requestAnimationFrame(() => sectionRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  }
+
+  function enableScrollAnimation() {
+    pendingStartRef.current = true;
+    setMotionOptIn(true);
+    setPaused(false);
+    setViewMode('scroll');
   }
 
   return <section ref={sectionRef} className="animated-experience" data-mode={scrollMode ? 'scroll' : 'stills'} data-media-ready={mediaReady ? 'true' : 'false'} aria-labelledby="animated-experience-title">
@@ -172,6 +197,7 @@ export default function AnimatedExperience({ motion = true }) {
           <p className="ae-eyebrow">Grama Development <span>/</span> Dexter Acres</p>
           <h1 id="animated-experience-title">Animated<br />Experience.</h1>
           <p className="ae-disclosure">AI-animated architectural concept.<br />Structure and materials are shown conceptually.</p>
+          <HouseAnimationPlayer />
         </header>
 
         <div className="ae-view-options" aria-label="Experience display options">
@@ -181,7 +207,7 @@ export default function AnimatedExperience({ motion = true }) {
               {paused ? 'Resume' : 'Pause'}
             </button>
             <button type="button" onClick={showStills}>View stills</button>
-          </> : <button type="button" onClick={() => setViewMode('scroll')} disabled={!clientReady || reducedMotion || !motion || motionUnavailable}>{reducedMotion || !motion || motionUnavailable ? 'Still view' : 'Explore with scroll'}<Arrow /></button>}
+          </> : <button type="button" onClick={enableScrollAnimation} disabled={!clientReady || motionUnavailable}>{motionUnavailable ? 'Scroll animation unavailable' : 'Enable scroll animation'}<Arrow /></button>}
         </div>
 
         <div className="ae-chapter-copy">

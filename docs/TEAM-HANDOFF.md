@@ -6,12 +6,12 @@ Tony approved **Grama Development** naming, the refined logo direction and premi
 
 ## Current candidate
 
-- Branch `feature/preserve-original-visuals-2026-11-12`, based on current production/Nail `d45e546fe0d1b8673039b45b3db34c5a7d0b784a`. PR/deployment evidence follows after publishing the verified candidate.
+- Branch `feature/preserve-original-visuals-2026-11-12`, based on current production/Nail `f7e9546d24ac38fe8e38cd95062da234e1304475`. PR/deployment evidence follows after publishing the verified candidate.
 - Restored the original company hero photograph from the exact official source, optimized as `original-home-hero.webp` (1536 × 983). Typography, spacing, restrained photo motion, responsive framing and navigation are refined. Mobile shows the complete original photograph above the copy. Contact/private presentation identity is consistently Grama Development.
 - All fifteen current live public routes, eight project cases, existing project facts, source attribution, galleries, portfolio filters, Contact safeguards and private access boundaries are preserved. Homepage concepts now link to their existing dedicated Dexter/Animated Experience pages; the supplied C5 plan is the homepage development visual. Legacy homepage #architecture/#community links redirect to the matching project anchors.
-- Image inventory: [ORIGINAL-IMAGES.md](ORIGINAL-IMAGES.md), with [immutable hashes](original-assets.json). All 31 original image/plan/font assets plus seventeen Nail-owned animation source/media files match the production baseline byte for byte. Only the restored original hero is added; no new generated content.
-- Validation: build and 133 tests passed; browser checked original image framing, 320/390px no overflow, 900/1100px menu/resize, focus wrap/Escape, mobile text stability under motion, portfolio filtering, gallery navigation, custom-home enquiry context, all 14 lots and Lot 4 → Contact. No captured warning/error logs. Physical-device testing, Core Web Vitals and real inbox receipt are unrun.
-- [Release readiness and rollback](WEBSITE-RELEASE-CANDIDATE.md). Existing staging service/domain only; production has not been changed by this task. Current production baseline deployment `39a823df-9674-4bba-892c-636e37e239b3` at d45e546 reports rollback/redeploy available. Nail's separate production release advanced during inspection; verify again before any approved promotion.
+- Image inventory: [ORIGINAL-IMAGES.md](ORIGINAL-IMAGES.md), with [immutable hashes](original-assets.json). All 31 original image/plan/font assets plus twenty Nail-owned animation source/media files match the production baseline byte for byte. Only the restored original hero is added; no new generated content.
+- Validation: build and 138 tests passed; browser checked original image framing, 320/390px no overflow, 900/1100px menu/resize, focus wrap/Escape, mobile text stability under motion, portfolio filtering, gallery navigation, custom-home enquiry context, all 14 lots and Lot 4 → Contact. No captured warning/error logs. Physical-device testing, Core Web Vitals and real inbox receipt are unrun.
+- [Release readiness and rollback](WEBSITE-RELEASE-CANDIDATE.md). Existing staging service/domain only; production has not been changed by this task. Current production baseline deployment `5caa1719-e9f4-429e-8277-64c69b28e552` at f7e9546 reports rollback/redeploy available. Nail's separate production release advanced during inspection; verify again before any approved promotion.
 
 ## Ownership and next actions
 
@@ -20,6 +20,8 @@ Tony approved **Grama Development** naming, the refined logo direction and premi
 - Next: Tony reviews this exact staging version; Nail acknowledges the protected checkpoint/shared-file boundaries; website lead prepares production promotion and rollback only after exact-version approval. Keep delivery activation separate.
 
 ---
+
+- Late production playback fix `f7e9546` was integrated verbatim into this isolated branch. The protected register is refreshed against that exact production checkpoint; Nail’s source/media and streaming host are unchanged from it. No production setting was modified.
 
 # Previous staging handoff — historical, superseded where different
 
