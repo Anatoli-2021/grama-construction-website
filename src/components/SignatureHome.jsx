@@ -31,9 +31,9 @@ export function SignatureHero({ motion = true, onToggleMotion }) {
       </div>
       <div className="sig-hero__shade" />
       <div className="sig-hero__inner">
-        <p className="sig-hero__kicker"><span />GRAMA Development / Chicagoland</p>
-        <h1 id="hero-title">Custom homes.<br /><em>Residential development.</em></h1>
-        <p className="sig-hero__lede">For homeowners, landowners and development partners.</p>
+        <p className="sig-hero__kicker"><span />Grama Development / Chicagoland</p>
+        <h1 id="hero-title">Luxury custom homes.<br /><em>Residential development.</em></h1>
+        <p className="sig-hero__lede">From site planning and design coordination through construction. For homeowners, landowners and development partners.</p>
         <nav className="sig-paths" aria-label="Start here">
           {paths.map(path => <a key={path.number} href={path.href} className="sig-path"><span className="sig-path__number">{path.number}</span><span className="sig-path__label">{path.label}<Arrow direction="diagonal" /></span><span className="sig-path__note">{path.note}</span></a>)}
         </nav>
@@ -76,13 +76,24 @@ export function SignatureResidences({ motion }) {
       });
     };
     element.addEventListener('scroll', update, { passive: true });
-    return () => { element.removeEventListener('scroll', update); cancelAnimationFrame(frame); };
+    const resize = new ResizeObserver(update);
+    resize.observe(element);
+    update();
+    return () => { element.removeEventListener('scroll', update); resize.disconnect(); cancelAnimationFrame(frame); };
   }, []);
 
-  function go(step) {
+  function goTo(index) {
     const element = rail.current;
-    const target = element?.children[Math.min(completed.length - 1, Math.max(0, active + step))];
+    const target = element?.children[Math.min(completed.length - 1, Math.max(0, index))];
     if (target) element.scrollTo({ left: target.offsetLeft - element.children[0].offsetLeft, behavior: motion ? 'smooth' : 'auto' });
+  }
+
+  function onRailKeyDown(event) {
+    if (event.target !== event.currentTarget || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    const destinations = { ArrowLeft: active - 1, ArrowRight: active + 1, Home: 0, End: completed.length - 1 };
+    if (!Object.hasOwn(destinations, event.key)) return;
+    event.preventDefault();
+    goTo(destinations[event.key]);
   }
 
   return (
@@ -96,12 +107,13 @@ export function SignatureResidences({ motion }) {
           <p>Residential work across Chicago and the surrounding suburbs.</p>
           <div className="sig-rail-controls">
             <span aria-live="polite">{String(active + 1).padStart(2, '0')} / {String(completed.length).padStart(2, '0')}</span>
-            <button type="button" aria-label="Previous project" onClick={() => go(-1)} disabled={active === 0}><Arrow direction="left" /></button>
-            <button type="button" aria-label="Next project" onClick={() => go(1)} disabled={active === completed.length - 1}><Arrow /></button>
+            <button type="button" aria-label="Previous project" onClick={() => goTo(active - 1)} disabled={active === 0}><Arrow direction="left" /></button>
+            <button type="button" aria-label="Next project" onClick={() => goTo(active + 1)} disabled={active === completed.length - 1}><Arrow /></button>
           </div>
         </div>
       </div>
-      <ol className="sig-rail" ref={rail} aria-label="Completed projects" tabIndex={0}>
+      <p className="sr-only" id="portfolio-keyboard-help">Use the left and right arrow keys to browse projects. Home and End move to the first and last project.</p>
+      <ol className="sig-rail" ref={rail} aria-label="Completed projects" aria-describedby="portfolio-keyboard-help" onKeyDown={onRailKeyDown} tabIndex={0}>
         {completed.map((project, index) => (
           <li className="sig-card" key={project.slug}>
             <a href={'/projects/' + project.slug} aria-label={'View ' + project.name + ', ' + project.location}>

@@ -1,5 +1,7 @@
 # GRAMA Development — proposed identity
 
+Tony confirmed the exact public brand spelling **Grama Development** in the Grama Website chat on November 12, 2026. This approves the spelling; the identity design and production release remain subject to his approval. Capitalized letterforms in the proposed SVG wordmark are a visual treatment, not a different name. No legal-name change or trademark clearance is claimed. The separate website staging preview is authorized for review.
+
 This feature branch is a complete identity study for client review. **Do not deploy this rebrand to the client's production website or replace the public identity before Tony's approval.** Grama Construction remains the current public brand; no legal-name change is made by these files.
 
 Run the normal local development/production preview from README. Open `/brand-review` for the identity room and `/` for the proposed website. The visible Brand concept label is intentional. The review route is not confidential access control; it contains only conceptual applications and approved public project materials.

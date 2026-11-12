@@ -2,6 +2,30 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { siteRoutes, previewOrigin } from '../../src/site-routes.js';
+import { readEnquiryContext } from '../../src/enquiry-context.js';
+
+function contextFromLink(html, label) {
+  const anchor = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].find(match => match[2].replace(/<[^>]+>/g, '').trim() === label);
+  assert.ok(anchor, 'Missing enquiry action: ' + label);
+  const url = new URL(anchor[1].replace(/&amp;/g, '&'), 'https://example.invalid');
+  assert.equal(url.pathname, '/contact');
+  return readEnquiryContext(url.search);
+}
+
+test('homepage opportunity links preserve each development enquiry intent', async () => {
+  const html = await readFile('dist/index.html', 'utf8');
+  for (const [label, topic] of [['I have land', 'Landowner opportunity'], ['I have a development', 'Development partnership'], ['I’m interested in partnering', 'Investment partnership']]) {
+    assert.deepEqual(contextFromLink(html, label), { path: 'development', topic });
+  }
+});
+
+test('every completed case offers distinct homeowner and development enquiries without a stale lot', async () => {
+  for (const route of siteRoutes.filter(route => route.type === 'project')) {
+    const html = await readFile('dist' + route.path + '/index.html', 'utf8');
+    assert.deepEqual(contextFromLink(html, 'Discuss a custom home'), { path: 'home', topic: 'Custom home' });
+    assert.deepEqual(contextFromLink(html, 'Discuss a development'), { path: 'development', topic: 'Development partnership' });
+  }
+});
 
 test('homepage uses completed-project photography consistently without an autoplay hero film', async () => {
   const html = await readFile('dist/index.html', 'utf8');

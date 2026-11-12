@@ -17,6 +17,7 @@ const plain = value => value.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '').
 
 test('identity review is a real prerendered, unindexed concept page with distinct metadata', async () => {
   const html = await readFile(new URL('brand-review/index.html', dist), 'utf8');
+  assert.match(html, /SPELLING CONFIRMED: Grama Development/);
   const route = siteRoutes.find(route => route.path === '/brand-review');
   assert.ok(route, 'Register the public feature-review route');
   assert.equal(route.type, 'brand-review');
@@ -36,7 +37,8 @@ test('identity review is a real prerendered, unindexed concept page with distinc
 test('review copy labels the proposal and its applications without legal or investment promises', async () => {
   const html = await readFile(new URL('brand-review/index.html', dist), 'utf8');
   const text = plain(html);
-  assert.match(text, /CONCEPT REVIEW\s*[—–-]\s*AWAITING TONY[’']S APPROVAL/i);
+  assert.match(text, /SPELLING CONFIRMED: Grama Development/i);
+  assert.match(text, /Design and production release await Tony[’']s approval/i);
   assert.match(text, /Grama Construction remains the current public brand/i);
   assert.match(text, /legal-name changes are not authorized/i);
   assert.match(text, /professional trademark review remain[s]? pending/i);
