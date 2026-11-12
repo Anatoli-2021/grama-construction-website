@@ -91,13 +91,13 @@ try {
   r = await run(`${SUBMIT} const out = {}; state.view = 'new'; render(); submit('newdev'); out.emptyRejected = state.projects.length === 1;
     set('n_addr', '1200 sample lane'); submit('newdev'); out.duplicateRejected = state.projects.length === 1;
     state.view = 'new'; render(); set('n_addr', '  77 Test Court  '); set('n_type', 'Development — subdivision'); submit('newdev'); out.sub = { addr: P().address, checklist: P().checklist.length, view: state.view, owner: P().team.every(t => t.name === '') };
-    state.view = 'new'; render(); set('n_addr', '9 Demo Road'); set('n_type', 'Construction or renovation'); submit('newdev'); out.reno = P().checklist.length;
+    state.view = 'new'; render(); set('n_addr', '9 Demo Road'); set('n_type', 'Construction or renovation'); submit('newdev'); const rp = P(); out.reno = { n: rp.checklist.length, gates: ['T17', 'T19'].every(k => rp.checklist.some(c => c.id === rp.id + '-' + k)), noDev: !rp.checklist.some(c => c.key === 'T01') };
     state.view = 'daily'; render(); set('t_text', 'Call about the vanity'); set('t_kind', 'Client request'); submit('newtask'); out.tasks = state.tasks.filter(k => !k.done).length;
     document.querySelector('[data-act=task-done]').click(); out.afterDone = state.tasks.filter(k => !k.done).length;
     const j = JSON.parse(taskJson(state.projects[0])); out.draft = j.tasks.every(t => t.status === 'Draft' && t.responsible === null && t.dueDate === null); out.projects = state.projects.length; return out;`);
   check('intake rejects an empty address and a duplicate address', r.emptyRejected && r.duplicateRejected);
   check('subdivision gets 29 checklist items, no one assigned', r.sub.checklist === 29 && r.sub.owner && r.sub.addr === '77 Test Court' && r.sub.view === 'studio');
-  check('construction or renovation gets no development checklist', r.reno === 0);
+  check('construction or renovation gets the construction gates, including contract authority and release-to-build', r.reno.n === 15 && r.reno.gates && r.reno.noDev, r.reno.n + ' items');
   check('tasks can be added and completed', r.tasks === 4 && r.afterDone === 3);
   check('exported tasks are Draft with no owner and no date', r.draft === true);
 
@@ -139,7 +139,17 @@ try {
     out.imp2 = importLaunch(launch); out.imp3 = importLaunch({ project: { project_id: '  ' }, planRows: [] }); out.imp4 = importLaunch({});
     out.dash = viewInfo('today').includes('DEMO-LAUNCH-01') && !viewInfo('today').includes('separate private prototype');
     out.approvalFile = JSON.parse(approvalJson(p)).selections.find(s => s.name === 'Base and wall cabinets').earlierRevisions.length === 1;
+    // DEP-02: a quick-created renovation references only gates it has; a plan with no release gate cannot export tasks
+    const reno = state.projects.find(x => x.address === '9 Demo Road'); state.current = reno.id; state.view = 'studio'; reno.step = 3; render();
+    set('s_name', 'Demo vanity'); set('s_qty', '1'); submit('selform'); const rs = reno.selections[0]; rs.status = 'Approved'; rs.approvedOn = today();
+    const rj = JSON.parse(taskJson(reno)), rIds = new Set(reno.checklist.map(c => c.id));
+    out.renoDeps = rj.tasks.length === 1 && rj.tasks[0].dependsOn.length === 2 && rj.tasks[0].dependsOn.every(d => rIds.has(d));
+    importLaunch({ project: { project_id: 'DEMO-NOGATE-01', project_type: 'Renovation', address_or_site_identity: '3 No Gate Row' }, planRows: [{ 'Task': 'Task T01', 'Task ID': 'DEMO-NOGATE-01-T01', 'Approval Needed': 'gate', 'Depends On / Gate': '' }] });
+    const ng = proj('DEMO-NOGATE-01'); ng.selections.push({ id: 'DEMO-NOGATE-01-SEL-01', seq: 1, areaId: ng.areas[0].id, name: 'Demo item', category: 'Other', spec: 'x', vendor: '', qty: 1, unit: 'EA', unitCost: null, costCode: 'c', leadDays: null, neededBy: '', neededConfirmed: false, after: [], sourceId: '', status: 'Approved', rev: 1, history: [], log: [], approvedOn: today() });
+    out.noGate = !canExportTasks(ng) && blockers(ng).some(b => b.includes('release-to-build')) && taskDeps(ng, ng.selections[0]).length === 0;
     state.current = state.projects[0].id; state.view = 'daily'; save(); render(); return out;`);
+  check('renovation: every task predecessor is a gate the project really has', r.renoDeps === true);
+  check('a plan with no release-to-build gate cannot export contractor tasks', r.noGate === true);
   check('stable IDs: selections carry <project>-SEL-nn and a task key survives an inserted item', r.idFormat && r.stableKey);
   check('full approval history: the replaced revision keeps unit cost, cost code and approval date; every status change is logged', r.fullHistory && r.events && r.ctEvents.join() === 'Selected>Approved', r.ctEvents.join());
   check('traceability: every output carries Selection ID, Revision and Project ID', r.traceCols && r.traceVals);
@@ -155,7 +165,7 @@ try {
   // 5. persistence across a reload
   await open('#daily');
   r = await run(`return { projects: state.projects.length, tasks: state.tasks.length, file: !!(await Files.get(${JSON.stringify(fid)})), rev: P().selections.concat(state.projects[0].selections).find(s => s.name === 'Base and wall cabinets').rev };`);
-  check('records are still there after a reload', r.projects === 4 && r.tasks === 4 && r.rev === 2, `${r.projects} projects, ${r.tasks} tasks`);
+  check('records are still there after a reload', r.projects === 5 && r.tasks === 4 && r.rev === 2, `${r.projects} projects, ${r.tasks} tasks`);
   check('an uploaded file is still there after a reload', r.file === true);
 
   // 5b. deep links by shared Project ID
