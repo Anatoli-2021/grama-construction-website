@@ -1,19 +1,22 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import SitePlan, { lotData } from './components/SitePlan.jsx';
-import CinematicStory from './components/CinematicStory.jsx';
-import { AboutGrama, PropertyCollection, Capabilities, Partnerships } from './components/BrandSections.jsx';
-import DevelopmentProcess from './components/DevelopmentProcess.jsx';
-import Consultation from './components/Consultation.jsx';
+import DexterExperience from './components/DexterExperience.jsx';
+import { AboutPage, PartnershipsPage, ContactPage } from './components/CompanyPages.jsx';
+import { ProjectsPage, ProjectCase } from './components/ProjectPages.jsx';
+import { getRoute, notFoundRoute } from './site-routes.js';
+import { readEnquiryContext, enquiryHref } from './enquiry-context.js';
+import { AboutGrama, TrustedPartners } from './components/BrandSections.jsx';
+import { SignatureHero, ProofBar, SignatureResidences } from './components/SignatureHome.jsx';
 import { isLocalPreview } from './preview-mode.js';
+import { BrandReview } from './components/BrandReview.jsx';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const assets = '/assets/';
 const enquiryPreviewNote = isLocalPreview
   ? 'Local enquiries are saved only on this computer; no email or CRM delivery is connected.'
-  : 'Online enquiries are not collected; use the direct telephone link.';
+  : 'The Contact page shows whether online submission is available. Submitted enquiries are sent through Grama’s configured email service. Browser-only drafts are not sent.';
 
 function Arrow({ diagonal = false, reverse = false, ...props }) {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props} style={{ transform: reverse ? 'rotate(180deg)' : undefined }}><path d={diagonal ? 'M5 19 19 5M5 5h14v14' : 'M3 12h17m-6-6 6 6-6 6'} stroke="currentColor" strokeWidth="1.3" /></svg>;
@@ -23,35 +26,24 @@ function MotionIcon({ paused }) {
   return <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">{paused ? <path d="m7 4 9 6-9 6V4Z" fill="currentColor" /> : <><path d="M7 4v12M13 4v12" stroke="currentColor" strokeWidth="2" /></>}</svg>;
 }
 
-function App() {
+function App({ initialPath } = {}) {
+  const route = getRoute(initialPath ?? (typeof window === 'undefined' ? '/' : window.location.pathname)) || notFoundRoute;
+  const isHome = route.type === 'home';
   const root = useRef(null);
-  const video = useRef(null);
   const dialog = useRef(null);
   const chapterState = useRef('01');
-  const [motion, setMotion] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [motion, setMotion] = useState(() => typeof window === 'undefined' || !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [selectedLot, setSelectedLot] = useState(10);
   const [modal, setModal] = useState(null);
-  const [consultationRequest, setConsultationRequest] = useState(null);
-  const [filmAvailable, setFilmAvailable] = useState(false);
+  const [consultationRequest, setConsultationRequest] = useState(() => typeof window === 'undefined' ? null : readEnquiryContext(window.location.search));
   const [chapter, setChapter] = useState('01');
-  const lot = lotData.find(item => item.id === selectedLot);
 
   useEffect(() => {
-    fetch('/assets/residence-film.mp4', { method: 'HEAD' })
-      .then(response => setFilmAvailable(response.ok && (response.headers.get('content-type') || '').includes('video')))
-      .catch(() => {});
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = event => { if (event.matches) setMotion(false); };
     query.addEventListener('change', update);
     return () => query.removeEventListener('change', update);
   }, []);
-
-  useEffect(() => {
-    if (!video.current) return;
-    if (motion) video.current.play().catch(() => {});
-    else video.current.pause();
-  }, [motion, filmAvailable]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -89,8 +81,10 @@ function App() {
     if (!motion) return;
     const mm = gsap.matchMedia();
     mm.add('all', () => {
-      gsap.fromTo('.hero-visual', { scale: 1.045 }, { scale: 1.14, yPercent: 7, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
-      gsap.to('.hero-copy', { y: 80, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero', start: '25% top', end: 'bottom top', scrub: .6 } });
+      if (isHome) {
+      gsap.to('.sig-hero__media', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.sig-hero', start: 'top top', end: 'bottom top', scrub: true } });
+      gsap.to('.sig-hero__inner', { y: 60, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.sig-hero', start: '35% top', end: 'bottom top', scrub: .6 } });
+      }
       gsap.utils.toArray('.reveal').forEach(element => gsap.from(element, { y: 36, opacity: 0, duration: 1.1, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 92%', once: true } }));
     }, root);
 
@@ -110,69 +104,70 @@ function App() {
     };
   }, [Boolean(modal)]);
 
+  useEffect(() => {
+    if (!isHome) return;
+    const legacy = { '#services': '/about#services', '#process': '/partnerships#process', '#partnerships': '/partnerships', '#interest': '/contact' };
+    const destination = legacy[window.location.hash];
+    if (destination) window.location.replace(destination);
+  }, []);
+
   function navigate() { setMenuOpen(false); }
   function openConsultation(options = {}) {
     setMenuOpen(false);
-    setConsultationRequest({ path: 'home', topic: 'Custom home', ...options });
-    document.querySelector('#interest').scrollIntoView({ behavior: motion ? 'smooth' : 'instant' });
+    const request = { path: 'development', topic: 'Development partnership', ...options };
+    if (route.type === 'contact') {
+      setConsultationRequest(request);
+      document.querySelector('#interest')?.scrollIntoView({ behavior: motion ? 'smooth' : 'instant' });
+    } else window.location.assign(enquiryHref(request));
   }
-  function enquireLot() {
-    openConsultation({ path: 'home', topic: 'Dexter Acres', lot: String(selectedLot) });
-  }
+  function current(path) { return route.path === path ? 'page' : undefined; }
+
 
   return (
-    <div ref={root} className="experience" data-motion={motion ? 'on' : 'off'}>
-      <a className="skip-link" href="#about">Skip to content</a>
-      <header className="site-header">
-        <a className="brand" href="#home" aria-label="Grama Construction — home" onClick={navigate}><img src={assets + 'logo-light.png'} alt="Grama Construction" width="1633" height="387" /></a>
+    <div ref={root} className={"experience experience--brand-concept" + (isHome ? "" : " interior-page")} data-motion={motion ? 'on' : 'off'}>
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <header className={"site-header" + (isHome ? "" : " site-header--solid")}>
+        <a className="brand brand--concept" href="/" aria-label="GRAMA Development — brand concept home" onClick={navigate}><img className="brand-concept-logo" src="/assets/brand/grama-development-a.svg" alt="GRAMA Development" width="780" height="240" /><span className="brand-concept-stage">Brand concept</span></a>
         <button type="button" className="menu-button" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
         <nav id="mobile-menu" className={menuOpen ? 'main-nav is-open' : 'main-nav'} aria-label="Main navigation">
-          <a href="#about" onClick={navigate}>About Grama</a>
-          <a href="#properties" onClick={navigate}>Our properties</a>
-          <a href="#services" onClick={navigate}>Services & process</a>
-          <a href="#partnerships" onClick={navigate}>Partnerships</a>
-          <a href="#architecture" onClick={navigate}>Dexter Acres</a>
-          <a className="nav-cta" href="#interest" onClick={navigate}>Private consultation <Arrow diagonal /></a>
+          <a href="/about" aria-current={current('/about')} onClick={navigate}>About</a>
+          <a href="/projects" aria-current={current('/projects')} data-active={route.type === 'project' ? 'true' : undefined} onClick={navigate}>Projects</a>
+          <a href="/partnerships" aria-current={current('/partnerships')} onClick={navigate}>Partnerships</a>
+          <a href="/projects/dexter-acres" aria-current={current('/projects/dexter-acres')} onClick={navigate}>Dexter Acres</a>
+          <a href="/brand-review" aria-current={current('/brand-review')} onClick={navigate}>Brand review</a>
+          <a className="nav-cta" href="/contact" aria-current={current('/contact')} onClick={navigate}>Contact <Arrow diagonal /></a>
         </nav>
         <div className="header-progress" />
       </header>
 
-      <main>
-        <section className="hero" id="home" data-chapter="01" aria-labelledby="hero-title">
-          <div className="hero-visual">
-            <img className="hero-image" src={assets + 'residence.webp'} alt="Architectural concept of a gabled Dexter Acres residence, with light masonry and dark rooflines" width="1536" height="1024" fetchPriority="high" />
-            {filmAvailable && <video ref={video} className="hero-video" src={assets + 'residence-film.mp4'} poster={assets + 'residence.webp'} autoPlay={motion} muted loop playsInline preload="metadata" aria-label="Animated architectural concept of a Dexter Acres residence" />}
-          </div>
-          <div className="hero-shade" />
-          <div className="hero-location"><span className="tiny-dot" /> DES PLAINES, ILLINOIS <span className="location-line" /> A NEW CHAPTER</div>
-          <div className="hero-copy">
-            <p className="eyebrow light">LUXURY CUSTOM HOMES & RESIDENTIAL DEVELOPMENT</p>
-            <h1 id="hero-title">Distinctive homes.<br /><em>One shared vision.</em></h1>
-            <p className="hero-positioning">Founder-led custom homes and complete residential development.<br />{' '}Chicago & the surrounding Illinois suburbs.</p>
-            <div className="hero-actions"><a className="text-link light-link" href="#interest" onClick={event => { event.preventDefault(); openConsultation(); }}>Build your custom home <Arrow /></a><a className="text-link light-link" href="#interest" onClick={event => { event.preventDefault(); openConsultation({ path: 'development', topic: 'Development partnership' }); }}>Develop with Grama <Arrow diagonal /></a></div>
-          </div>
-          <div className="hero-bottom"><a href="#architecture" className="scroll-cue"><span />DEXTER ACRES / 14 PLANNED HOMES</a><span className="image-disclosure">Architectural concept{filmAvailable ? ' · AI-animated visualization' : ' rendering'}</span><button className="motion-button" onClick={() => setMotion(!motion)} aria-label={motion ? 'Pause motion' : 'Enable motion'}><MotionIcon paused={!motion} /><span>{motion ? 'PAUSE MOTION' : 'PLAY MOTION'}</span></button></div>
-        </section>
-
+      <main id="main-content" tabIndex={-1}>
+        {isHome && <>
+        <SignatureHero motion={motion} onToggleMotion={() => setMotion(!motion)} />
+        <ProofBar />
+        <section className="flagship-preview section-pad" aria-labelledby="flagship-preview-title"><div className="flagship-preview__copy"><p className="eyebrow">FLAGSHIP CONCEPT / DES PLAINES</p><h2 id="flagship-preview-title">Dexter Acres.<br /><em>A proposed neighborhood.</em></h2><p>Fourteen planned homes. Explore the architectural vision and supplied lot plan.</p><a className="text-link" href="/projects/dexter-acres">Explore Dexter Acres <Arrow diagonal /></a></div><a className="flagship-preview__image" href="/projects/dexter-acres" aria-label="Explore the proposed Dexter Acres development"><img src="/assets/community.webp" alt="Architectural concept of the proposed fourteen-home Dexter Acres neighborhood" width="1800" height="817" loading="lazy" /><span>Architectural visualization / AI concept</span></a></section>
         <AboutGrama onConsultation={() => openConsultation()} />
-
-        <CinematicStory motion={motion} />
-
-        <section className="community section-pad" id="community" data-chapter="04" aria-labelledby="community-title">
-          <div className="section-heading reveal"><p className="eyebrow">02 / DEXTER ACRES — THE COMMUNITY</p><div className="heading-row"><h2 className="display" id="community-title">Individually distinctive.<br /><em>Thoughtfully connected.</em></h2><p>A planned neighborhood of 14 homes at Webster and Dexter Lanes. A cohesive architectural vision, with room for your own point of view.</p></div></div>
-          <div className="community-layout"><div className="map-frame"><div className="map-topline"><span>EXPLORE THE PROPOSED LOTS</span><span>SELECT A LOT <Arrow diagonal /></span></div><SitePlan selectedLot={selectedLot} onSelectLot={setSelectedLot} /></div><aside className="lot-panel" aria-live="polite"><div className="lot-panel-top"><span className="eyebrow">YOUR PERSPECTIVE</span><span className="lot-status">PLANNED COMMUNITY</span></div><div className="lot-number"><span>LOT</span><strong>{String(selectedLot).padStart(2, '0')}</strong></div><h3>{lot.frontage === 'Internal street' ? 'Within the neighborhood.' : 'Along ' + lot.frontage + '.'}</h3><dl><div><dt>Drawing-reported area</dt><dd>{lot.area.toLocaleString('en-US')} <span>sq ft</span></dd></div><div><dt>Frontage</dt><dd>{lot.frontage}</dd></div></dl><button className="button button-dark" onClick={enquireLot}>Enquire about this lot <Arrow diagonal /></button><button className="text-link plan-link" onClick={() => setModal({ image: 'site-plan-original.png', title: 'Supplied subdivision drawing — C5', caption: 'The supplied drawing is the reference for lot numbering. Approval status and current engineering revisions have not been established.' })}>View the source drawing <span>+</span></button><p className="fineprint">Lot selection expresses interest only. Availability, dimensions, home designs and project details are subject to confirmation and the current approved documents.</p></aside></div>
-          <div className="community-notes"><div><span className="tiny-number">I.</span><h3>A cohesive vision</h3><p>A collection of new homes with a shared architectural language and individual character.</p></div><div><span className="tiny-number">II.</span><h3>Connected planning</h3><p>Street access, utilities, landscape and drainage are part of the coordinated development vision, subject to approved plans.</p></div><div><span className="tiny-number">III.</span><h3>A personal conversation</h3><p>Explore the possibilities for your home as the neighborhood plans and designs take shape.</p></div></div>
-        </section>
-
-        <PropertyCollection onView={setModal} motion={motion} />
-        <Capabilities />
-        <DevelopmentProcess onConsultation={() => openConsultation()} />
-        <Partnerships onExplore={() => openConsultation({ path: 'development', topic: 'Investment partnership' })} />
-        <Consultation request={consultationRequest} motion={motion} />
+        <SignatureResidences motion={motion} />
+        <DexterExperience motion={motion} onView={setModal} onConsultation={openConsultation} />
+        <TrustedPartners />
+        <section className="page-invitation section-pad" data-chapter="08"><p className="eyebrow">WORK WITH GRAMA</p><h2 className="display">A site, a home<br /><em>or a development.</em></h2><p>Meet the team, review our work and tell us about your project.</p><div><a className="button button-dark" href="/partnerships">Development partnerships <Arrow diagonal /></a><a className="text-link" href="/contact">Contact Grama <Arrow diagonal /></a></div></section>
+        </>}
+        {route.type === 'brand-review' && <BrandReview />}
+        {route.type === 'about' && <AboutPage onConsultation={openConsultation} />}
+        {route.type === 'projects' && <ProjectsPage />}
+        {route.type === 'project' && <ProjectCase project={route.project} onView={setModal} />}
+        {route.type === 'partnerships' && <PartnershipsPage onExplore={openConsultation} />}
+        {route.type === 'contact' && <ContactPage request={consultationRequest} motion={motion} />}
+        {route.type === 'dexter' && <>
+          <header className="page-masthead section-pad"><nav className="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects">Projects</a><span aria-hidden="true">/</span><span>Dexter Acres</span></nav><p className="eyebrow">DES PLAINES / PROPOSED DEVELOPMENT</p><h1>Dexter Acres.<br /><em>14 planned homes.</em></h1><p>Explore the architectural concept and supplied lot plan for the proposed neighborhood at Webster and Dexter Lanes.</p><div className="page-masthead-actions"><a className="text-link" href="#community">Explore the lot plan <Arrow diagonal /></a><button className="text-link" aria-label={motion ? 'Pause motion' : 'Enable motion'} onClick={() => setMotion(!motion)}><MotionIcon paused={!motion} />{motion ? 'Pause motion' : 'Enable motion'}</button></div></header>
+          <section className="development-overview section-pad" aria-labelledby="development-overview-title"><figure><img src="/assets/residence-garden.webp" alt="Architectural concept showing a proposed Dexter Acres residence" width="1536" height="1024" /><figcaption>Architectural visualization / AI concept</figcaption></figure><div><p className="eyebrow">THE DEVELOPMENT CONCEPT</p><h2 id="development-overview-title">Fourteen homes.<br /><em>One proposed neighborhood.</em></h2><dl><div><dt>Location</dt><dd>Des Plaines, Illinois</dd></div><div><dt>Project status</dt><dd>Proposed development</dd></div><div><dt>Site reference</dt><dd>Supplied C5 lot plan</dd></div></dl><p>Designs, dimensions, approvals and availability are subject to confirmation.</p><div className="development-overview__actions"><a className="button button-dark" href="#community">Explore the lots <Arrow diagonal /></a><a className="text-link" href="/assets/site-plan-original.png" target="_blank" rel="noreferrer">View the supplied plan <Arrow diagonal /></a></div></div></section>
+          <DexterExperience motion={motion} onView={setModal} onConsultation={openConsultation} />
+          <section className="page-invitation section-pad"><p className="eyebrow">DEXTER ACRES ENQUIRIES</p><h2 className="display">Discuss the project<br /><em>with Grama.</em></h2><p>For development partnerships, project details or interest in a home, speak with our team.</p><a className="button button-dark" href={enquiryHref({path:'home',topic:'Dexter Acres'})}>Enquire about Dexter Acres <Arrow diagonal /></a></section>
+        </>}
+        {route.type === 'not-found' && <section className="page-masthead not-found-page section-pad"><p className="eyebrow">404 / PAGE NOT FOUND</p><h1>This page<br /><em>could not be found.</em></h1><p>Explore Grama’s work or contact us about your project.</p><div><a className="button button-dark" href="/projects">Explore projects <Arrow diagonal /></a><a className="text-link" href="/">Return home <Arrow /></a></div></section>}
       </main>
 
-      <footer className="site-footer"><div className="footer-navigation"><a href="#about">About Grama</a><a href="#properties">Our properties</a><a href="#services">Services</a><a href="#process">The process</a><a href="#partnerships">Development partnerships</a><a href="#interest">Private consultation</a></div><div className="footer-main"><a className="footer-brand" href="#home"><img src={assets + 'logo-light.png'} alt="Grama Construction" width="1633" height="387" /></a><p>Signature luxury homes.<br />Full-service residential development.</p><a className="footer-phone" href="tel:+17738499634">+1 773 849 9634 <Arrow diagonal /></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Grama Construction</span><span>Chicago & the surrounding Illinois suburbs</span><button onClick={() => setModal({ title: 'About this preview', text: 'Dexter Acres is an upcoming, owner-described 14-home development. House images are architectural renderings; the aerial is an AI-generated concept. The interactive map follows the supplied C5 drawing for lot organization and numbering. Project approval status, infrastructure specifications, dates, final designs, pricing and availability have not been confirmed. Completed-project photographs are separately identified and sourced from Grama Construction’s official website. This preview sends no marketing emails and does not reserve a property. ' + enquiryPreviewNote })}>Project & image notes</button></div></footer>
-      <div className="chapter-index" aria-hidden="true"><span>{chapter}</span><i />08</div>
+      <footer className="site-footer"><div className="footer-navigation"><a href="/about">About Grama</a><a href="/projects">Projects</a><a href="/about#services">Services</a><a href="/partnerships#process">The process</a><a href="/partnerships">Development partnerships</a><a href="/contact">Contact</a></div><div className="footer-main"><a className="footer-brand" href="/" aria-label="GRAMA Development — brand concept home"><img className="brand-concept-logo" src="/assets/brand/grama-development-a.svg" alt="GRAMA Development — proposed identity" width="780" height="240" /></a><p>Brand concept for Grama Construction.<br />Chicago & Chicagoland residential development.</p><a className="footer-phone" href="tel:+17738499634">+1 773 849 9634 <Arrow diagonal /></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Grama Construction</span><span>Chicago & the surrounding Illinois suburbs</span><button onClick={() => setModal({ title: 'About this preview', text: 'Dexter Acres is an upcoming, owner-described 14-home development. House images are architectural renderings; the aerial is an AI-generated concept. The interactive map follows the supplied C5 drawing for lot organization and numbering. Project approval status, infrastructure specifications, dates, final designs, pricing and availability have not been confirmed. Completed-project photographs are separately identified and sourced from Grama Construction’s official website. This preview sends no marketing emails and does not reserve a property. ' + enquiryPreviewNote })}>Project & image notes</button></div></footer>
+      {isHome && <div className="chapter-index" aria-hidden="true"><span>{chapter}</span><i />08</div>}
       {modal && <dialog ref={dialog} aria-labelledby="preview-dialog-title" className={modal.image ? 'media-dialog' : 'notes-dialog'} onCancel={() => setModal(null)} onClick={event => { if (event.target === event.currentTarget) setModal(null); }}><div className="dialog-sticky-toolbar"><button className="dialog-close" autoFocus aria-label="Close preview" onClick={() => setModal(null)}>×</button></div>{modal.image && <><img src={assets + (modal.images?.[modal.index || 0]?.image || modal.image)} alt={modal.images?.[modal.index || 0]?.alt || modal.title} />{modal.images?.length > 1 && <div className="dialog-gallery-controls"><button aria-label="Previous project photograph" onClick={() => setModal(current => ({ ...current, index: ((current.index || 0) + current.images.length - 1) % current.images.length }))}><Arrow reverse /></button><span>{String((modal.index || 0) + 1).padStart(2, '0')} / {String(modal.images.length).padStart(2, '0')}</span><button aria-label="Next project photograph" onClick={() => setModal(current => ({ ...current, index: ((current.index || 0) + 1) % current.images.length }))}><Arrow /></button></div>}</>}<div className="dialog-caption"><h2 id="preview-dialog-title">{modal.title}</h2><p>{modal.caption || modal.text}</p>{modal.source && <a href={modal.source} target="_blank" rel="noreferrer">Original Grama project page <Arrow diagonal /></a>}</div></dialog>}
     </div>
   );

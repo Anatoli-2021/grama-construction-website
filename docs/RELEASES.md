@@ -1,36 +1,29 @@
-# Review, preview, release and rollback
+# Review, deployment and rollback
 
-## Current state
+## Website review target
 
-The company production domain is unchanged. The public Sites review preview is tied to web source commit `a339806ee240c4546a5b3c2b75f0276136f6b108`; its hosted contact section does not collect personal data. PR #1 contains that source. The unified-workspace PR builds on PR #1, without merging either change into `main` automatically.
+The existing review website is [Grama Construction on Railway](https://grama-construction-website-production.up.railway.app/). The integration candidate is `feature/architectural-flagship`: it combines the multipage/private-presentation baseline, configurable Contact delivery and the architectural homepage prototype. The PR is the record of the exact tested and deployed SHA. Previous release notes are historical; do not treat an old branch or commit as the current runtime without checking Railway.
 
-The Development OS demonstration remains local and contains only blank templates. No OS production deployment, company data migration or live connector was made.
+The latest rebranding addendum supersedes earlier deployment authorization for this candidate: **do not deploy the rebrand or replace the public identity before Tony approves it**. Commit/push, local concept review and the PR are authorized; production release is not yet approved. See [identity review](BRAND-REVIEW.md).
 
-## Workflow and release gate
+The company domain/DNS remains separate. The Development OS remains local. Actual private presentation data/accounts are server configuration, not public website assets. Hosted Contact delivery is separately enabled only after sender/key setup and receipt verification; deployment alone does not make it live.
 
-1. Link one issue; create a `feature/*` branch and use synthetic records.
-2. Run `npm ci` and `npm run check`; test website API/media with `npm run dev` plus `npm run verify` when relevant. Inspect the staged diff and media for private content.
-3. Push and open a PR. GitHub Actions runs tests/build/data-boundary checks. Tony reviews the result, visible changes and remaining limitations.
-4. Preview the website only. Use existing Sites review deployment or an approved hosting PR preview. OS previews stay local until authentication and access tests are implemented.
-5. Merge after owner approval. `main` protection is not technically enforced under the current GitHub plan; this is a material limitation. Do not equate a green check with permission to deploy.
-6. Record the approved release SHA, build result, target, previous version and rollback route. Obtain Tony’s explicit approval for the production target and cost before activation.
-7. Deploy the approved commit to the approved environment. Verify HTML/media, mobile contact, links, anonymous access and no private artifacts; record deployment ID and SHA.
+## Release workflow
 
-The prepared CI does not deploy. Once the selected platform is approved, connect branch previews and gate production promotion with supported environment approval controls. If the account cannot enforce that gate, retain manual owner promotion; do not allow every push to update company production.
+1. Refresh authenticated repository access and read current contributor instructions. Inspect status, preserve unfinished work, update clean main with `git pull --ff-only`, then use a dedicated `feature/*` branch. No force push, hard reset or direct main push.
+2. Integrate intended published changes without discarding Contact, presentation authorization, cinematic media, the lot map or other contributors' work. Keep private client notes, recordings, credentials and enquiry evidence outside this repository.
+3. Run `npm run check` and relevant API/media/browser checks against the actual candidate. Review desktop/mobile, direct routes, motion alternatives, lot/context flow, Contact availability and anonymous presentation access. Record measured results rather than repeating another sender's report.
+4. Stage explicit intended non-sensitive files and inspect the full diff. Push, open a PR against main and request `Anatoli-2021` review. Reconcile the existing PR stack before merging. Do not self-merge owner-controlled changes.
+5. Obtain Tony’s approval for this proposed identity and its release before deploying it. The prior standing website-review instruction does not authorize this new rebrand. Record the prior release and inspect the complete staged platform diff before applying it. New company-domain targets, spending, account/access grants, live enquiry activation and OS publication need their applicable authorization.
+6. Deploy the tested candidate, then verify Railway SUCCESS and its exact commit hash. Check live HTML/assets, health, mobile navigation, private/source exclusions and Contact mode. Source branch configuration is not proof that GitHub autodeploy works; inspect actual deployment events and use the authorized connector workflow when necessary.
+7. Record branch, changed files/features, test outcomes, preview URL, PR/reviewer, remaining questions, production status and next priorities. Leave missing provider/domain/inbox checks marked unrun.
 
-## Domain cutover plan — approval required
+## Indexing and domain launch
 
-Inventory current registrar/DNS, hosting and mail records read-only. Save a DNS export and prior target. Verify the chosen platform’s exact hostname/certificate instructions on its temporary address. Present Tony the precise DNS record changes, website release SHA, test result and rollback target. Change only approved web records; preserve email records. Verify TLS, www/apex routing and contact flow after cutover. No domain records have been edited in this task.
+This review target remains noindex in HTML and response headers, with robots.txt blocking crawlers. Generating sitemap.xml does not authorize indexing. A company-domain launch requires a reviewed plan for canonical origin, metadata, robots and hosting headers, plus exact approved DNS records and rollback. Preserve existing mail records and do not change website routing to configure outbound email.
 
-## Rollback and backups
+## Rollback
 
-- Code: keep commits/PRs; use a reviewed `git revert` PR for a bad merge. Do not reset/force-push shared `main`.
-- Website: redeploy a known-good approved commit/version, verify media and contact behavior, and record the rollback. On Sites, redeploy the saved previous version; on Vercel use its documented rollback when available. This preparation does not prove an account-specific rollback until it is exercised there.
-- DNS: restore only the previously saved, approved web record if cutover fails. Certificate/cache propagation may take time; check the actual provider behavior.
-- OS: application rollback does not roll back database schema/data. Require reversible migrations or a tested forward fix, encrypted snapshots and a restore drill. Backups must live outside Git and the public website.
+Keep the previous successful commit/deployment as the runtime rollback target. Redeploy that known version if an authorized release fails; verify its actual live state. Preserve Git history and use reviewed corrective commits or revert PRs instead of force-resetting shared branches.
 
-## Demonstrations in this change
-
-- Website: existing hosted-contact adjustment is in PR #1 and the functioning public review preview; current website source/layout is preserved.
-- OS: the shared launch tool rejects whitespace/unsafe Project IDs, preserves common/subdivision task counts and dependencies, and exports Draft records. Automated tests cover this behavior and local/public access boundaries.
-- Pending: independent human review, merge and approved hosting integration; a hosted OS demonstration is deliberately deferred until its access controls exist.
+To stop future enquiry delivery, set CONTACT_ENABLED=false through authorized runtime configuration and verify status false / POST503; this does not retract email already accepted. See [Contact delivery](CONTACT-DELIVERY.md). Code rollback does not restore operational data or account configuration.

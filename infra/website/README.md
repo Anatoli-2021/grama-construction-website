@@ -4,7 +4,7 @@ Existing project: `earnest-wisdom`.
 Service: `grama-construction-website`.
 Repository: `Anatoli-2021/grama-construction-website`.
 
-The root Dockerfile builds and serves only the website. Runtime is unprivileged Node 24 with `dist` and the static host; OS source, private data, dependencies and Git history are excluded. PORT is supplied by Railway. `/healthz` reports container readiness.
+The root Dockerfile builds and serves the website. Runtime is unprivileged Node 24 with `dist`, the website host and private-presentation authorization middleware; OS source, private data files, dependencies and Git history are excluded. Private deck/account configuration is supplied only at runtime, outside Git. With no configuration the presentation gate stays closed. PORT is supplied by Railway. `/healthz` reports container readiness.
 
 Service settings to verify:
 
