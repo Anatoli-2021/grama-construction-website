@@ -33,7 +33,7 @@
 .animated-experience .ae-roof { transform: translate3d(0, var(--ae-roof-y), 0); will-change: transform; }
 .animated-experience .ae-facade--left { clip-path: polygon(0 0, 68% 0, 68% 100%, 0 100%); transform: translate3d(var(--ae-facade-left-x), 0, 0); will-change: transform; }
 .animated-experience .ae-facade--right { clip-path: polygon(68% 0, 100% 0, 100% 100%, 68% 100%); transform: translate3d(var(--ae-facade-right-x), 0, 0); will-change: transform; }
-.animated-experience .ae-facade { filter: url("#groma-ae-facade-edge"); }
+.animated-experience .ae-facade { filter: url("#grama-ae-facade-edge"); }
 .animated-experience .ae-aerial { position: absolute; inset: 0; opacity: var(--ae-aerial-opacity); transform: scale(var(--ae-aerial-scale)); will-change: transform, opacity; }
 .animated-experience .ae-aerial img { width: 100%; height: 100%; object-fit: cover; object-position: 61% 50%; }
 .animated-experience .ae-aerial::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #101713e8 0%, #10171365 48%, #1017131c 80%), linear-gradient(0deg, #111713e8, transparent 38%, #11171335); }

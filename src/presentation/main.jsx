@@ -5,7 +5,7 @@ import './presentation.css';
 async function request(path, body) {
   const response = await fetch('/presentation/api/' + path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), credentials: 'same-origin' } : { credentials: 'same-origin', cache: 'no-store' });
   let result;
-  try { result = await response.json(); } catch { throw new Error('The private presentation is being prepared. Please contact Groma Development.'); }
+  try { result = await response.json(); } catch { throw new Error('The private presentation is being prepared. Please contact Grama Development.'); }
   if (!response.ok) throw new Error(result.error || 'Unable to load this presentation.');
   return result;
 }
@@ -54,10 +54,10 @@ function Presentation() {
   }
 
   if (!session) return <main className="access-page">
-    <a className="presentation-brand" href="/" aria-label="Groma Development home"><img src="/assets/brand/groma-development.svg" alt="Groma Development" /></a>
+    <a className="presentation-brand" href="/" aria-label="Grama Development home"><img src="/assets/brand/grama-development.svg" alt="Grama Development" /></a>
     <div className="access-layout">
-      <div className="access-image"><img src="/assets/portfolio-dexter.webp" alt="Completed Groma Development residence and garden terrace" /><span>Groma Development · Des Plaines</span></div>
-      <section className="access-form"><p className="deck-label">By individual invitation</p><h1>A closer look<br />at what’s next.</h1><p>Private project presentations for Groma Development’s investment partners. Use the access details issued to you.</p>
+      <div className="access-image"><img src="/assets/portfolio-dexter.webp" alt="Completed Grama Development residence and garden terrace" /><span>Grama Development · Des Plaines</span></div>
+      <section className="access-form"><p className="deck-label">By individual invitation</p><h1>A closer look<br />at what’s next.</h1><p>Private project presentations for Grama Development’s investment partners. Use the access details issued to you.</p>
         <form onSubmit={login}>
           <label>Email address<input name="email" type="email" autoComplete="username" required maxLength={254} /></label>
           <label>Private access code<input name="code" type="password" autoComplete="current-password" required minLength={12} maxLength={200} /></label>
@@ -72,16 +72,16 @@ function Presentation() {
   const deck = session.deck;
   const financial = deck.financial;
   return <div className="investor-deck" ref={deckRoot}>
-    <header className="deck-header"><a className="presentation-brand" href="/"><img src="/assets/brand/groma-development.svg" alt="Groma Development" /></a><span>Prepared for {session.preparedFor}</span><button onClick={logout}>Sign out</button></header>
+    <header className="deck-header"><a className="presentation-brand" href="/"><img src="/assets/brand/grama-development.svg" alt="Grama Development" /></a><span>Prepared for {session.preparedFor}</span><button onClick={logout}>Sign out</button></header>
     <main>
-      <section className="deck-cover"><div className="deck-cover-copy"><p className="deck-label">Private presentation · {deck.dateLabel}</p><h1>{deck.title}</h1><p>{deck.introduction}</p><a className="deck-text-link" href="#investment-approach">Explore the proposal <span aria-hidden="true">↓</span></a></div><img src="/assets/portfolio-prospect-interior.webp" alt="Interior detail of a completed Groma Development residence" /></section>
+      <section className="deck-cover"><div className="deck-cover-copy"><p className="deck-label">Private presentation · {deck.dateLabel}</p><h1>{deck.title}</h1><p>{deck.introduction}</p><a className="deck-text-link" href="#investment-approach">Explore the proposal <span aria-hidden="true">↓</span></a></div><img src="/assets/portfolio-prospect-interior.webp" alt="Interior detail of a completed Grama Development residence" /></section>
       <section className="deck-section deck-intro deck-reveal" id="investment-approach"><p className="deck-label">Your development partner</p><h2>{deck.approachTitle}</h2><p className="deck-lead">{deck.approach}</p><div className="deck-principles">{deck.principles?.map((item,index)=><article key={item.title}><span>0{index+1}</span><h3>{item.title}</h3><p>{item.body}</p></article>)}</div></section>
       <section className="deck-section deck-proof deck-reveal"><div className="deck-section-heading"><div><p className="deck-label">Completed work</p><h2>Experience you can see.</h2></div><p>{deck.portfolioNote}</p></div><div className="deck-projects">{deck.projects?.map(project=><article key={project.name}><img src={project.image?.startsWith('/assets/') ? project.image : '/assets/portfolio-prospect.webp'} alt={project.alt || project.name} loading="lazy" /><p>{project.location}</p><h3>{project.name}</h3><div>{project.description}</div></article>)}</div></section>
       <section className="deck-community deck-reveal"><img src="/assets/community.webp" alt="Illustrative fourteen-home Dexter Acres architectural concept" loading="lazy" /><div><p className="deck-label">The larger vision</p><h2>Dexter Acres.<br />14 planned homes.</h2><p>{deck.community}</p><small>Architectural concept. Scope, phasing and approvals follow the project’s current documents.</small></div></section>
       {financial && <section className="deck-section deck-financial deck-reveal" id="project-numbers"><p className="deck-label">{financial.project} · {financial.currency}</p><h2>{financial.title}</h2><p className="deck-lead">{financial.basis}</p><div className="deck-financial-source">{financial.sourceLabel}</div><div className="deck-metrics">{financial.metrics?.map(metric=><article key={metric.label}><p>{metric.label}</p><strong>{metric.display}</strong><small>{metric.status}</small></article>)}</div><div className="deck-economics"><div><h3>Project screening model</h3><table><tbody>{financial.lines?.map(line=><tr key={line.label}><th scope="row">{line.label}</th><td>{line.display}</td></tr>)}</tbody></table></div><aside><h3>What the model still needs</h3><ul>{financial.openItems?.map(item=><li key={item}>{item}</li>)}</ul></aside></div><p className="deck-model-note">{financial.limitation}</p></section>}
       <section className="deck-section deck-plan deck-reveal"><p className="deck-label">The proposed working relationship</p><h2>{deck.partnershipTitle}</h2><p className="deck-lead">{deck.partnershipNote}</p><ol>{deck.steps?.map(step=><li key={step.title}><h3>{step.title}</h3><p>{step.body}</p></li>)}</ol></section>
       <section className="deck-section deck-next deck-reveal"><p className="deck-label">The next conversation</p><h2>{deck.nextTitle}</h2><p>{deck.nextBody}</p><a className="deck-button" href="tel:+17738499634">Speak with Tony <span aria-hidden="true">↗</span></a><small>{deck.disclosure}</small></section>
-    </main><footer className="deck-footer"><span>Groma Development</span><span>Private · Prepared for {session.preparedFor}</span><button onClick={()=>window.print()}>Print presentation</button></footer>
+    </main><footer className="deck-footer"><span>Grama Development</span><span>Private · Prepared for {session.preparedFor}</span><button onClick={()=>window.print()}>Print presentation</button></footer>
   </div>;
 }
 

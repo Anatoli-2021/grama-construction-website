@@ -85,7 +85,7 @@ export function createPresentationHandler({ getConfig = environmentPresentationC
         res.setHeader('Set-Cookie', cookie('', 0));
         send(res, 200, { ok: true }); return true;
       }
-      if (!config.accounts.length) { send(res, 503, { error: 'Individual invitations are being prepared. Please contact Groma Development.' }); return true; }
+      if (!config.accounts.length) { send(res, 503, { error: 'Individual invitations are being prepared. Please contact Grama Development.' }); return true; }
       let raw = '';
       for await (const chunk of req) {
         raw += chunk;

@@ -146,7 +146,7 @@ export default function AnimatedExperience({ motion = true }) {
   }
 
   return <section ref={sectionRef} className="animated-experience" data-mode={scrollMode ? 'scroll' : 'stills'} data-media-ready={mediaReady ? 'true' : 'false'} aria-labelledby="animated-experience-title">
-    <svg className="ae-filter-defs" aria-hidden="true" focusable="false"><defs><filter id="groma-ae-facade-edge" colorInterpolationFilters="sRGB"><feMorphology in="SourceAlpha" operator="erode" radius="1.25" result="trimmedAlpha" /><feComposite in="SourceGraphic" in2="trimmedAlpha" operator="in" /></filter></defs></svg>
+    <svg className="ae-filter-defs" aria-hidden="true" focusable="false"><defs><filter id="grama-ae-facade-edge" colorInterpolationFilters="sRGB"><feMorphology in="SourceAlpha" operator="erode" radius="1.25" result="trimmedAlpha" /><feComposite in="SourceGraphic" in2="trimmedAlpha" operator="in" /></filter></defs></svg>
     <div className="ae-scroll-track" ref={trackRef}>
       <div className="ae-stage" ref={stageRef} data-phase="house" data-progress="0">
         <div className="ae-stage-grain" aria-hidden="true" />
@@ -159,7 +159,7 @@ export default function AnimatedExperience({ motion = true }) {
         </div>
 
         <header className="ae-heading">
-          <p className="ae-eyebrow">Groma Development <span>/</span> Dexter Acres</p>
+          <p className="ae-eyebrow">Grama Development <span>/</span> Dexter Acres</p>
           <h1 id="animated-experience-title">Animated<br />Experience.</h1>
           <p className="ae-disclosure">An illustrative architectural study.<br />Structure and materials are shown conceptually.</p>
         </header>
@@ -204,7 +204,7 @@ export default function AnimatedExperience({ motion = true }) {
     </div>
 
     <div className="ae-next">
-      <div><p className="ae-eyebrow">Continue exploring</p><h2>See the bigger picture.</h2><p>Explore the proposed fourteen-lot plan or speak with Groma Development about Dexter Acres.</p></div>
+      <div><p className="ae-eyebrow">Continue exploring</p><h2>See the bigger picture.</h2><p>Explore the proposed fourteen-lot plan or speak with Grama Development about Dexter Acres.</p></div>
       <div className="ae-next-links"><a href="/projects/dexter-acres#community">Explore the lot plan <Arrow /></a><a href={enquiryHref({ path: 'home', topic: 'Dexter Acres' })}>Discuss Dexter Acres <Arrow /></a></div>
     </div>
   </section>;

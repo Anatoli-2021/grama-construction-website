@@ -20,7 +20,7 @@ export function ProjectsPage() {
   return (
     <div className="projects-page">
       <header className="projects-page-intro">
-        <p className="eyebrow">THE GROMA DEVELOPMENT PORTFOLIO</p>
+        <p className="eyebrow">THE GRAMA DEVELOPMENT PORTFOLIO</p>
         <h1>Completed work.<br /><em>Future development.</em></h1>
         <p>Residential projects across Chicago and the surrounding suburbs, from individual homes to the proposed Dexter Acres neighborhood.</p>
       </header>
@@ -33,7 +33,7 @@ export function ProjectsPage() {
           <section className="projects-page-empty" aria-labelledby="current-listings-title">
             <p className="eyebrow">CURRENT LISTINGS</p>
             <h2 id="current-listings-title">Ask about current availability.</h2>
-            <p>Contact Groma Development for the latest property information or to discuss a home or development project.</p>
+            <p>Contact Grama Development for the latest property information or to discuss a home or development project.</p>
             <a className="text-link" href="/contact">Discuss an opportunity <Arrow /></a>
           </section>
         ) : (
@@ -86,14 +86,14 @@ export function ProjectCase({ project, onView }) {
           <figcaption>{project.gallery[0].caption}</figcaption>
         </figure>
         <section className="project-case-overview" aria-labelledby="project-overview-title">
-          <div><p className="eyebrow">PROJECT OVERVIEW</p><h2 id="project-overview-title">{project.location}</h2><p>{project.description}</p><a className="project-case-source" href={project.source} target="_blank" rel="noreferrer">View the original Groma Development project <Arrow /></a></div>
+          <div><p className="eyebrow">PROJECT OVERVIEW</p><h2 id="project-overview-title">{project.location}</h2><p>{project.description}</p><a className="project-case-source" href={project.source} target="_blank" rel="noreferrer">View the original Grama Development project <Arrow /></a></div>
           <div className="project-case-details"><h3>Project details</h3><ul>{project.highlights.map(highlight => <li key={highlight}>{highlight}</li>)}</ul></div>
         </section>
         <section className="project-case-gallery" aria-labelledby="project-gallery-title">
           <div className="project-case-gallery-heading"><p className="eyebrow">PROJECT PHOTOGRAPHY</p><h2 id="project-gallery-title">A closer look.</h2></div>
           <div className="project-case-gallery-grid">{project.gallery.map((photo, photoIndex) => <figure key={photo.image}><button type="button" onClick={() => openGallery(photoIndex)} aria-label={'Enlarge ' + photo.caption}><img src={'/assets/' + photo.image} alt={photo.alt} width="1600" height="1067" loading="lazy" /><span><Arrow /></span></button><figcaption>{photo.caption}</figcaption></figure>)}</div>
         </section>
-        <section className="project-case-cta" aria-labelledby="project-contact-title"><div><p className="eyebrow">BUILD WITH GROMA DEVELOPMENT</p><h2 id="project-contact-title">Discuss your home<br /><em>or development.</em></h2></div><a className="text-link" href="/contact">Talk to Groma Development <Arrow /></a></section>
+        <section className="project-case-cta" aria-labelledby="project-contact-title"><div><p className="eyebrow">BUILD WITH GRAMA DEVELOPMENT</p><h2 id="project-contact-title">Discuss your home<br /><em>or development.</em></h2></div><a className="text-link" href="/contact">Talk to Grama Development <Arrow /></a></section>
         <nav className="project-case-navigation" aria-label="More completed projects"><a href={'/projects/' + previous.slug}><span>PREVIOUS PROJECT</span><strong><Arrow reverse />{previous.name}</strong></a><a href={'/projects/' + next.slug}><span>NEXT PROJECT</span><strong>{next.name}<Arrow /></strong></a></nav>
       </div>
     </article>

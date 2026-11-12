@@ -1,5 +1,5 @@
-const UNCONFIRMED = 'We could not confirm that your enquiry was accepted. Your details are still here. Retry without changing them, or call Groma Development.';
-const TIMED_OUT = 'The request timed out, so acceptance could not be confirmed. Your details are still here. Retry without changing them, or call Groma Development.';
+const UNCONFIRMED = 'We could not confirm that your enquiry was accepted. Your details are still here. Retry without changing them, or call Grama Development.';
+const TIMED_OUT = 'The request timed out, so acceptance could not be confirmed. Your details are still here. Retry without changing them, or call Grama Development.';
 
 export function contactPayload(values, { path, topic, lot }) {
   return {
@@ -28,7 +28,7 @@ export function createSubmissionSession(makeId = () => globalThis.crypto.randomU
         try {
           submissionId = makeId();
         } catch {
-          throw new Error('Online submission could not be prepared in this browser. Your details are still here; call Groma Development to discuss your enquiry.');
+          throw new Error('Online submission could not be prepared in this browser. Your details are still here; call Grama Development to discuss your enquiry.');
         }
         fingerprint = nextFingerprint;
       }

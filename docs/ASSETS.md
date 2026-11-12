@@ -93,7 +93,7 @@ The project index separates the eight completed portfolio entries from the propo
 
 ## Animated Experience review
 
-- `brand/groma-development.svg`, `brand/groma-g.svg` and `favicon.svg`: native SVG Concept A wordmark and circular G for the requested **Groma Development** review identity. The founder's surname remains Grama.
+- `brand/grama-development.svg`, `brand/grama-g.svg` and `favicon.svg`: native SVG Concept A wordmark and circular G for the requested **Grama Development** review identity. The founder's surname remains Grama.
 - `animated/house-complete.webp`: selected OpenAI-generated architectural concept, based on the supplied house visual.
 - `animated/house-structure.webp`, `animated/roof.png`, `animated/facade.png`: OpenAI Imagegen derivatives for an independently moving layered illustration. These are concept images, not measured construction or engineering details.
 - The existing `community.webp` provides the neighborhood transition. It is an AI concept, not a surveyed land plan or verified built neighborhood.

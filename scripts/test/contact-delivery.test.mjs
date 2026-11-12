@@ -108,7 +108,7 @@ test('five enquiry topics reach only the configured recipient with validated rep
     assert.equal(payload.from, config.from);
     assert.deepEqual(payload.to, [config.to]);
     assert.equal(payload.reply_to, data.email);
-    assert.equal(payload.subject, `Groma Development website enquiry — ${interest} — ${data.submissionId}`);
+    assert.equal(payload.subject, `Grama Development website enquiry — ${interest} — ${data.submissionId}`);
     assert.ok(!payload.subject.includes(data.name));
     assert.equal(Object.hasOwn(payload, 'html'), false);
     assert.match(payload.text, /<script>plain text<\/script>/);

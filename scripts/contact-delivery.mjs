@@ -8,7 +8,7 @@ const topics = {
   development: ['Landowner opportunity', 'Investment partnership', 'Development partnership'],
 };
 const timingOptions = ['', 'Within 6 months', '6–12 months', 'More than a year'];
-const unavailable = 'Online enquiries are temporarily unavailable. Please call Groma Development.';
+const unavailable = 'Online enquiries are temporarily unavailable. Please call Grama Development.';
 
 export function environmentContactConfig() {
   return {
@@ -67,7 +67,7 @@ function validate(input, key) {
     || input.path !== 'home' || input.interest !== 'Dexter Acres')) return { error: 'Please select a valid Dexter Acres lot.' };
   const timing = input.timing === undefined ? '' : input.timing;
   if (!timingOptions.includes(timing)) return { error: 'Please select a valid timeframe.' };
-  if (input.consent !== true) return { error: 'Please confirm that Groma Development may contact you about this enquiry.' };
+  if (input.consent !== true) return { error: 'Please confirm that Grama Development may contact you about this enquiry.' };
   return { data: { submissionId: input.submissionId.toLowerCase(), name, email, phone, location, details, path: input.path, interest: input.interest, lot: hasLot ? Number(input.lot) : null, timing } };
 }
 
@@ -78,9 +78,9 @@ function emailPayload(data, config) {
     from: config.from,
     to: [config.to],
     reply_to: data.email,
-    subject: `Groma Development website enquiry — ${data.interest} — ${data.submissionId}`,
+    subject: `Grama Development website enquiry — ${data.interest} — ${data.submissionId}`,
     text: [
-      'New Groma Development website enquiry',
+      'New Grama Development website enquiry',
       `Reference: ${data.submissionId}`,
       `Path: ${data.path}`,
       `Topic: ${data.interest}`,
@@ -204,7 +204,7 @@ export function createContactHandler({
     if (statusRoute) { json(req, res, 200, { enabled: Boolean(config) }); return true; }
     if (!config) { json(req, res, 503, { error: unavailable }); return true; }
     if (typeof req.headers.origin !== 'string' || !config.origins.has(req.headers.origin)) {
-      json(req, res, 403, { error: 'Please use the Groma Development website to send your enquiry.' }); return true;
+      json(req, res, 403, { error: 'Please use the Grama Development website to send your enquiry.' }); return true;
     }
     if (!allowRequest(req, now())) {
       json(req, res, 429, { error: 'Please wait before sending another enquiry.' }, { 'Retry-After': String(Math.ceil(rateWindowMs / 1000)) }); return true;
