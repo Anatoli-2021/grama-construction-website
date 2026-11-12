@@ -2,7 +2,7 @@
 
 ## Current implemented boundary
 
-- Repository is private. Only approved collaborator access is added; `axmatea` has verified write permission.
+- GitHub reports the repository as public (November 12, 2026). Treat every commit and branch as publicly readable; axmatea has verified write permission. Do not commit real operating records.
 - Git excludes local enquiry data, populated exports, private-data/backups folders, environment files, credentials, workbooks and database dumps. `.env.example` contains ports only.
 - Shared OS specification is blank; actual dashboard, project finances, private source URLs and pilot evidence are excluded.
 - OS server binds only to `127.0.0.1`, allowlists exact routes, rejects unexpected Host headers and writes, and sets no-store / frame / outbound-connection restrictions.
@@ -25,3 +25,5 @@ Gitignore and pattern checks reduce accidents; they do not certify the entire hi
 - [ ] Tony approves exact migration/import and verifies read-back, access and rollback before release.
 
 The local blank tool has no authentication/database and must not be presented as a secure multi-user OS. A hidden URL, private GitHub repository or host preview password does not replace application authorization. Smartsheet remains the operational record; original evidence and accounting records remain in their existing systems.
+
+For the proposed hosted application, the detailed identity, role, file, data, Smartsheet, mail and Design Studio contracts are in [SECURE-OS-CONTRACT.md](SECURE-OS-CONTRACT.md). Those contracts are not implemented-runtime evidence. See [current readiness](INFRASTRUCTURE-READINESS.md) for verified staging and remaining gates.

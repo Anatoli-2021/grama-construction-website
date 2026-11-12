@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "status": "PREPARED_NOT_ACTIVATED",
+  "existingProject": "earnest-wisdom",
+  "productionChangesAllowed": false,
+  "automaticPrEnvironments": false,
+  "environments": [
+    {
+      "name": "staging-website",
+      "created": true,
+      "copiedFromProduction": false,
+      "dataMode": "synthetic-only",
+      "runtimeActive": false,
+      "services": [],
+      "proposedRuntime": {
+        "sourcePath": ".",
+        "dockerfile": "Dockerfile",
+        "healthcheck": "/healthz",
+        "reviewedCommit": null
+      },
+      "publicExposureApproved": false
+    },
+    {
+      "name": "staging-os",
+      "created": true,
+      "copiedFromProduction": false,
+      "dataMode": "synthetic-only",
+      "runtimeActive": false,
+      "services": [],
+      "proposedRuntime": {
+        "sourcePath": "apps/development-os",
+        "dockerfile": null,
+        "healthcheck": null,
+        "reviewedCommit": null
+      },
+      "publicExposureApproved": false,
+      "blockers": [
+        "Hosted runtime contract",
+        "Server authentication and project authorization",
+        "Approved staging resource budget"
+      ]
+    }
+  ],
+  "productionDataInStaging": false,
+  "secretsStoredHere": false,
+  "liveSmartsheetWrites": false,
+  "resourceActivationApproval": null
+}

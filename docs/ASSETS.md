@@ -25,4 +25,4 @@ The company portfolio is the source for completed-project attribution, not curre
 
 The [Noah About](https://www.noahchicago.com/about) and [Custom Build](https://www.noahchicago.com/custombuild) pages informed information hierarchy only. The [Royal Pop reference](https://royal-pop-website.vercel.app/) informed scroll-sequenced storytelling. No reference-site marketing copy, images or code were imported.
 
-Preserve distinctions between concepts and actual photography. The existing materials are for Grama's website development; inclusion in this private repository does not grant a separate license to reuse them for other clients or publish them elsewhere. Obtain owner approval for new public-facing people, roles and claims.
+Preserve distinctions between concepts and actual photography. The existing materials are for Grama's website development; inclusion in this repository does not grant a separate license to reuse them for other clients or publish them elsewhere. GitHub currently reports public visibility, so review asset rights and sensitive content before committing. Obtain owner approval for new public-facing people, roles and claims.
