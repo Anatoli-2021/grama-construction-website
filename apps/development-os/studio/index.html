@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Design Studio — Development OS prototype</title>
+<!--
+  Design Studio prototype. Ships with made-up sample data only.
+  Everything a person adds (projects, files, selections, notes) stays in that browser's local storage.
+  Nothing is uploaded, sent or synchronised. AI and Smartsheet are NOT connected.
+-->
+<style>
+:root{
+  color-scheme:light;
+  --page:#f5f5f7; --surface:#ffffff; --inset:#f5f5f7; --glass:rgba(250,250,252,.78);
+  --ink:#1d1d1f; --ink-2:#515154; --muted:#86868b; --line:#e8e8ed; --line-2:#d2d2d7;
+  --accent:#0066cc; --accent-fill:#0071e3; --on-accent:#fff; --hover:rgba(0,0,0,.05);
+  --st-good:#0ca30c; --st-ready:#2a78d6; --st-wait:#ec835a; --st-over:#d03b3b; --st-none:#aeaeb2;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 32px -20px rgba(0,0,0,.18);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text","Segoe UI",system-ui,Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme:dark;
+    --page:#0b0b0d; --surface:#1c1c1e; --inset:#2a2a2d; --glass:rgba(28,28,30,.78);
+    --ink:#f5f5f7; --ink-2:#c7c7cc; --muted:#8e8e93; --line:#2c2c2e; --line-2:#3a3a3c;
+    --accent:#4aa3ff; --accent-fill:#0a84ff; --hover:rgba(255,255,255,.07);
+    --st-ready:#3987e5; --st-wait:#d95926; --st-none:#636366; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --page:#0b0b0d; --surface:#1c1c1e; --inset:#2a2a2d; --glass:rgba(28,28,30,.78);
+  --ink:#f5f5f7; --ink-2:#c7c7cc; --muted:#8e8e93; --line:#2c2c2e; --line-2:#3a3a3c;
+  --accent:#4aa3ff; --accent-fill:#0a84ff; --hover:rgba(255,255,255,.07);
+  --st-ready:#3987e5; --st-wait:#d95926; --st-none:#636366; --shadow:none;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.47 var(--sans);-webkit-font-smoothing:antialiased;letter-spacing:-.006em}
+button,select,input,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:2px solid var(--accent-fill);outline-offset:2px;border-radius:6px}
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100%}
+.side{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:16px;padding:22px 14px 18px;background:var(--glass);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-right:1px solid var(--line);overflow-y:auto}
+.brand{display:flex;align-items:center;gap:11px;padding:2px 8px 4px}
+.brand svg{width:34px;height:34px;flex:none}
+.brand b{display:block;font-size:16px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.brand span{font-size:11.5px;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:1px}
+.nav button{display:flex;align-items:center;gap:11px;padding:8px 10px;border:0;border-radius:9px;background:none;color:var(--ink);font-size:14.5px;cursor:pointer;text-align:left;width:100%}
+.nav button:hover{background:var(--hover)}
+.nav svg{width:19px;height:19px;flex:none;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.nav button[aria-current="page"]{background:var(--hover);font-weight:600}
+.cap{font-size:12px;color:var(--muted)}
+.sub{font-size:13px;color:var(--ink-2)}
+.side h3{font-size:11px;font-weight:500;color:var(--muted);padding:0 10px;margin-bottom:4px}
+.plist{display:flex;flex-direction:column;gap:1px;max-height:34vh;overflow-y:auto}
+.plist button{display:block;width:100%;text-align:left;padding:7px 10px;border:0;border-radius:9px;background:none;cursor:pointer;font-size:13.5px}
+.plist button:hover{background:var(--hover)}
+.plist button[aria-current="true"]{background:var(--hover);font-weight:600}
+.plist small{display:block;color:var(--muted);font-weight:400;font-size:11.5px}
+.in{padding:9px 11px;border:1px solid var(--line-2);border-radius:10px;background:var(--surface);min-width:0;width:100%}
+textarea.in{min-height:84px;resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 15px;border:0;border-radius:980px;background:var(--accent-fill);color:var(--on-accent);font-weight:500;font-size:14px;cursor:pointer;white-space:nowrap}
+.btn:hover{filter:brightness(1.07)}
+.btn.sec{background:var(--inset);color:var(--ink)}
+.btn.sm{padding:5px 11px;font-size:12.5px}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding:0 8px;font-size:12px;color:var(--muted)}
+.ghost{padding:7px 10px;border:1px solid var(--line-2);border-radius:9px;background:var(--surface);cursor:pointer;font-size:13px;color:var(--ink)}
+.main{min-width:0;padding:0 clamp(16px,3.2vw,44px) 110px}
+.wrap{max-width:1160px;margin:0 auto}
+.topbar{display:none}
+.notice{display:flex;gap:10px;align-items:flex-start;margin:18px 0 0;padding:11px 14px;border-radius:12px;background:var(--surface);box-shadow:var(--shadow);font-size:13px;color:var(--ink-2)}
+.notice b{color:var(--ink);font-weight:600}
+.head{padding:30px 0 18px}
+.head .crumb{font-size:13px;color:var(--muted);margin-bottom:6px}
+.head h1{font-size:clamp(26px,3vw,36px);font-weight:600;letter-spacing:-.028em;line-height:1.12}
+.head p{color:var(--ink-2);margin-top:6px}
+.grid{display:grid;gap:16px}
+.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.two{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start}
+.card{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);min-width:0}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:18px 22px 10px}
+.card-h h2{font-size:17px;font-weight:600;letter-spacing:-.02em}
+.card-b{padding:0 22px 20px}
+.kpi{padding:16px 22px}
+.kpi .lbl{font-size:13px;color:var(--ink-2)}
+.kpi .val{font-size:38px;font-weight:600;letter-spacing:-.035em;line-height:1.1;margin:4px 0}
+.kpi .val small{font-size:15px;font-weight:500;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:980px;background:var(--inset);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
+.chip i{width:7px;height:7px;border-radius:2px;box-shadow:inset 0 0 0 2px var(--muted)}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:6px;background:var(--inset);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
+.tag.warn{background:transparent;box-shadow:inset 0 0 0 1px var(--st-over);color:var(--ink)}
+.segctl{display:inline-flex;gap:2px;padding:3px;border-radius:11px;background:var(--line);max-width:100%;overflow-x:auto}
+.segctl button{padding:7px 14px;border:0;border-radius:8px;background:none;cursor:pointer;color:var(--ink);font-size:13.5px;white-space:nowrap}
+.segctl button[aria-selected="true"]{background:var(--surface);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.rows{display:flex;flex-direction:column}
+.row{padding:14px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.row .t{font-weight:600;letter-spacing:-.01em}
+.row .d{font-size:13px;color:var(--ink-2);margin-top:2px}
+.row .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.steps{display:flex;gap:3px;margin-top:10px}
+.steps i{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.steps i.on{background:var(--st-ready)} .steps i.ok{background:var(--st-good)}
+.steplbl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:5px}
+.steplbl b{color:var(--ink);font-weight:600}
+.hist{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--inset);font-size:12.5px;color:var(--ink-2)}
+.empty{padding:16px 18px;border-radius:12px;color:var(--ink-2);font-size:13px;background:var(--inset)}
+.empty b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+.drop{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px;border:1.5px dashed var(--line-2);border-radius:14px;text-align:center;color:var(--ink-2);font-size:13px}
+.drop.over{border-color:var(--accent-fill);background:var(--inset)}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:14px}
+.file{border-radius:12px;background:var(--inset);overflow:hidden;font-size:12.5px;cursor:pointer;border:0;text-align:left;padding:0;color:inherit}
+.file .th{height:92px;display:flex;align-items:center;justify-content:center;background:var(--line);color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.file .th img{width:100%;height:100%;object-fit:cover;display:block}
+.file .m{padding:8px 10px}
+.file .n{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.form .full{grid-column:1/-1}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-2)}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{font-size:11.5px;color:var(--muted);font-weight:500;text-align:left;padding:8px 14px 8px 0;border-bottom:1px solid var(--line-2);white-space:nowrap}
+.tbl td{padding:10px 14px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums;padding-right:0}
+.scroll{overflow-x:auto}
+pre.brief{white-space:pre-wrap;font:13px/1.5 ui-monospace,"SF Mono",Consolas,monospace;background:var(--inset);padding:14px;border-radius:12px;margin:10px 0 0;max-height:320px;overflow:auto}
+.navmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.navmap div{padding:12px 14px;border-radius:12px;background:var(--inset);font-size:13px;color:var(--ink-2)}
+.navmap b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+.tabs{display:none}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)} .side{display:none}
+  .side.open{display:flex;position:fixed;inset:0;z-index:40;height:auto;border-right:0;background:var(--page);padding-bottom:90px}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 calc(-1*clamp(16px,3.2vw,44px));padding:10px clamp(16px,3.2vw,44px);background:var(--glass);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+  .topbar .brand{padding:0} .topbar .brand svg{width:28px;height:28px}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);background:var(--glass);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+  .tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 7px;font-size:10.5px;color:var(--muted);border:0;background:none;cursor:pointer}
+  .tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .tabs button[aria-current="page"]{color:var(--accent)}
+  .head{padding:22px 0 14px} .card-h,.card-b,.kpi{padding-left:18px;padding-right:18px}
+  .form{grid-template-columns:minmax(0,1fr)} .kpi .val{font-size:32px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side" aria-label="Navigation">
+    <div class="brand" id="brand"></div>
+    <nav class="nav" id="nav"></nav>
+    <div>
+      <h3>Projects by address</h3>
+      <input class="in" id="q" type="search" placeholder="Search address" autocomplete="off" aria-label="Search projects by address">
+      <div class="plist" id="plist" style="margin-top:6px"></div>
+      <form id="newproj" style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
+        <input class="in" id="np_addr" placeholder="New project address" autocomplete="off" aria-label="New project address">
+        <div style="display:flex;gap:6px"><select class="in" id="np_type" aria-label="Project type"><option>Single home</option><option>Renovation</option><option>Subdivision lot</option></select><button class="btn sm" type="submit">Add</button></div>
+      </form>
+    </div>
+    <div class="side-foot">
+      <span id="storage"></span>
+      <button class="ghost" id="theme" type="button">Light / dark</button>
+      <button class="ghost" id="reset" type="button">Reset prototype data</button>
+      <span>Prototype v0.1 · AI and Smartsheet not connected</span>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="brand" id="brand-m"></div><button class="ghost" id="menu" type="button">Projects</button></div>
+    <div class="wrap">
+      <div class="notice" role="note"><div><b>Prototype.</b> It opens with one made-up sample project. What you add stays in this browser on this device — nothing is uploaded or sent. AI and Smartsheet are not connected; exports are Draft files for you to review.</div></div>
+      <main id="view" tabindex="-1"></main>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Studio sections"></nav>
+</div>
+
+<script>
+/* ============ constants ============ */
+const STATUSES = ["Discussed","Selected","Approved","Ordered","Received","Paid","Installed"];
+const FILE_CATS = ["Survey","Drawing","Photo","Reference","Specification","Rendering"];
+const SEL_CATS = { // category -> proposed trade (a suggestion, never an assignment)
+  "Cabinets":"Cabinet installer","Countertops":"Countertop fabricator","Tile":"Tile setter","Plumbing fixtures":"Plumber",
+  "Lighting":"Electrician","Appliances":"Appliance installer","Paint":"Painter","Flooring":"Flooring installer",
+  "Windows & doors":"Carpenter","Siding":"Siding installer","Roofing":"Roofer","Landscape":"Landscaper","Other":"To be assigned"
+};
+const DEFAULT_AREAS = ["Kitchen","Bathrooms","Exterior","Interior finishes","Site & landscape"];
+const NAV = [
+  ["today","Today",'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'],
+  ["projects","Projects",'<path d="M4 20V10l8-5.5 8 5.5v10"/><path d="M9.5 20v-6h5v6"/>'],
+  ["studio","Design Studio",'<path d="M4 17.5L15.5 6l2.5 2.5L6.5 20H4z"/><path d="M13.5 8l2.5 2.5M15 19h5"/>'],
+  ["decisions","Decisions",'<circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 4.9-5.2"/>'],
+  ["documents","Documents",'<path d="M7 3.5h7l4 4V20.5H7z"/><path d="M14 3.5v4h4M9.8 12.5h5.4M9.8 16h5.4"/>'],
+  ["finance","Financial risks",'<rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 017 0v2.5"/>'],
+  ["status","AI & connections",'<path d="M5 12a7 7 0 0114 0M8 12a4 4 0 018 0"/><circle cx="12" cy="12.4" r="1.2"/><path d="M12 14v5.5"/>']
+];
+const mark = id => '<svg viewBox="0 0 512 512" aria-hidden="true"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b3e44"/><stop offset="1" stop-color="#17181b"/></linearGradient></defs><rect width="512" height="512" rx="116" fill="url(#'+id+')"/><path d="M329.5 182.5A104 104 0 1 0 360 256" fill="none" stroke="#f5f5f7" stroke-width="38" stroke-linecap="round"/><path d="M360 256H266" fill="none" stroke="#c9a36b" stroke-width="38" stroke-linecap="round"/></svg>';
+
+/* ============ storage: state in localStorage, file contents in IndexedDB; both fall back to memory ============ */
+const KEY = "dev-os-design-studio-v1";
+let persistent = true;
+const Files = (() => {
+  let db = null; const mem = new Map();
+  const open = () => new Promise(res => { try {
+      const r = indexedDB.open(KEY, 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("files");
+      r.onsuccess = () => { db = r.result; res(true); };
+      r.onerror = () => res(false);
+    } catch (e) { res(false); } });
+  const put = (id, blob) => new Promise(res => { mem.set(id, blob); if (!db) return res();
+      try { const t = db.transaction("files","readwrite"); t.objectStore("files").put(blob, id); t.oncomplete = () => res(); t.onerror = () => res(); } catch (e) { res(); } });
+  const get = id => new Promise(res => { if (mem.has(id)) return res(mem.get(id)); if (!db) return res(null);
+      try { const r = db.transaction("files").objectStore("files").get(id); r.onsuccess = () => res(r.result || null); r.onerror = () => res(null); } catch (e) { res(null); } });
+  const clear = () => new Promise(res => { mem.clear(); if (!db) return res();
+      try { const t = db.transaction("files","readwrite"); t.objectStore("files").clear(); t.oncomplete = () => res(); t.onerror = () => res(); } catch (e) { res(); } });
+  return { open, put, get, clear, ok: () => !!db };
+})();
+function loadState(){ try { const s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; } catch (e) { persistent = false; return null; } }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { persistent = false; } }
+
+/* ============ made-up sample data ============ */
+const uid = () => Math.random().toString(36).slice(2, 10);
+function sampleState(){
+  const areas = DEFAULT_AREAS.map(n => ({ id: uid(), name: n }));
+  const a = n => areas.find(x => x.name === n).id;
+  const sel = (area, name, category, status, o = {}) => Object.assign({ id: uid(), areaId: a(area), name, category, spec: "", vendor: "", qty: null, unit: "", unitCost: null, costCode: "", leadDays: null, neededBy: "", neededConfirmed: false, note: "", status, rev: 1, history: [] }, o);
+  return { version: 1, current: "sample", tab: "design", out: "takeoff", projects: [{
+    id: "sample", address: "1200 Sample Lane", type: "Single home", sample: true, areaId: a("Kitchen"), areas, files: [], notes: {},
+    selections: [
+      sel("Kitchen","Base and wall cabinets","Cabinets","Approved",{ spec: "Shaker, painted, soft-close", vendor: "Sample Cabinet Co.", qty: 24, unit: "LF", costCode: "6400" }),
+      sel("Kitchen","Quartz countertop","Countertops","Selected",{ spec: "3 cm, eased edge", qty: 58, unit: "SF" }),
+      sel("Kitchen","36 in range","Appliances","Ordered",{ spec: "Dual fuel, stainless", vendor: "Sample Supply Co.", qty: 1, unit: "EA", unitCost: 4200, costCode: "11300", leadDays: 21 }),
+      sel("Kitchen","Backsplash tile","Tile","Discussed",{ spec: "Handmade-look ceramic, 3x12" }),
+      sel("Bathrooms","60 in double vanity","Plumbing fixtures","Selected",{ qty: 1, unit: "EA" }),
+      sel("Exterior","Fiber-cement lap siding","Siding","Approved",{ spec: "7 in exposure, factory finish", costCode: "7460" })
+    ] }] };
+}
+
+/* ============ state + helpers ============ */
+let state = null, ui = { q: "", editing: null, hist: {}, info: null };
+const thumbs = new Map();
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const num = v => { const t = String(v == null ? "" : v).trim(); return t !== "" && isFinite(+t) ? +t : null; };
+const money = n => "$" + n.toLocaleString("en-US", { maximumFractionDigits: 2 });
+const P = () => state.projects.find(p => p.id === state.current) || state.projects[0];
+const areaName = (p, id) => (p.areas.find(a => a.id === id) || {}).name || "";
+const idx = s => STATUSES.indexOf(s.status);
+const approved = p => p.selections.filter(s => idx(s) >= 2);
+function blockers(p){
+  const out = [];
+  for (const s of approved(p)) {
+    if (s.qty == null) out.push([s, "Approved without a quantity — takeoff cannot be issued"]);
+    if (!s.spec) out.push([s, "Approved without a specification or model"]);
+    if (!s.costCode) out.push([s, "No cost code — cannot map to the budget"]);
+  }
+  for (const a of p.areas) {
+    const has = p.selections.some(s => s.areaId === a.id && idx(s) >= 1);
+    if (has && !p.files.some(f => f.areaId === a.id && f.cat === "Drawing")) out.push([null, a.name + ": selections exist but no drawing is uploaded"]);
+  }
+  return out;
+}
+
+/* ============ views ============ */
+function stepper(s){
+  const i = idx(s);
+  return `<div class="steps" role="img" aria-label="Status ${esc(s.status)}, step ${i + 1} of ${STATUSES.length}">${STATUSES.map((_, k) => `<i class="${k <= i ? (i >= 2 ? "ok" : "on") : ""}"></i>`).join("")}</div>
+    <div class="steplbl"><span><b>${esc(s.status)}</b></span><span>${i < 6 ? "next: " + STATUSES[i + 1] : "complete"}</span></div>`;
+}
+function selRow(p, s, showArea){
+  const i = idx(s), meta = [s.category, s.spec, s.vendor].filter(Boolean).map(esc).join(" · ");
+  const qty = s.qty != null ? `${s.qty} ${esc(s.unit)}` : "quantity not set";
+  const need = s.neededBy ? `needed ${esc(s.neededBy)} (${s.neededConfirmed ? "confirmed" : "proposed"})` : "no deadline set";
+  let act = "";
+  if (i === 0) act = `<button class="btn sm sec" data-act="next" data-id="${s.id}">Mark selected</button>`;
+  else if (i === 1) act = `<button class="btn sm" data-act="next" data-id="${s.id}">Approve</button>`;
+  else if (i < 6) act = `<button class="btn sm sec" data-act="next" data-id="${s.id}">Mark ${STATUSES[i + 1].toLowerCase()}</button>`;
+  const h = ui.hist[s.id] ? `<div class="hist">${s.history.length ? s.history.map(x => `R${x.rev} · ${esc(x.status)} · ${esc(x.when)} — ${esc([x.spec, x.vendor, x.qty != null ? x.qty + " " + x.unit : ""].filter(Boolean).join(" · ") || "no details")}`).join("<br>") : "No earlier revisions."}</div>` : "";
+  return `<div class="row"><div class="top"><div><div class="t">${esc(s.name)} <span class="tag">R${s.rev}</span>${showArea ? ` <span class="tag">${esc(areaName(p, s.areaId))}</span>` : ""}</div>
+    <div class="d">${meta || "No specification yet"}</div><div class="d">${qty} · ${need}${s.costCode ? " · cost code " + esc(s.costCode) : ""}</div></div></div>
+    ${stepper(s)}<div class="acts">${act}<button class="btn sm sec" data-act="edit" data-id="${s.id}">Edit</button><button class="btn sm sec" data-act="hist" data-id="${s.id}">History (${s.history.length})</button></div>${h}</div>`;
+}
+function selForm(p){
+  const e = ui.editing ? p.selections.find(s => s.id === ui.editing) : null, v = k => e && e[k] != null ? esc(e[k]) : "";
+  const warn = e && idx(e) >= 2 ? `<div class="empty full"><b>This selection is ${esc(e.status)}.</b>Saving a change keeps R${e.rev} in its history, creates R${e.rev + 1} and returns it to Selected for your approval.</div>` : "";
+  return `<form class="form" id="selform">${warn}
+    <label class="full">Item<input class="in" id="s_name" required value="${v("name")}" placeholder="e.g. Island pendant lights"></label>
+    <label>Category<select class="in" id="s_cat">${Object.keys(SEL_CATS).map(c => `<option${e && e.category === c ? " selected" : ""}>${c}</option>`).join("")}</select></label>
+    <label>Vendor<input class="in" id="s_vendor" value="${v("vendor")}"></label>
+    <label class="full">Specification or model<input class="in" id="s_spec" value="${v("spec")}"></label>
+    <label>Quantity<input class="in" id="s_qty" inputmode="decimal" value="${v("qty")}"></label>
+    <label>Unit<input class="in" id="s_unit" value="${v("unit")}" placeholder="EA, SF, LF"></label>
+    <label>Unit cost (leave blank if unknown)<input class="in" id="s_cost" inputmode="decimal" value="${v("unitCost")}"></label>
+    <label>Cost code<input class="in" id="s_code" value="${v("costCode")}"></label>
+    <label>Needed by<input class="in" id="s_need" type="date" value="${v("neededBy")}"></label>
+    <label>Deadline<select class="in" id="s_conf"><option value="">Proposed</option><option value="1"${e && e.neededConfirmed ? " selected" : ""}>Confirmed</option></select></label>
+    <div class="full" style="display:flex;gap:8px"><button class="btn" type="submit">${e ? "Save change" : "Add selection"}</button>${e ? '<button class="btn sec" type="button" data-act="cancel">Cancel</button>' : ""}</div></form>`;
+}
+function fileGrid(p, areaId){
+  const list = p.files.filter(f => f.areaId === areaId);
+  if (!list.length) return `<div class="empty" style="margin-top:14px"><b>No files yet</b>Add the survey, drawings, photos, references and specifications for this area.</div>`;
+  return `<div class="files">${list.map(f => `<button class="file" data-act="open" data-id="${f.id}" title="Open ${esc(f.name)}"><div class="th" data-thumb="${f.type.startsWith("image/") ? f.id : ""}">${esc(f.cat)}</div><div class="m"><div class="n">${esc(f.name)}</div><div class="cap">${esc(f.cat)} · R${f.rev} · ${Math.max(1, Math.round(f.size / 1024))} KB</div></div></button>`).join("")}</div>`;
+}
+function brief(p, areaId){
+  const sels = p.selections.filter(s => s.areaId === areaId), line = s => `- ${s.name}${s.spec ? ": " + s.spec : ""}${s.qty != null ? " (" + s.qty + " " + s.unit + ")" : ""}`;
+  const grp = (label, f) => { const l = sels.filter(f); return l.length ? `\n${label}\n${l.map(line).join("\n")}\n` : ""; };
+  const files = p.files.filter(f => f.areaId === areaId);
+  return `Design brief — ${areaName(p, areaId)} — ${p.address}\n\nGoal and notes\n${(p.notes[areaId] || "(none written yet)").trim()}\n` +
+    grp("Approved — do not change", s => idx(s) >= 2) + grp("Selected — awaiting approval", s => idx(s) === 1) + grp("Under discussion", s => idx(s) === 0) +
+    `\nReference files\n${files.length ? files.map(f => `- ${f.cat}: ${f.name} (R${f.rev})`).join("\n") : "- none uploaded"}\n\nRequest\nPropose up to three options for this area that respect the approved items. List every assumption. Flag anything that conflicts with the drawings. Do not invent dimensions, prices or product availability.`;
+}
+function viewDesign(p){
+  const a = p.areaId, sels = p.selections.filter(s => s.areaId === a);
+  return `<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+      <div class="segctl" role="tablist">${p.areas.map(x => `<button role="tab" aria-selected="${x.id === a}" data-act="area" data-id="${x.id}">${esc(x.name)}</button>`).join("")}</div>
+      <form id="addarea" style="display:flex;gap:6px"><input class="in" id="a_name" placeholder="Add area" style="width:130px" aria-label="New area name"><button class="btn sm sec" type="submit">Add</button></form></div>
+    <div class="grid two"><div class="grid">
+      <section class="card"><div class="card-h"><h2>Selections — ${esc(areaName(p, a))}</h2><span class="cap">${sels.length} item${sels.length === 1 ? "" : "s"}</span></div><div class="card-b">
+        ${sels.length ? `<div class="rows">${sels.map(s => selRow(p, s)).join("")}</div>` : `<div class="empty"><b>No selections yet</b>Add the first item below.</div>`}</div></section>
+      <section class="card" id="selcard"><div class="card-h"><h2>${ui.editing ? "Edit selection" : "Add a selection"}</h2></div><div class="card-b">${selForm(p)}</div></section>
+    </div><div class="grid">
+      <section class="card"><div class="card-h"><h2>Files</h2><span class="cap">Kept on this device</span></div><div class="card-b">
+        <div class="drop" id="drop"><span>Drop files here, or</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><select class="in" id="f_cat" style="width:auto" aria-label="File type">${FILE_CATS.map(c => `<option>${c}</option>`).join("")}</select>
+          <label class="btn sm">Choose files<input id="f_in" type="file" multiple hidden></label></div>
+          <span class="cap">A file with the same name is kept as a new revision. Nothing is removed.</span></div>
+        ${fileGrid(p, a)}</div></section>
+      <section class="card"><div class="card-h"><h2>AI design brief</h2><span class="chip"><i></i>AI not connected</span></div><div class="card-b">
+        <p class="sub" style="margin-bottom:8px">Write what you want. The brief gathers your notes, the selections and the file list into one request you can paste into your AI tool.</p>
+        <textarea class="in" id="notes" placeholder="e.g. Warm modern kitchen, island seating for four, keep the range wall as drawn.">${esc(p.notes[a] || "")}</textarea>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn sm" data-act="brief">Build brief</button><button class="btn sm sec" data-act="copy">Copy</button><span class="cap" id="copied" style="align-self:center"></span></div>
+        <pre class="brief" id="brief" hidden></pre></div></section>
+    </div></div>`;
+}
+const OUT = {
+  takeoff: ["Takeoff", ["Area","Item","Specification","Quantity","Unit"], s => [s._a, s.name, s.spec, s.qty == null ? "" : s.qty, s.unit]],
+  budget: ["Budget lines", ["Cost code","Area","Item","Quantity","Unit cost","Amount"], s => [s.costCode, s._a, s.name, s.qty == null ? "" : s.qty, s.unitCost == null ? "" : s.unitCost, s.qty != null && s.unitCost != null ? s.qty * s.unitCost : ""]],
+  proposal: ["Proposal inputs", ["Area","Line description","Quantity","Unit"], s => [s._a, s.name + (s.spec ? " — " + s.spec : ""), s.qty == null ? "" : s.qty, s.unit]],
+  procurement: ["Procurement package", ["Vendor","Item","Specification","Quantity","Unit","Lead time (days)","Needed by","Status"], s => [s.vendor, s.name, s.spec, s.qty == null ? "" : s.qty, s.unit, s.leadDays == null ? "" : s.leadDays, s.neededBy, s.status]],
+  tasks: ["Contractor tasks", ["Key","Task","Proposed trade","Status","Responsible","Due"], (s, i) => ["DS-" + String(i + 1).padStart(2, "0"), `Install ${s.name} — ${s._a}, per approved selection R${s.rev}`, SEL_CATS[s.category] || "To be assigned", "Draft", "", ""]]
+};
+const OUT_NOTE = {
+  takeoff: "Quantities are what you entered. A blank quantity is unknown, not zero.",
+  budget: "Amount is quantity × unit cost only where both are known. Unknown stays blank and is not counted.",
+  proposal: "Line items to enter in Wave. Wave remains the record for estimates, proposals and invoices; this is not a proposal document.",
+  procurement: "Grouped by vendor. No order is placed from here.",
+  tasks: "Draft tasks in the same shape as the New Project Launch template, for Smartsheet after your approval. The trade is a suggestion, not an assignment; no owner or date is set."
+};
+function outRows(p, k){
+  let l = approved(p).map(s => Object.assign({}, s, { _a: areaName(p, s.areaId) }));
+  if (k === "procurement") l.sort((a, b) => (a.vendor || "~").localeCompare(b.vendor || "~"));
+  if (k === "budget") l.sort((a, b) => (a.costCode || "~").localeCompare(b.costCode || "~"));
+  return l.map((s, i) => OUT[k][2](s, i));
+}
+function viewOutputs(p){
+  const k = state.out, rows = outRows(p, k), cols = OUT[k][1];
+  let foot = "";
+  if (k === "budget") { const known = rows.filter(r => r[5] !== ""), sum = known.reduce((t, r) => t + r[5], 0);
+    foot = `<p class="sub" style="margin-top:12px"><b>${money(sum)}</b> across ${known.length} line${known.length === 1 ? "" : "s"} with a known amount. ${rows.length - known.length} line${rows.length - known.length === 1 ? " has" : "s have"} no amount yet and ${rows.length - known.length === 1 ? "is" : "are"} not included.</p>`; }
+  const cell = (c, v) => c === "Amount" || c === "Unit cost" ? (v === "" ? "<span class='cap'>unknown</span>" : money(v)) : (v === "" ? "<span class='cap'>—</span>" : esc(v));
+  return `<p class="sub" style="margin-bottom:12px">Built only from selections you have approved (${approved(p).length}). Each line carries its revision, so a later change does not silently alter what was issued.</p>
+    <div class="segctl" role="tablist" style="margin-bottom:16px">${Object.keys(OUT).map(x => `<button role="tab" aria-selected="${x === k}" data-act="out" data-v="${x}">${OUT[x][0]}</button>`).join("")}</div>
+    <section class="card"><div class="card-h"><h2>${OUT[k][0]}</h2><button class="btn sm sec" data-act="dl">Download ${k === "tasks" ? "JSON" : "CSV"}</button></div><div class="card-b">
+      <p class="sub" style="margin-bottom:10px">${OUT_NOTE[k]}</p>
+      ${rows.length ? `<div class="scroll"><table class="tbl"><thead><tr>${cols.map(c => `<th${/Quantity|cost|Amount/.test(c) ? ' class="num"' : ""}>${c}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((v, i) => `<td${/Quantity|cost|Amount/.test(cols[i]) ? ' class="num"' : ""}>${cell(cols[i], v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : `<div class="empty"><b>Nothing approved yet</b>Approve a selection in Design and it appears here.</div>`}${foot}</div></section>`;
+}
+function viewStatus(p){
+  const wait = p.selections.filter(s => idx(s) === 1), bl = blockers(p), dl = p.selections.filter(s => s.neededBy).sort((a, b) => a.neededBy.localeCompare(b.neededBy));
+  return `<div class="grid two"><div class="grid">
+      <section class="card"><div class="card-h"><h2>Decisions waiting on you</h2><span class="cap">${wait.length}</span></div><div class="card-b">${wait.length ? `<div class="rows">${wait.map(s => selRow(p, s, true)).join("")}</div>` : `<div class="empty"><b>Nothing is waiting</b>Selections marked Selected appear here for approval.</div>`}</div></section>
+    </div><div class="grid">
+      <section class="card"><div class="card-h"><h2>Blockers</h2><span class="cap">${bl.length}</span></div><div class="card-b">${bl.length ? `<div class="rows">${bl.map(b => `<div class="row"><div class="t" style="font-weight:500">${esc(b[0] ? b[0].name : "Files")}</div><div class="d">${esc(b[1])}</div></div>`).join("")}</div>` : `<div class="empty"><b>No blockers found</b>Checks: quantity, specification and cost code on approved items; a drawing for each active area.</div>`}</div></section>
+      <section class="card"><div class="card-h"><h2>Deadlines</h2></div><div class="card-b">${dl.length ? `<div class="rows">${dl.map(s => `<div class="row"><div class="top"><div><div class="t" style="font-weight:500">${esc(s.name)}</div><div class="d">${esc(areaName(p, s.areaId))} · ${esc(s.status)}</div></div><span class="tag${s.neededConfirmed ? "" : " warn"}">${esc(s.neededBy)} · ${s.neededConfirmed ? "confirmed" : "proposed"}</span></div></div>`).join("")}</div>` : `<div class="empty"><b>No deadline is set</b>Add a needed-by date on a selection. It shows as proposed until you mark it confirmed.</div>`}</div></section>
+    </div></div>`;
+}
+function viewInfo(k){
+  const label = NAV.find(n => n[0] === k)[1];
+  return `<header class="head"><div class="crumb">Proposed navigation</div><h1>${label}</h1><p>This section belongs to the dashboard, which is a separate private prototype for now. In the application both are one workspace with this same menu.</p></header>
+    <section class="card"><div class="card-h"><h2>One workspace — proposed navigation</h2></div><div class="card-b"><div class="navmap">
+      <div><b>Today</b>Next actions, decisions waiting, projects needing attention.</div>
+      <div><b>Projects</b>Open any project by address. Stage, status, owner, next action, blockers.</div>
+      <div><b>Design Studio</b>Files, selections, AI briefs by area. Approved designs become takeoff, budget lines, proposal inputs, procurement and Draft tasks.</div>
+      <div><b>Decisions</b>Everything waiting for approval, design selections included.</div>
+      <div><b>Documents</b>Missing items, templates, where each record lives.</div>
+      <div><b>Financial risks</b>Owner only.</div>
+      <div><b>AI &amp; connections</b>What is connected and what is not.</div>
+    </div><p style="margin-top:14px"><button class="btn sm" data-act="nav" data-k="studio">Back to Design Studio</button></p></div></section>`;
+}
+function render(){
+  const p = P();
+  $("#nav").innerHTML = NAV.map(n => `<button data-act="nav" data-k="${n[0]}"${(ui.info ? ui.info === n[0] : n[0] === "studio") ? ' aria-current="page"' : ""}><svg viewBox="0 0 24 24">${n[2]}</svg><span>${n[1]}</span></button>`).join("");
+  const q = ui.q.trim().toLowerCase();
+  $("#plist").innerHTML = state.projects.filter(x => !q || x.address.toLowerCase().includes(q)).map(x => `<button data-act="proj" data-id="${x.id}" aria-current="${x.id === p.id}">${esc(x.address)}<small>${esc(x.type)}${x.sample ? " · made-up sample" : ""}</small></button>`).join("") || `<span class="cap" style="padding:6px 10px">No project matches.</span>`;
+  $("#storage").textContent = persistent && Files.ok() ? "Saved in this browser on this device." : "Storage is unavailable in this view — work is kept only until the page closes.";
+  const st = [["design","Design",'<path d="M4 17.5L15.5 6l2.5 2.5L6.5 20H4z"/>'],["outputs","Outputs",'<path d="M5 6h14M5 12h14M5 18h9"/>'],["status","Status",'<circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 4.9-5.2"/>'],["menu","Projects",'<path d="M4 20V10l8-5.5 8 5.5v10"/>']];
+  $("#tabs").innerHTML = st.map(t => `<button data-act="${t[0] === "menu" ? "menu" : "tab"}" data-v="${t[0]}"${!ui.info && state.tab === t[0] ? ' aria-current="page"' : ""}><svg viewBox="0 0 24 24">${t[2]}</svg><span>${t[1]}</span></button>`).join("");
+  if (ui.info) { $("#view").innerHTML = viewInfo(ui.info); return; }
+  const wait = p.selections.filter(s => idx(s) === 1).length, ap = approved(p), inst = ap.filter(s => idx(s) === 6).length;
+  $("#view").innerHTML = `<header class="head"><div class="crumb">Design Studio${p.sample ? ' · <span class="chip"><i></i>Made-up sample data</span>' : ""}</div><h1>${esc(p.address)}</h1><p>${esc(p.type)} · design to production in one place.</p></header>
+    <div class="grid kpis">
+      <div class="card kpi"><div class="lbl">Waiting for your approval</div><div class="val">${wait}</div><div class="cap">selections marked Selected</div></div>
+      <div class="card kpi"><div class="lbl">Approved</div><div class="val">${ap.length}<small> of ${p.selections.length}</small></div><div class="cap">feed takeoff, budget and tasks</div></div>
+      <div class="card kpi"><div class="lbl">Installed</div><div class="val">${inst}<small> of ${ap.length}</small></div><div class="cap">approved items completed</div></div>
+      <div class="card kpi"><div class="lbl">Blockers</div><div class="val">${blockers(p).length}</div><div class="cap">${p.files.length} file${p.files.length === 1 ? "" : "s"} on this project</div></div>
+    </div>
+    <div class="segctl" role="tablist" style="margin:20px 0 18px">${[["design","Design"],["outputs","Outputs"],["status","Status"]].map(t => `<button role="tab" aria-selected="${state.tab === t[0]}" data-act="tab" data-v="${t[0]}">${t[1]}</button>`).join("")}</div>
+    ${state.tab === "outputs" ? viewOutputs(p) : state.tab === "status" ? viewStatus(p) : viewDesign(p)}`;
+  loadThumbs();
+}
+async function loadThumbs(){
+  for (const el of document.querySelectorAll("[data-thumb]")) { const id = el.dataset.thumb; if (!id) continue;
+    if (!thumbs.has(id)) { const b = await Files.get(id); if (!b) continue; thumbs.set(id, URL.createObjectURL(b)); }
+    if (el.isConnected) el.innerHTML = `<img alt="" src="${thumbs.get(id)}">`; }
+}
+
+/* ============ actions ============ */
+async function addFiles(list){
+  const p = P(), cat = ($("#f_cat") || {}).value || "Reference";
+  for (const f of list) { const id = uid(), same = p.files.filter(x => x.areaId === p.areaId && x.name === f.name);
+    await Files.put(id, f);
+    p.files.push({ id, areaId: p.areaId, name: f.name, cat, size: f.size, type: f.type || "", added: new Date().toISOString().slice(0, 10), rev: same.length + 1 }); }
+  save(); render();
+}
+function download(name, text, type){ const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+const csv = rows => rows.map(r => r.map(v => { const s = String(v == null ? "" : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(",")).join("\r\n");
+document.addEventListener("click", async e => {
+  const t = e.target.closest("[data-act]"); if (!t) return; const p = P(), act = t.dataset.act, s = t.dataset.id && p.selections.find(x => x.id === t.dataset.id);
+  if (act === "nav") { const k = t.dataset.k;
+    if (k !== "studio" && DASHBOARD) { location.href = DASHBOARD + "#" + k; return; }
+    ui.info = k === "studio" ? null : k; $("#side").classList.remove("open"); }
+  else if (act === "proj") { state.current = t.dataset.id; ui.editing = null; ui.info = null; $("#side").classList.remove("open"); }
+  else if (act === "tab") { state.tab = t.dataset.v; ui.info = null; }
+  else if (act === "menu") { $("#side").classList.toggle("open"); return; }
+  else if (act === "area") { p.areaId = t.dataset.id; ui.editing = null; }
+  else if (act === "out") state.out = t.dataset.v;
+  else if (act === "next" && s) { const i = idx(s); if (i < 6) { s.status = STATUSES[i + 1]; if (i === 1) s.approvedOn = new Date().toISOString().slice(0, 10); } }
+  else if (act === "edit" && s) { ui.editing = s.id; p.areaId = s.areaId; state.tab = "design"; save(); render(); $("#selcard").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  else if (act === "cancel") ui.editing = null;
+  else if (act === "hist") ui.hist[t.dataset.id] = !ui.hist[t.dataset.id];
+  else if (act === "open") { const b = await Files.get(t.dataset.id); if (b) window.open(URL.createObjectURL(b), "_blank"); return; }
+  else if (act === "brief" || act === "copy") { const el = $("#brief"); el.textContent = brief(p, p.areaId); el.hidden = false;
+    if (act === "copy") { try { await navigator.clipboard.writeText(el.textContent); $("#copied").textContent = "Copied."; } catch (x) { $("#copied").textContent = "Select the text to copy it."; } } return; }
+  else if (act === "dl") { const k = state.out, slug = p.address.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") || "project";
+    if (k === "tasks") download(`${slug}-draft-tasks.json`, JSON.stringify({ project: p.address, status: "Draft — not approved, not in Smartsheet", tasks: outRows(p, k).map(r => ({ key: r[0], phase: "09", task: r[1], proposedRole: r[2], dependsOn: [], definitionOfDone: "Installed per the approved selection revision; photo evidence recorded", approvalGate: "Owner approval before any commitment", status: "Draft", responsible: null, dueDate: null, nextFollowUp: null, evidence: null })) }, null, 2), "application/json");
+    else download(`${slug}-${k}.csv`, csv([OUT[k][1], ...outRows(p, k)]), "text/csv"); return; }
+  save(); render();
+});
+document.addEventListener("submit", e => {
+  e.preventDefault(); const p = P();
+  if (e.target.id === "newproj") { const addr = $("#np_addr").value.trim(); if (!addr) { $("#np_addr").focus(); return; }
+    const areas = DEFAULT_AREAS.map(n => ({ id: uid(), name: n })), id = uid();
+    state.projects.push({ id, address: addr, type: $("#np_type").value, areaId: areas[0].id, areas, files: [], notes: {}, selections: [] });
+    state.current = id; state.tab = "design"; ui.info = null; ui.editing = null; $("#np_addr").value = ""; $("#side").classList.remove("open"); }
+  else if (e.target.id === "addarea") { const n = $("#a_name").value.trim(); if (!n) return; const id = uid(); p.areas.push({ id, name: n }); p.areaId = id; }
+  else if (e.target.id === "selform") { const name = $("#s_name").value.trim(); if (!name) { $("#s_name").focus(); return; }
+    const data = { name, category: $("#s_cat").value, vendor: $("#s_vendor").value.trim(), spec: $("#s_spec").value.trim(), qty: num($("#s_qty").value), unit: $("#s_unit").value.trim(), unitCost: num($("#s_cost").value), costCode: $("#s_code").value.trim(), neededBy: $("#s_need").value, neededConfirmed: !!$("#s_conf").value };
+    const cur = ui.editing && p.selections.find(s => s.id === ui.editing);
+    if (cur) { if (idx(cur) >= 2) { cur.history.push({ rev: cur.rev, status: cur.status, when: new Date().toISOString().slice(0, 10), spec: cur.spec, vendor: cur.vendor, qty: cur.qty, unit: cur.unit }); cur.rev++; cur.status = "Selected"; }
+      Object.assign(cur, data); ui.editing = null; }
+    else p.selections.push(Object.assign({ id: uid(), areaId: p.areaId, leadDays: null, note: "", status: "Discussed", rev: 1, history: [] }, data)); }
+  save(); render();
+});
+document.addEventListener("input", e => {
+  if (e.target.id === "q") { ui.q = e.target.value; render(); const q = $("#q"); q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
+  else if (e.target.id === "notes") { const p = P(); p.notes[p.areaId] = e.target.value; save(); }
+});
+document.addEventListener("change", e => { if (e.target.id === "f_in" && e.target.files.length) addFiles([...e.target.files]); });
+document.addEventListener("dragover", e => { const d = e.target.closest && e.target.closest("#drop"); if (d) { e.preventDefault(); d.classList.add("over"); } });
+document.addEventListener("dragleave", e => { const d = e.target.closest && e.target.closest("#drop"); if (d) d.classList.remove("over"); });
+document.addEventListener("drop", e => { const d = e.target.closest && e.target.closest("#drop"); if (d) { e.preventDefault(); d.classList.remove("over"); if (e.dataTransfer.files.length) addFiles([...e.dataTransfer.files]); } });
+$("#menu").addEventListener("click", () => $("#side").classList.toggle("open"));
+$("#theme").addEventListener("click", () => { const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light"); document.documentElement.dataset.theme = cur === "dark" ? "light" : "dark"; });
+$("#reset").addEventListener("click", async () => { if (!confirm("Remove everything added in this prototype on this device and restore the made-up sample?")) return; await Files.clear(); thumbs.clear(); state = sampleState(); ui = { q: "", editing: null, hist: {}, info: null }; save(); render(); });
+
+/* Optional link back to a dashboard page: ?dashboard=<relative .html path>. Only a plain relative path is accepted. */
+const DASHBOARD = (() => { try { const d = new URLSearchParams(location.search).get("dashboard"); return d && /^[A-Za-z0-9 ._()\/-]+\.html$/.test(d) && !d.includes("//") ? d : null; } catch (e) { return null; } })();
+
+(async () => {
+  await Files.open();
+  state = loadState() || sampleState();
+  if (!state.projects || !state.projects.length) state = sampleState();
+  $("#brand").innerHTML = mark("g1") + "<div><b>Grama OS</b><span>Design Studio</span></div>";
+  $("#brand-m").innerHTML = mark("g2") + "<div><b>Grama OS</b><span>Design Studio</span></div>";
+  save(); render();
+})();
+</script>
+</body>
+</html>
