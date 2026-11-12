@@ -1,5 +1,7 @@
 # Developer team handoff — November 10, 2026
 
+Current central coordination: [TEAM_HANDOFF.md](TEAM_HANDOFF.md) (underscore). This hyphenated file is preserved as historical evidence.
+
 > Historical handoff below. For the November 12 infrastructure work use [current readiness](INFRASTRUCTURE-READINESS.md), [task handoff](handoffs/infrastructure-2026-11-12.md) and [Claude's next-task prompt](CLAUDE-INFRA-HANDOFF.md). GitHub currently reports public visibility; older private/no-staging/no-deployment descriptions below are historical, not current verification.
 
 ## Start here

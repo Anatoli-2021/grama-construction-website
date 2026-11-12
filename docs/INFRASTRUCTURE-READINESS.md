@@ -1,5 +1,7 @@
 # Infrastructure readiness — November 12, 2026
 
+Technical checkpoint, retained as evidence. Current roadmap/status/coordination are maintained only in [OS_MASTER_PLAN.md](OS_MASTER_PLAN.md), [OS_STATUS.md](OS_STATUS.md) and [TEAM_HANDOFF.md](TEAM_HANDOFF.md).
+
 Status: preparation in a separate infrastructure branch. Nothing here is approval to merge or publish the OS.
 
 ## Verified inventory

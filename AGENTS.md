@@ -1,6 +1,6 @@
 # Grama Construction repository instructions
 
-Scope: this repository only. Direct user instructions take precedence. Start by reading this file, README.md, docs/INFRASTRUCTURE-READINESS.md and the handoff for your task.
+Scope: this repository only. Direct user instructions take precedence. Start with this file, README.md, docs/OS_MASTER_PLAN.md, docs/OS_STATUS.md and docs/TEAM_HANDOFF.md. Those three documents own roadmap, current status and coordination; dated technical handoffs are supporting evidence.
 
 ## Preserve the existing project
 - Keep the website at root src/, public/ and the existing build paths. Extend apps/development-os/ for the OS. Share small utilities in packages/. Do not create another repository, framework scaffold or copy of the website.

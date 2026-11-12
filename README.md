@@ -2,7 +2,7 @@
 
 One shared repository for the existing React/Vite/GSAP website and reusable Development OS tools. GitHub reported this repository as public on November 12, 2026; only code, blank templates and synthetic examples belong here. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
 
-Start new infrastructure/UI coordination with [AGENTS.md](AGENTS.md), [current readiness](docs/INFRASTRUCTURE-READINESS.md) and [Claude's handoff](docs/CLAUDE-INFRA-HANDOFF.md). Existing product paths are retained; no second platform or repository is needed.
+Start with [AGENTS.md](AGENTS.md), the [master plan](docs/OS_MASTER_PLAN.md), [current status](docs/OS_STATUS.md) and [team handoff](docs/TEAM_HANDOFF.md). Existing product paths are retained; no second platform or repository is needed. Detailed technical evidence remains linked from those central documents.
 
 Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Owner: **Anatoli-2021**.
 
