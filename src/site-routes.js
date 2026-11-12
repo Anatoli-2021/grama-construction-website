@@ -1,6 +1,6 @@
 import { projects } from './data/projects.js';
 
-export const previewOrigin = 'https://grama-construction-website-production.up.railway.app';
+export const previewOrigin = 'https://gramadevelopment.com';
 export const siteRoutes = [
   { path: '/', title: 'Grama Development — Luxury Custom Homes & Residential Development', description: 'A family construction business serving Chicago and Chicagoland. Explore completed homes, development partnerships and the proposed Dexter Acres neighborhood.', image: 'residence.webp', type: 'home' },
   { path: '/about', title: 'About Grama Development — Tony, Alina & the Company', description: 'Meet Anatoli (Tony) Grama and Alina, the family behind Grama Development. Luxury custom homes, renovation and residential development in Chicago and the Illinois suburbs.', image: 'tony-grama.webp', type: 'about' },

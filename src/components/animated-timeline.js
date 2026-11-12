@@ -4,7 +4,7 @@ export const SOURCE_HEIGHT = 941;
 export const EXPERIENCE_CHAPTERS = [
   { id: 'house', label: 'House', target: 0 },
   { id: 'layers', label: 'Layers', target: 0.4 },
-  { id: 'inside', label: 'Inside the frame', target: 0.66 },
+  { id: 'inside', label: 'Structure', target: 0.66 },
   { id: 'neighborhood', label: 'Neighborhood', target: 0.96 },
 ];
 

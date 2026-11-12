@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { enquiryHref } from '../enquiry-context.js';
 import { EXPERIENCE_CHAPTERS, clampProgress, getAnimatedPose, poseStyles } from './animated-timeline.js';
+import ArtlistHouseSequence from './ArtlistHouseSequence.jsx';
+import { getHouseClipProgress } from './artlist-house-sequence.js';
 import './AnimatedExperience.css';
 
 const assets = {
@@ -13,7 +15,7 @@ const assets = {
 const chapters = [
   { title: 'The house, considered.', text: 'Gabled rooflines. Light masonry. A sheltered entrance. Explore the architectural idea from a different perspective.' },
   { title: 'One home. Its many layers.', text: 'The roof lifts and the exterior opens, revealing the frame beneath.' },
-  { title: 'Inside the frame.', text: 'Move closer to the timber structure and the space it begins to define.' },
+  { title: 'The structure, revealed.', text: 'An open view of the timber-frame concept and the space it begins to define.' },
   { title: 'A wider perspective.', text: 'From one residence to a proposed neighborhood at Webster and Dexter Lanes in Des Plaines.' },
 ];
 
@@ -21,9 +23,9 @@ function Arrow() {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15M13 5l7 7-7 7" stroke="currentColor" strokeWidth="1.2" /></svg>;
 }
 
-function LayeredHouse({ className = '', stillProgress, mediaReady = false }) {
+function LayeredHouse({ className = '', stillProgress, mediaReady = false, motionSlot = null, hideLayers = false }) {
   return <div className={`ae-house-plane ${className}`} style={stillProgress === undefined ? undefined : poseStyles(getAnimatedPose(stillProgress))}>
-    <div className="ae-house-camera" data-ready={mediaReady ? 'true' : 'false'} role="img" aria-label="Illustrative architectural concept of a gabled residence, with roof and exterior layers separated to reveal its timber frame">
+    <div className="ae-house-camera" data-ready={mediaReady ? 'true' : 'false'} style={hideLayers ? { visibility: 'hidden' } : undefined} aria-hidden={hideLayers || undefined} role="img" aria-label="Illustrative architectural concept of a gabled residence, with roof and exterior layers separated to reveal its timber frame">
       <img className="ae-house-fallback" src={assets.complete} alt="" width="1672" height="941" decoding="async" />
       <div className="ae-house-layers" data-ready={mediaReady ? 'true' : 'false'} aria-hidden="true">
         <img className="ae-structure" src={assets.structure} alt="" width="1672" height="941" decoding="async" />
@@ -32,6 +34,7 @@ function LayeredHouse({ className = '', stillProgress, mediaReady = false }) {
         <img className="ae-roof" src={assets.roof} alt="" width="1672" height="941" decoding="async" />
       </div>
     </div>
+    {motionSlot}
   </div>;
 }
 
@@ -40,6 +43,7 @@ export default function AnimatedExperience({ motion = true }) {
   const trackRef = useRef(null);
   const stageRef = useRef(null);
   const rangeRef = useRef(null);
+  const sequenceRef = useRef(null);
   const chapterButtonRefs = useRef([]);
   const seekRef = useRef(null);
   const progressRef = useRef(0);
@@ -50,7 +54,12 @@ export default function AnimatedExperience({ motion = true }) {
   const [paused, setPaused] = useState(false);
   const [viewMode, setViewMode] = useState('scroll');
   const [mediaStatus, setMediaStatus] = useState('loading');
-  const scrollMode = clientReady && motion && !reducedMotion && viewMode === 'scroll' && mediaStatus !== 'unavailable';
+  const [artlistStatus, setArtlistStatus] = useState('idle');
+  const wantsMotion = clientReady && motion && !reducedMotion && viewMode === 'scroll';
+  const canAnimate = mediaStatus !== 'unavailable' || artlistStatus === 'loading' || artlistStatus === 'ready';
+  const scrollMode = wantsMotion && canAnimate;
+  const filmReady = scrollMode && artlistStatus === 'ready';
+  const motionUnavailable = mediaStatus === 'unavailable' && artlistStatus === 'error';
   const mediaReady = mediaStatus === 'ready';
 
   useEffect(() => {
@@ -81,6 +90,7 @@ export default function AnimatedExperience({ motion = true }) {
     let raf = 0;
     function draw(progress) {
       const pose = getAnimatedPose(progress);
+      sequenceRef.current?.seek(getHouseClipProgress(pose.progress));
       progressRef.current = pose.progress;
       stage.dataset.progress = pose.progress.toFixed(4);
       stage.dataset.phase = EXPERIENCE_CHAPTERS[pose.chapterIndex].id;
@@ -148,20 +158,20 @@ export default function AnimatedExperience({ motion = true }) {
   return <section ref={sectionRef} className="animated-experience" data-mode={scrollMode ? 'scroll' : 'stills'} data-media-ready={mediaReady ? 'true' : 'false'} aria-labelledby="animated-experience-title">
     <svg className="ae-filter-defs" aria-hidden="true" focusable="false"><defs><filter id="grama-ae-facade-edge" colorInterpolationFilters="sRGB"><feMorphology in="SourceAlpha" operator="erode" radius="1.25" result="trimmedAlpha" /><feComposite in="SourceGraphic" in2="trimmedAlpha" operator="in" /></filter></defs></svg>
     <div className="ae-scroll-track" ref={trackRef}>
-      <div className="ae-stage" ref={stageRef} data-phase="house" data-progress="0">
+      <div className="ae-stage" ref={stageRef} data-phase="house" data-progress="0" data-artlist-status={artlistStatus}>
         <div className="ae-stage-grain" aria-hidden="true" />
         <div className="ae-world">
           <div className="ae-aerial" role="img" aria-label="AI-generated conceptual aerial of the proposed Dexter Acres neighborhood">
             <img src="/assets/community.webp" alt="" width="1800" height="817" decoding="async" />
           </div>
-          <LayeredHouse mediaReady={mediaReady} />
+          <LayeredHouse mediaReady={mediaReady} hideLayers={filmReady} motionSlot={<ArtlistHouseSequence ref={sequenceRef} enabled={wantsMotion} onStatusChange={setArtlistStatus} />} />
           <div className="ae-frame-detail" aria-hidden="true"><i /><i /><i /><i /></div>
         </div>
 
         <header className="ae-heading">
           <p className="ae-eyebrow">Grama Development <span>/</span> Dexter Acres</p>
           <h1 id="animated-experience-title">Animated<br />Experience.</h1>
-          <p className="ae-disclosure">An illustrative architectural study.<br />Structure and materials are shown conceptually.</p>
+          <p className="ae-disclosure">AI-animated architectural concept.<br />Structure and materials are shown conceptually.</p>
         </header>
 
         <div className="ae-view-options" aria-label="Experience display options">
@@ -171,7 +181,7 @@ export default function AnimatedExperience({ motion = true }) {
               {paused ? 'Resume' : 'Pause'}
             </button>
             <button type="button" onClick={showStills}>View stills</button>
-          </> : <button type="button" onClick={() => setViewMode('scroll')} disabled={!clientReady || reducedMotion || !motion || mediaStatus === 'unavailable'}>{reducedMotion || !motion || mediaStatus === 'unavailable' ? 'Still view' : 'Explore with scroll'}<Arrow /></button>}
+          </> : <button type="button" onClick={() => setViewMode('scroll')} disabled={!clientReady || reducedMotion || !motion || motionUnavailable}>{reducedMotion || !motion || motionUnavailable ? 'Still view' : 'Explore with scroll'}<Arrow /></button>}
         </div>
 
         <div className="ae-chapter-copy">
@@ -183,7 +193,7 @@ export default function AnimatedExperience({ motion = true }) {
           </div>)}
         </div>
 
-        {mediaStatus !== 'ready' && <p className="ae-media-status" role="status">{mediaStatus === 'loading' ? 'Preparing the architectural layers…' : 'The layered view is unavailable. Showing the complete house concept.'}</p>}
+        {mediaStatus !== 'ready' && artlistStatus !== 'ready' && <p className="ae-media-status" role="status">{mediaStatus === 'loading' || artlistStatus === 'loading' ? 'Preparing the architectural animation…' : 'The animated view is unavailable. Showing the complete house concept.'}</p>}
 
         <div className="ae-scroll-controls">
           <div className="ae-scroll-instruction"><span>{paused ? 'Animation paused' : 'Scroll to explore'}</span><span className="ae-scroll-arrow" aria-hidden="true">↓</span><span>Reverse your scroll to return</span></div>
