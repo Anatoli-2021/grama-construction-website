@@ -10,4 +10,8 @@ The complete house and derivative structure, roof and façade images were prepar
 
 Keep the website's motion preference, keyboard controls and static alternative usable when updating this sequence. Test forward and reverse scroll, chapter controls, narrow screens and the original lot-to-Contact path after asset changes. Test contact delivery separately; this visual change does not activate an email provider.
 
+The visible **Play animation** link provides an independent native video player. It opens the same selected Artlist house take, followed by its reverse, as a 10.08-second silent H.264 baseline / yuv420p MP4 at 1280 × 720. The video is requested only after activation and includes native playback controls and a direct-file link. The ordinary anchor is also present in server-rendered HTML for browsers that cannot run the interactive page. The website server supports single byte ranges for MP4 playback and seeking.
+
+Reduced motion starts in still view. Visitors can explicitly choose **Enable scroll animation** for this page, including when the surrounding website has disabled motion. Returning to stills or a new system reduced-motion preference clears that override. This choice does not change system or website-wide preferences.
+
 This experience is a conceptual architectural study. Final project specifications, dates and availability require current confirmation.

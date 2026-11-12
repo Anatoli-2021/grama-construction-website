@@ -55,6 +55,33 @@ test('every public route has distinct prerendered content and metadata without J
   }
 });
 
+test('the prerendered experience exposes a native film link without requiring its module', async t => {
+  const server = createWebsiteServer();
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const base = 'http://127.0.0.1:' + server.address().port;
+  const response = await fetch(base + '/animated-experience');
+  assert.equal(response.status, 200);
+  const html = (await response.text()).replace(/<noscript\b[\s\S]*?<\/noscript>/gi, '');
+  const link = [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)]
+    .find(([, attributes]) => /aria-label="Play animation of the house"/.test(attributes));
+  assert.ok(link, 'A regular playback anchor must exist even when ES modules cannot execute');
+  const href = link[1].match(/\bhref="([^"]+)"/)?.[1];
+  assert.match(href || '', /^\/assets\/[^?#]+\.mp4$/);
+  assert.match(text(link[2]), /Play animation/);
+  const head = await fetch(base + href, { method: 'HEAD' });
+  assert.equal(head.status, 200, 'The native playback target must be a built asset');
+  assert.equal(head.headers.get('content-type'), 'video/mp4');
+  assert.equal(head.headers.get('accept-ranges'), 'bytes');
+  assert.ok(Number(head.headers.get('content-length')) > 32);
+  assert.equal((await head.arrayBuffer()).byteLength, 0);
+  const initialBytes = await fetch(base + href, { headers: { Range: 'bytes=0-31' } });
+  assert.equal(initialBytes.status, 206);
+  const bytes = Buffer.from(await initialBytes.arrayBuffer());
+  assert.equal(bytes.length, 32);
+  assert.equal(bytes.subarray(4, 8).toString(), 'ftyp', 'The link serves an MP4 container, not an HTML fallback');
+});
+
 test('unknown, private and source URLs remain true 404s instead of SPA fallbacks', async t => {
   const server = createWebsiteServer();
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
