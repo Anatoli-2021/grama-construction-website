@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "PREPARED_NOT_ACTIVATED",
+  "status": "OS_CANDIDATE_NOT_DEPLOYED",
   "existingProject": "earnest-wisdom",
   "productionChangesAllowed": false,
   "automaticPrEnvironments": false,
@@ -9,16 +9,24 @@
       "name": "staging-website",
       "created": true,
       "copiedFromProduction": false,
-      "dataMode": "synthetic-only",
-      "runtimeActive": false,
-      "services": [],
+      "dataMode": "synthetic-only requirement; runtime data not audited here",
+      "runtimeActive": true,
+      "services": [
+        {
+          "name": "humorous-delight",
+          "state": "SUCCESS",
+          "sourceBranch": "main",
+          "owner": "website coordination",
+          "activatedByThisContinuation": false
+        }
+      ],
       "proposedRuntime": {
         "sourcePath": ".",
         "dockerfile": "Dockerfile",
         "healthcheck": "/healthz",
         "reviewedCommit": null
       },
-      "publicExposureApproved": false
+      "publicExposureApproved": "Owned by separate website approval scope; not granted by this plan"
     },
     {
       "name": "staging-os",
@@ -26,23 +34,46 @@
       "copiedFromProduction": false,
       "dataMode": "synthetic-only",
       "runtimeActive": false,
-      "services": [],
+      "services": [
+        {
+          "name": "exquisite-comfort",
+          "state": "STAGED_CREATE_NOT_APPLIED",
+          "sourceBranch": "main",
+          "deployment": null,
+          "owner": "unknown; reconcile before mutation",
+          "createdByThisContinuation": false
+        }
+      ],
       "proposedRuntime": {
-        "sourcePath": "apps/development-os",
-        "dockerfile": null,
-        "healthcheck": null,
-        "reviewedCommit": null
+        "sourcePath": ".",
+        "dockerfile": "infra/staging/os.Dockerfile",
+        "start": "node apps/development-os/hosted/server.mjs",
+        "healthcheck": "/healthz",
+        "reviewedCommit": null,
+        "uiIntegrated": false
       },
       "publicExposureApproved": false,
       "blockers": [
-        "Hosted runtime contract",
-        "Server authentication and project authorization",
-        "Approved staging resource budget"
-      ]
+        "Existing staged service owner/source reconciliation",
+        "Claude renovation dependency fix and CSP-compatible UI integration",
+        "Exact-head review and container build/runtime acceptance",
+        "Private OAuth client/callback/owner/project configuration",
+        "Approved synthetic resource activation/spend",
+        "Real provider access tests and Railway rollback"
+      ],
+      "identity": {
+        "provider": "Google OIDC",
+        "role": "owner only",
+        "decision": "approved",
+        "actualAccountStoredHere": false,
+        "oauthConfigured": false,
+        "liveSignInTested": false
+      }
     }
   ],
-  "productionDataInStaging": false,
+  "productionDataInStaging": "not audited across other contributors' services; forbidden for OS candidate",
   "secretsStoredHere": false,
   "liveSmartsheetWrites": false,
-  "resourceActivationApproval": null
+  "resourceActivationApproval": null,
+  "observedOn": "2026-11-12"
 }

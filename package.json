@@ -17,6 +17,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "latest",
     "gsap": "latest",
+    "openid-client": "6.8.9",
     "react": "latest",
     "react-dom": "latest",
     "vite": "latest"

@@ -1,78 +1,85 @@
 # Development OS — current status
 
-Checkpoint: November 12, 2026. Maintainer: Codex. Reviewed artifact IDs and limitations below are evidence, not authorization.
-Roadmap: [OS_MASTER_PLAN.md](OS_MASTER_PLAN.md). Coordination: [TEAM_HANDOFF.md](TEAM_HANDOFF.md).
+Checkpoint: November 12, 2026. Maintainer: Codex. Roadmap: [OS_MASTER_PLAN.md](OS_MASTER_PLAN.md). Coordination: [TEAM_HANDOFF.md](TEAM_HANDOFF.md). Evidence is not release authority.
 
 ## COMPLETED
-- Verified existing public repository and unchanged website-root / apps/development-os source separation.
-- Verified axmatea GitHub write permission; no invitation or permission expansion performed.
-- Created staging-website and staging-os as empty environments in the existing Railway project; read-back confirmed no copied services, variables, volumes, buckets or pending patches.
-- Prepared shared AGENTS.md / CLAUDE.md, security/integration and release contracts in draft PR #15, commit 902f8e25a081e67bef589e631f2ea7d8f67f0c3e.
-- That commit passed local build, 63 existing Node checks, repository/artifact policy, 9 localhost API/asset checks and GitHub Actions run 43309929592.
-- Reviewed Claude's committed handoff and source at claude/design-studio-prototype, commit 0b1d4e3f2c14621ae0a5e1b2df45aab14181b7cf. It adds only studio/index.html and studio/README.md.
-- Created the three requested central documents without replacing an existing version.
-- Independently exercised the exact Studio script: 11 logic checks passed and 6 complete-workflow readiness checks failed. The QA copy matches Git blob 1a64670632cf145de3142434fd8766a4b9f62a6c.
+- Verified public repository, website-root / apps/development-os separation and axmatea GitHub write access; no access expansion.
+- Infrastructure draft [PR #15](https://github.com/Anatoli-2021/grama-construction-website/pull/15); previous head 7f5464b passed 63 tests and GitHub Actions run 43311610043. Current additions require exact-head CI and reviewer confirmation.
+- Tony confirmed Google sign-in with one initial owner account only. Actual identity/credentials remain private.
+- Added synthetic Google OIDC host candidate, pinned openid-client 6.8.9, project allowlist, filtered metadata, expiring server sessions, single-use PKCE/state/nonce, CSRF logout and fail-closed configuration. No real-data mode or live writes.
+- Local website build and 85 tests passed: existing 63 plus 15 actual localhost HTTP security tests and 7 offline real-OIDC-library/signature tests. No Google account was used.
+- Reviewed Claude fix 239335c12ba97a74be907a5f7e8042989ff4845b; exact HTML blob 629a5fee7f8eef9b12dde3e9decbc9c4e37ee017. His committed handoff acknowledges PR #15 at 7f5464b.
+- All six original failures now pass at prototype-logic level. Expanded independent checks: **22 PASS / 1 FAIL**. Actual launch-builder subdivision import preserves Project ID and all 29 task IDs/dependencies; repeat import refuses duplicate IDs.
+- OS-specific Dockerfile and variable-name-only example prepared; container/deployment not tested.
 
 ## IN PROGRESS
-- Independent review of the updated central documents and reproducible QA helper in the same infrastructure PR #15; Tony's merge approval remains pending.
-- Claude follow-up for the six findings below; no merge or copy of Studio into the infrastructure product source performed.
+- Same PR #15: auth candidate, exact-source QA and central documentation review.
+- Claude: remaining renovation defect and CSP-compatible protected UI integration. No Studio UI copied into infrastructure source.
+- Shared hosted project records/storage; JSON import passing logic is not a shared application store.
 
 ## BLOCKED
-- GitHub main protection is not saved/enforced: owner identity confirmation is required.
-- Current OS server does not serve Studio; its CSP rejects the prototype's inline script/blob image behavior. Do not relax access protection as a shortcut.
-- No authenticated hosted OS runtime, application storage or approved live Smartsheet application connection exists.
-- No runnable staging OS URL or completed staging runtime/rollback acceptance.
-- The prototype and launch tool do not yet share one project-record store/ID workflow; the Dashboard link is optional and the local private dashboard is a separate artifact.
-- Claude reports no committed automated Studio tests and no browser-restart persistence test.
-- All-branch/history confidentiality review is not complete; the repository is public.
-- Full browser workflow verification is blocked by browser policy denying local-file URLs. No alternate browser/protocol workaround was attempted. The Node logic harness is a different, limited test.
-- Readiness defects: sequential task IDs, missing export revision IDs, incomplete old cost history, formula-leading CSV text and absent dependency/Dashboard integration.
+- **P1 DEP-02:** direct Construction or renovation creation has no checklist gates, but contractor export references its T17/T19. Dangling dependencies are setup defects. Claude must add/map valid gates or explicitly block invalid export.
+- Authenticated host intentionally returns UI-integration-pending 503. Old loopback tool remains unchanged; no protected hosted Dashboard/Studio yet.
+- No Google OAuth client/callback/private configuration or actual owner sign-in acceptance. Personal Google login does not prove MFA.
+- Docker unavailable locally; image build/runtime untested. No persistent/shared project storage, backup or browser-restart durability acceptance.
+- No OS staging URL/deployment or actual Railway rollback drill.
+- GitHub main protection unsaved pending owner identity verification; existing Railway Can Edit member not conclusively mapped to Nail.
+- Read-only Smartsheet application connection, approved sheet scope and freshness/permissions tests unimplemented; assistant connector credentials are not reused.
+- Full all-branch/history confidentiality review incomplete; repository is public.
+- Local-file browser verification blocked by browser policy. No alternate protocol/browser workaround; Node logic tests are limited evidence.
 
-## NEEDS TONY'S APPROVAL / INPUT
-- Complete GitHub identity verification so the prepared main rule can be saved and checked.
-- Confirm the existing Railway Can Edit member is Nail; no duplicate invitation.
-- Approve identity provider/allowed accounts and any new access scopes.
-- Approve exact synthetic staging runtime resources/spend and activation before anything runs.
-- Review code/visual direction and approve merge; production and real-data access require separate explicit approval.
-- Do not treat the prototype's selections, quantities, prices or click-to-approve as real business records or protected approvals.
+## Railway observation
+Initially both staging environments were created empty. Re-read November 12:
+- staging-website now has active SUCCESS service humorous-delight, source main. Website chat owns review; this continuation did not deploy it.
+- staging-os has existing staged-create service exquisite-comfort, source main; no deployment, variables, volume or domain. Unapplied patch preserved; owner unknown. Website chat confirms it will leave it untouched.
+- Reconcile that existing draft rather than duplicate it. Its main source is the website baseline, not the OS host candidate; do not apply as-is.
+- Production source/configuration untouched. **OS staging URL: none.**
 
 ## TEST RESULTS
-| Check | Result |
+| Check | Observed result |
 | --- | --- |
-| Existing infrastructure commit build / 63 tests / artifact policy | PASS |
-| Existing localhost API/assets, 9 checks | PASS |
-| Infrastructure commit GitHub CI | Initial checkpoint PASS; use the [current PR checks](https://github.com/Anatoli-2021/grama-construction-website/pull/15/checks) for the latest exact head |
-| Documentation links | PASS: 45 relative links across the 21 changed files resolve; all three central documents exist |
-| Limited staged-tree credential-pattern scan | No matches; not a full history audit |
-| New Project → Studio → selection → budget → package → Dashboard | FAIL overall: 11 logic checks pass, 6 readiness checks fail; no full browser or cross-tool integration pass |
-| Hosted authentication, project permissions, live source freshness | NOT IMPLEMENTED / NOT TESTED |
-| Staging deployment and rollback drill | NOT RUN |
+| Local build / Node suite / artifact policy | PASS: 85 tests with synthetic auth candidate |
+| Google owner sign-in / MFA | NOT RUN |
+| Anonymous / forged session / nonowner / wrong-project / restricted fields / logout / expiry / replacement | PASS locally with synthetic identities; owner-only, not future multi-role acceptance |
+| Real OIDC signature / issuer / audience / nonce / expiry / state | PASS offline, intercepted discovery/token/JWK responses |
+| Original six Studio regressions | PASS at exact 239335c, logic only |
+| Expanded independent workflow | 22 PASS / 1 FAIL: renovation gate references |
+| Actual launch JSON import | PASS logic: subdivision ID/29 tasks/dependencies; duplicate refused |
+| Complete browser + hosted workflow | NOT READY |
+| Container / Railway access / rollback | NOT RUN |
+| Current PR CI | [Exact-head checks](https://github.com/Anatoli-2021/grama-construction-website/pull/15/checks); prior green head is not new-head evidence |
 
-## Independent workflow findings
-Method: unmodified committed script in Node with minimal DOM/storage stubs; actual submit/click/download handlers, no network and only synthetic inputs. This verifies logic, not rendered UI, browser persistence, protected approvals or hosted access.
+## Six reviewed fixes
+| Finding | Result at 239335c |
+| --- | --- |
+| FLOW-08 Dashboard context | PASS: project-linked Daily Workspace action returns to same project/budget step |
+| FLOW-09 dependencies | PASS for single-home; expanded renovation fails separately |
+| REV-02 cost history | PASS: former approved unit cost and cost code retained |
+| TRACE-01 lineage | PASS: project/selection/revision headers; source/approval fields exist, missing source stays missing |
+| ID-01 stable keys | PASS: actual new selection/reordering preserves existing key; distinct selection IDs/tasks unique |
+| CSV-01 formula text | PASS: dangerous text neutralized; numbers preserved; spreadsheet consumer/resave not tested |
 
-| Priority / check | Observed result | Required fix / owner |
-| --- | --- | --- |
-| P0 hosted security | No application login/authorization exists | Codex + Claude agree backend; Tony approves provider/accounts; runtime denial tests before exposure |
-| P1 FLOW-08 | Today navigation returns a placeholder instead of the project dashboard | Claude links the actual Dashboard with the shared project ID |
-| P1 FLOW-09 | Draft task export has empty predecessor links | Claude/Codex define dependency and release references; keep Draft until explicitly released |
-| P1 REV-02 | Prior approval history omits unit cost and cost code | Claude preserves the full approved revision and its approval/source references |
-| P1 TRACE-01 | Budget export columns have no selection ID/revision | Claude carries stable IDs/revisions/source links through every output |
-| P1 ID-01 | Inserting an approved item changes an existing task key from DS-01 to DS-02 | Claude uses stable project/selection/revision-derived identities |
-| P1 CSV-01 | Export preserves a leading = in untrusted text cells | Claude/Codex define spreadsheet-safe text export and test intended consumers; do not execute formulas |
+Synthetic flow: create project/area → selection excluded until demo approval → 2 × 100 = 200 budget draft → Draft/unreleased contractor package → project-linked Daily Workspace action. These are fictional inputs, not prices/quotes, protected business approvals or work release.
 
-Working logic: create a synthetic project and kitchen area; exclude discussed/selected items from outputs; demo approval feeds a draft budget; missing costs remain blank; synthetic drawing metadata clears the prototype's drawing warning; export Draft tasks without owners/dates; edits return approved items for reapproval; HTML text is escaped.
+Evidence: [exact-source results](handoffs/studio-workflow-qa-2026-11-12.json), [host candidate/limits](../apps/development-os/hosted/README.md), [staging procedure](../infra/staging/README.md). Historical checkpoints: 0b1d4e3 was 11 pass / 6 fail; 48bbde9 was 12 / 5. They do not supersede this status.
 
-Selection approval is a client-side demo action, not a protected business approval. Contractor tasks are draft planning inputs, not an authorized work release. No price shown in QA is a real quote.
+~~~text
+node scripts/qa/verify-studio-workflow.mjs --source <reviewed Studio HTML> --expected-blob 629a5fee7f8eef9b12dde3e9decbc9c4e37ee017 --commit 239335c12ba97a74be907a5f7e8042989ff4845b
+~~~
 
-Reproduce against a reviewed source file:
+Manual helper verifies Git blob, writes ignored evidence/studio-qa, exits 1 for the remaining defect and is separate from green infrastructure CI. Run only reviewed trusted code; Node vm is not a security boundary.
 
-```text
-node scripts/qa/verify-studio-workflow.mjs --source <reviewed Studio HTML> --expected-blob 1a64670632cf145de3142434fd8766a4b9f62a6c --commit 0b1d4e3f2c14621ae0a5e1b2df45aab14181b7cf
-```
+CSV guidance: [OWASP CSV Injection](https://community.owasp.org/attacks/CSV_Injection); CSV quoting alone is not universal formula protection.
 
-The helper checks the exact Git blob, writes synthetic results to ignored evidence/studio-qa, and exits 1 while readiness failures remain. It is a manual review helper, not part of the existing green CI suite. Do not execute arbitrary unreviewed source; node:vm is not a security boundary. After a reviewed fix, update the expected source identity and review the tests before rerunning.
+## NEEDS TONY'S APPROVAL / INPUT
+- Complete GitHub identity verification for the prepared protection; confirm Railway member mapping, without duplicate invitations.
+- Review exact PR/code; merge approval remains separate.
+- Approve concrete synthetic resource activation/spend/deployment after UI/security review and OAuth setup. Google provider/account choice is already approved.
+- Additional accounts/scopes, live-data integration and production require separate approvals.
 
-CSV reference: [OWASP CSV Injection](https://community.owasp.org/attacks/CSV_Injection). Spreadsheet viewing and programmatic import need a deliberate text/number policy; CSV quoting alone is not a universal formula defense.
+## NEXT THREE ACTIONS
+1. **Claude Code:** fix DEP-02 and externalize CSP-compatible UI assets; publish exact commit/regression evidence in a focused PR.
+2. **Codex:** independently retest, connect reviewed UI/backend contracts and test OS image; prepare real provider/access/rollback acceptance.
+3. **Tony:** finish GitHub verification and review exact PR/resource proposal.
 
-The definition of done is not met. Update this file from observed test evidence, never from inferred completion.
+Definition of done is not met; keep approval/dependency gates visible.

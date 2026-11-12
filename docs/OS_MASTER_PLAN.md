@@ -1,7 +1,7 @@
 # Grama Construction Development OS — master plan
 
 ## Authority and scope
-Tony approved continuing the existing platform, the five-step execution order below, Claude Code owning Tony Dashboard/Design Studio, and Codex owning infrastructure/integration. This is the shared roadmap. Detailed design, identity provider, paid resources, operational writes, merge and production release are not approved merely because they appear here.
+Tony approved continuing the existing platform, the five-step execution order below, Claude Code owning Tony Dashboard/Design Studio, and Codex owning infrastructure/integration. He subsequently confirmed Google sign-in with one initial owner account only. The actual identity belongs in private configuration. Detailed design, additional accounts/scopes, paid resources, operational writes, merge and production release are not approved merely because they appear here.
 
 Current execution state: [OS_STATUS.md](OS_STATUS.md). Branch ownership and next handoff: [TEAM_HANDOFF.md](TEAM_HANDOFF.md). Preserve older dated reports as evidence; do not use them as competing live status registers.
 
@@ -21,8 +21,8 @@ Do not skip failed gates to make the sequence appear complete. No invented dates
 ## Product roadmap
 1. **Foundation and review:** retain the existing launch tool, source boundaries, instructions, CI and isolated staging. Obtain effective branch review protection.
 2. **Tony's creation workbench:** Claude develops Dashboard and Design Studio in the existing OS. Gather plans/surveys/photos, compare ideas/renderings, coordinate vendor drawings, record selections and identify missing facts.
-3. **Connected project workflow:** one stable project ID connects launch plan, design areas, source documents, approved selection revisions, budget draft, contractor package and dashboard. Shared links must work; copying a project name between disconnected stores is insufficient. The first independent Studio checkpoint passed 11 logic checks but failed 6 readiness checks; the fixes in OS_STATUS.md are prerequisites to declaring this phase complete.
-4. **Private staging:** implement individual identity, server project/field/file permissions, isolated secrets and synthetic fixtures; run anonymous/wrong-role/wrong-project/session tests and a rollback drill.
+3. **Connected project workflow:** one stable project ID connects launch plan, design areas, source documents, approved selection revisions, budget draft, contractor package and dashboard. Shared links must work; copying a project name between disconnected stores is insufficient. The initial checkpoint was 11 pass / 6 fail. Claude's reviewed fix 239335c passes all original 17 checks; expanded independent testing is 22 pass / 1 fail (quick-created renovation has dangling gate dependencies). Browser, shared storage and secure UI integration remain incomplete.
+4. **Private staging:** review the Google owner-only authentication candidate, integrate Claude's UI with server project/field/file permissions, isolated secrets and synthetic fixtures, then run real provider/access tests and a Railway rollback drill. Local HTTP/offline cryptographic tests are evidence for the candidate, not a hosted acceptance.
 5. **Read-only business pilot:** after Tony approves accounts and source access, show permitted Smartsheet records with source revision/freshness. Preserve existing approved records. Use the existing property pilot only through private sources.
 6. **Controlled daily operation:** after evidence review and explicit release approval, enable the minimum approved operations. Additional trades/projects use the same template. Automation and writes are introduced one operation at a time, not by granting unrestricted agent access.
 

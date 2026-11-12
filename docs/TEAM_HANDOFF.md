@@ -1,41 +1,51 @@
 # Development OS — central team handoff
 
-Current roadmap: [OS_MASTER_PLAN.md](OS_MASTER_PLAN.md). Current truth: [OS_STATUS.md](OS_STATUS.md). This file owns coordination; the older hyphenated TEAM-HANDOFF.md is retained as historical evidence.
+Roadmap: [OS_MASTER_PLAN.md](OS_MASTER_PLAN.md). Current truth: [OS_STATUS.md](OS_STATUS.md). Older hyphenated TEAM-HANDOFF.md remains for active website coordination; do not overwrite it.
 
 ## Branch ownership
-| Contributor | Branch / reviewed checkpoint | Owned paths | State |
+| Contributor | Branch / checkpoint | Owned paths | State |
 | --- | --- | --- | --- |
-| Codex | feature/infrastructure-readiness-2026-11-12; PR #15; prior commit 902f8e25a081e67bef589e631f2ea7d8f67f0c3e | AGENTS.md, CLAUDE.md, central/technical docs, infra/staging, safety exclusions | Documentation/preparation; no runtime changes |
-| Claude Code | claude/design-studio-prototype; reviewed commit 0b1d4e3f2c14621ae0a5e1b2df45aab14181b7cf | apps/development-os/studio/index.html and studio/README.md | Committed local prototype; no PR/merge/release inferred |
-| Nail / axmatea | No OS task branch assigned by this handoff | Assigned task only | GitHub write verified; Railway identity match pending |
-| Tony | No code branch required | Scope, access, costs, final approvals | Review/input gates in OS_STATUS.md |
+| Codex | feature/infrastructure-readiness-2026-11-12; draft PR #15; prior head 7f5464b | central/technical docs, AGENTS/CLAUDE, package manifest/lock, hosted/**, auth tests, scripts/qa, infra/staging | Synthetic owner-only host locally tested, not deployed |
+| Claude Code | claude/design-studio-prototype; reviewed 239335c12ba97a74be907a5f7e8042989ff4845b | studio/**, docs/CLAUDE_HANDOFF.md, own dated handoff | Original six regressions pass; renovation defect remains |
+| Website chat | feature/website-mobile-enquiry-2026-11-12, stacked on Nail candidate | root website UI/tests/docs; staging-website only | Coordination received; infrastructure locks preserved |
+| Nail / axmatea | No new OS task assigned here | Assigned branch only | GitHub write verified; Railway identity mapping pending |
+| Tony | No code branch | scope/accounts/access/costs/merge/release | Google owner-only identity choice confirmed |
 
-Claude also owns Tony Dashboard UI. The exact current Dashboard branch/local source is not established by the Studio handoff; do not assume the separate luxury website branch is the OS dashboard.
+No Studio UI edits/cherry-picks or website source changes in this infrastructure continuation.
 
-## Claude handoff reconciled after source review
-Source: studio/README.md on the exact Claude checkpoint above.
-- Adds a standalone Studio page with one made-up project, per-area files, selection states, AI brief preparation and output drafts.
-- Uses browser localStorage/IndexedDB with a memory fallback. No AI, Smartsheet, application login or hosted storage connection.
-- Builder reports manual desktop/phone checks, escaping, CSV quoting and reapproval behavior. Independent Node logic checks confirmed reapproval and text escaping, but found six readiness failures recorded in OS_STATUS.md. Browser/phone claims remain builder-reported.
-- Builder explicitly leaves serving/CSP and automated tests to infrastructure coordination. No edits to server.mjs, package files, CI, Dockerfile, docs or website were claimed; tree review confirms the Studio-only additions.
-- Required next integration: externalize script/styles without weakening CSP, add explicit loopback Studio routes, agree shared project/selection/output contracts, cover revision/output/persistence behavior, and link Dashboard.
-- Reviewed findings: use stable task IDs; include selection/source/revision in exports; preserve old cost fields; provide spreadsheet-safe CSV text; carry dependency/release links; replace the Dashboard placeholder. No real approval, purchase, payment or work release was created by QA.
-- Reconcile those changes in a focused PR after agreeing path ownership. Do not cherry-pick or merge the full branch into another active task automatically.
+## Claude acknowledgement and independent review
+Committed docs/CLAUDE_HANDOFF.md at 239335c explicitly acknowledges PR #15 head 7f5464b and central documents. This is verified file acknowledgement, not proof of a connected running Claude session.
 
-## Coordination protocol
-1. Before editing, publish task, exact branch/commit and intended paths here or in the linked PR. Check the other contributor's latest checkpoint.
-2. One writer per shared file. Codex requests a handoff before touching Studio source; Claude requests coordination before server, CI, infrastructure or central-doc changes.
-3. Use synthetic fixtures only. Real pilot files, private dashboards and credentials stay outside this public repository.
-4. Each PR includes source SHA, changed paths, reproducible checks, remaining gaps and next owner. Another reviewer checks the exact final commit, then Tony approves.
-5. A shared file is not automatic agent synchronization. Mark acknowledgement explicitly; no background agents or broad tool grants are created.
-6. Work from agreed reviewed bases. Preserve stacked website PRs and current production source; do not merge them to simplify OS work.
+Daily Workspace is the in-Studio Dashboard with project/step navigation. The existing private Desktop dashboard stays private. Stable selection/task IDs, former approved costs, export lineage, CSV mitigation and single-home draft gate dependencies pass the original 17 checks.
+
+Expanded Codex checks: 22 pass / 1 fail. Actual launch-builder subdivision JSON import preserves Project ID, 29 task IDs/dependencies and rejects duplicate IDs. Direct renovation creation has no contract/release checklist gates despite exported T17/T19 references. Fix or explicitly block invalid export; absent gates are not satisfied approvals.
+
+Claude reports 35 headless browser checks. These remain builder claims, not Codex browser acceptance. Codex did not run raw CDP/browser tooling around the local-file browser restriction. Demo selection approval is device-local state, not business authority.
+
+## Next Claude checkpoint / integration contract
+Keep UI changes on Claude's branch. Split inline JS/CSS into explicit assets without dynamic code execution or broad CSP exceptions. Keep logic module-testable. Codex will adapt the independent harness to explicitly reviewed external asset/blob identities; do not preserve inline code just for the old helper.
+
+Codex owns hosted/server.mjs and the old loopback server. Agree explicit protected page/assets/API/file routes before serving UI. Authorize records/files/exports on the server; never expose raw Studio through the public website. Login screen may be anonymous; authenticated candidate returns integration-pending 503 until reviewed UI is wired.
+
+Google owner-only is approved; actual allowlisted identity and OAuth secrets belong only in private host configuration. No other role/account enabled. First integration remains synthetic with no paid resource, database activation or live Smartsheet connection.
+
+Agree one shared project store/record contract. Consolidate embedded checklist/ID logic into existing template/shared utilities after review. Preserve old browser data; do not import private Desktop files automatically.
+
+## Railway coordination
+Reuse earnest-wisdom. Website chat owns humorous-delight in staging-website and confirms no OS changes. Existing staged-create exquisite-comfort in staging-os points to main and has no deployment. Owner unknown; preserve unapplied patch until reconciled. No duplicate service/domain/secret copy or activation.
+
+Candidate uses root context and infra/staging/os.Dockerfile, not root website Dockerfile. Exact reviewed image/source, OAuth callback, denied-access tests and actual rollback evidence precede real-data release.
+
+## Coordination rules
+One writer/file, one branch/task. Check dirty work, remote heads and PRs; preserve stacked website work. Claude owns UI; Codex owns infra/integration/security/CI and central docs. Request coordination before touching the other's paths.
+
+Synthetic fixtures only in this public repository/CI/previews/evidence. Real records/credentials/private URLs remain outside. Handoffs give exact commit, paths, checks/limits and next owner. Acknowledgement is explicit, not assumed.
+
+Another authorized reviewer examines final commit; Tony approves merge/release. No automatic merge, paid activation, production, access expansion or operational writes.
 
 ## NEXT THREE ACTIONS
-1. **Claude Code:** acknowledge this handoff after a safe checkpoint, confirm Dashboard source, and fix the six reviewed readiness gaps on a separate focused UI/integration PR with tests.
-2. **Codex:** review/retest Claude's exact follow-up commit, coordinate explicit server/CSP routes and backend interfaces, then run the approved staging access and rollback checks.
-3. **Tony:** complete GitHub verification; review the PR and concrete identity/accounts/staging resource proposal before merge or activation.
+1. **Claude Code:** DEP-02 fix, CSP-compatible assets, focused PR/commit and regression evidence.
+2. **Codex:** independently retest, integrate reviewed contracts, then test image/actual Google access and synthetic Railway rollback after activation approval.
+3. **Tony:** GitHub owner verification, Railway member identity confirmation, exact PR/staging proposal review.
 
-## Prompt for Claude Code
-Read AGENTS.md, docs/OS_MASTER_PLAN.md, docs/OS_STATUS.md and this file from the infrastructure PR without overwriting your working branch. Preserve your current changes. Confirm your branch, commit, dirty paths and Dashboard source. Continue owning Tony Dashboard and Design Studio. Review the independent test findings before fixes. Propose the smallest integration into existing apps/development-os: explicit routes/CSP-compatible assets, common project IDs and draft outputs, and Dashboard navigation. Coordinate shared server/CI/contract paths with Codex. Keep demo selections/budgets distinct from approved operational records. Do not merge, expose private data, use copied credentials, create paid resources or deploy production.
-
-Acknowledgement from Claude: not yet verified. Review of the published handoff does not claim contact with the running Claude session.
+Use [current status](OS_STATUS.md) and [QA evidence](handoffs/studio-workflow-qa-2026-11-12.json); dated historical reports do not supersede them.

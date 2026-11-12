@@ -23,3 +23,7 @@ Next:
 6. Approve real-data integration separately after evidence and access checks.
 
 Handoff received/acknowledged by Claude: NOT VERIFIED. No automatic message to another developer has been sent.
+
+## Later checkpoint — use central documents
+The preceding paragraphs preserve the initial checkpoint. Current state is maintained in [OS_STATUS.md](../OS_STATUS.md) and [TEAM_HANDOFF.md](../TEAM_HANDOFF.md).
+Claude's 239335c handoff explicitly acknowledges PR #15 at 7f5464b. Original six logic regressions pass; expanded independent review is 22 pass / 1 fail (renovation gate dependencies). Google owner-only was approved; a synthetic host candidate passes 22 local security tests (85 total repository tests), not actual Google/Railway acceptance. Existing OS staged-create service is preserved, undeployed; website staging is now active under separate website coordination. No merge, paid activation, production change or operational write in this continuation.

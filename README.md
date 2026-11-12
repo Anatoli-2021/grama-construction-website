@@ -49,7 +49,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for exact invitation, branch, PR, conflic
 
 Run the full shared checks with `npm run check`: website build, OS draft and access-boundary tests, then repository/artifact data-policy checks. The build runs first because the static host tests exercise the actual output. GitHub Actions runs these checks on pull requests and on `main`, plus the website API/media checks. The workflow has read-only repository permission and contains no deployment secrets.
 
-The OS has no dependencies beyond Node and runs independently of the website. Use synthetic input during shared development. Its JSON exports remain Draft and do not provision or update operational records.
+The existing loopback OS tool needs only Node and runs independently of the website. The separate [synthetic hosted-auth candidate](apps/development-os/hosted/README.md) uses the pinned OIDC dependency installed by npm ci; it is not a deployed Dashboard. Use synthetic input during shared development. JSON exports remain Draft and do not provision or update operational records.
 
 Build without changing the source website:
 

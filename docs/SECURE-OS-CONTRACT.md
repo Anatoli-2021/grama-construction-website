@@ -1,13 +1,16 @@
 # Private OS security and integration contract
 
-Design contract for review, not implemented authentication. Never treat this document as release evidence.
+Security contract plus implementation status for review. The owner-only synthetic authentication candidate is implemented under apps/development-os/hosted, locally tested and not deployed. Never treat this document as release evidence.
 
 ## Identity and permissions
-Recommended starting choice: individual Google/OIDC login with an explicit account allowlist; provider remains Tony's decision. Validate issuer, audience, nonce/state, signature, verified account identity and stable subject server-side. Require MFA through an enforceable provider/gateway policy if the account type supports it; do not claim a personal Google login proves MFA.
+Tony confirmed Google/OIDC sign-in with one initial owner account only. Keep the actual allowlisted identity in private environment configuration. The candidate validates issuer, audience, nonce/state, signature, verified account identity and stable subject server-side; it requests openid/email only. Real OAuth registration and sign-in have not run. Require MFA through an enforceable provider/gateway policy if the account type supports it; do not claim a personal Google login proves MFA.
 
 Use expiring server-validated sessions, Secure/HttpOnly/SameSite cookies, logout/revocation, CSRF protection, request/rate limits and audit events without private payloads. No admin/admin or shared owner password. Keep callback URLs and secrets environment-specific.
 
 Project membership and permission are separate from login:
+
+Only the owner role is implemented in the synthetic candidate; the other roles below are a future contract, not enabled accounts. Explicit project scope and response field filtering are tested locally. Files/exports and operational writes are unavailable. The authenticated UI intentionally reports integration pending.
+
 | Role | Default scope |
 | --- | --- |
 | Owner | Explicitly authorized projects and private owner views; consequential actions still require recorded approval |

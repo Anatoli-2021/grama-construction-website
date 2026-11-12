@@ -2,11 +2,11 @@
 
 Use the existing earnest-wisdom project. Do not create another project or clone production resources.
 
-Two empty environments exist:
-- staging-website: intended website preview, synthetic forms only.
-- staging-os: intended authenticated Development OS preview, synthetic data only.
+Two existing staging environments are reused:
+- staging-website: website chat now has an active SUCCESS service, humorous-delight, source main. This infrastructure continuation did not deploy it.
+- staging-os: existing staged-create exquisite-comfort points to main; no deployment, variables, volume or domain. Unapplied patch is preserved; owner unknown.
 
-They currently have no running services, volumes, buckets or copied variables. The declarative [plan.json](plan.json) is a preparation record, not a deployable Railway manifest and not an automatic activation tool.
+Both environments were initially created empty. The observations above supersede that initial checkpoint. Do not duplicate the existing OS draft or apply it as-is: main is the website baseline, not the candidate OS host. The declarative [plan.json](plan.json) records observation/proposal separately; it is not a deployable manifest or activation tool. No OS staging URL exists.
 
 ## Website activation, after review
 1. Use the existing root Dockerfile and root build context; preserve the public website paths.
@@ -17,12 +17,12 @@ They currently have no running services, volumes, buckets or copied variables. T
 6. Verify public pages/assets/mobile, health, unknown routes, and denial of OS/source/private-data paths.
 
 ## OS activation, after backend/auth review
-1. Claude provides the real hosted build/start/health contract. The current apps/development-os/server.mjs is loopback-only and not suitable for public hosting.
-2. Implement server identity, project/field/file authorization, session protection and synthetic fixtures. Fail closed when identity configuration is missing.
+1. Review [host candidate](../../apps/development-os/hosted/README.md) and reconcile its exact commit with the existing draft service. Use root build context and os.Dockerfile, not the website Dockerfile. Candidate health is /healthz, start is node apps/development-os/hosted/server.mjs; UI remains integration-pending. The old loopback server is unchanged.
+2. Google sign-in with one owner is approved. Configure a separate web OAuth client, exact staging callback and private owner/project allowlist; never reuse a desktop connector credential. The candidate's 22 local HTTP/offline OIDC checks pass, but real Google login, container and Railway acceptance have not run. Other roles/files/exports/storage are not implemented.
 3. Run synthetic OS separately from the website, with its own secrets and no production Smartsheet connection.
 4. Keep it unexposed until anonymous/wrong-role/wrong-project tests pass. A future /platform URL requires reviewed routing that covers assets, callbacks, APIs, cookies and cache behavior.
 5. Any database/private storage requires explicit resource/cost approval. Do not persist shared records in an ephemeral container or reuse the local AI memory SQLite file.
-6. Test approved login, denial, revocation, disconnected/stale integration and rollback before a real-data release.
+6. After reviewed UI and resource activation approval, test actual owner login, nonowner/anonymous/project denial, revocation and source-disconnected behavior. Run the actual two-version Railway rollback drill in the host README; server replacement/session tests alone do not prove rollback.
 
 ## Previews and costs
 Automatic project-wide PR environments remain disabled. Existing GitHub CI is the initial preview gate; local loopback previews use synthetic data. Later enable only explicitly reviewed staging previews with scoped watch paths, no production secrets, defined expiry and approved spend. Never create an automatically public OS environment.
