@@ -31,11 +31,13 @@ No competitor assets, logos, copy, fonts or branded compositions were copied or 
 
 ## Ownership and release
 
-- Nail (`axmatea`) owns Animated Experience at `feature/animated-experience`, inspected at `aa8eb97`. This branch and the architectural candidate diverge after the Contact integration. No timeline, animated assets or branch history is overwritten or merged in this increment. Coordination was posted on PR #14; an acknowledgement/integration checkpoint remains pending.
+- Nail (`axmatea`) owns Animated Experience in [PR #16](https://github.com/Anatoli-2021/grama-construction-website/pull/16), `feature/animated-experience`, inspected at `aa8eb97`. This branch and the architectural candidate diverge after the Contact integration. No timeline, animated assets or branch history is overwritten or merged in this increment. Coordination was posted on PR #14; an acknowledgement/integration checkpoint remains pending.
 - Claude Code owns Development OS; the infrastructure task acknowledged website boundaries. Its locked package files, OS code, central underscore handoff and staging-os remain untouched. See [PR #15](https://github.com/Anatoli-2021/grama-construction-website/pull/15) for OS coordination.
 - Current inspected production source is `feature/contact-enquiry-delivery` at `bf33cf4`, with the existing Railway domain and `gramadevelopment.com`. Production and DNS are not changed by this task.
 - Website review uses only the existing `humorous-delight` service in `staging-website`, with no production variables/accounts copied. Contact delivery stays disabled; private presentation data/accounts stay absent. No new service or paid-plan change is needed.
 - Exact deployment, verification and remaining actions are recorded in [TEAM-HANDOFF.md](TEAM-HANDOFF.md). Tony must approve the identity and exact release commit before production changes.
+
+Verified review candidate: [website staging](https://humorous-delight-staging-website.up.railway.app/) / [PR #17](https://github.com/Anatoli-2021/grama-construction-website/pull/17). Application `d6d20e6`, deployment `83529a90-e1c9-4c78-b44e-eb9efcc71a8f` SUCCESS; all 15 public pages and five matching code-asset hashes checked. Staging remains unindexed, Contact disabled and private accounts/data absent. The domain stays on the existing staging service; production was read back unchanged.
 
 ## Proposed next design increment
 
