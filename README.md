@@ -10,7 +10,7 @@ Hosted enquiries use a server-only Resend integration when the approved sender, 
 
 ## Multipage website
 
-Current implementation: `6fb4308` / [PR9](https://github.com/Anatoli-2021/grama-construction-website/pull/9), branch `feature/multipage-website`. The existing Railway review service follows this branch; the PR records its actual deployed SHA and status.
+Current integration candidate: `feature/architectural-flagship`, combining the multipage website, private presentation, configurable Contact delivery and the architectural homepage prototype. The PR records the exact checked SHA and actual Railway deployment state. Existing branch pushes are not proof of deployment. See [architectural review](docs/LUXURY-DESIGN-REVIEW.md).
 
 The review website now has fourteen prerendered public pages. Normal document links and direct URL refreshes work without a catch-all homepage response. Build with `npm run build`; the build emits each page’s HTML, title, description, canonical and sharing metadata. Preview indexing remains disabled.
 
@@ -34,7 +34,7 @@ Project links come from `src/data/projects.js`; the public page registry is `src
 | Development OS | `apps/development-os/` | `npm run dev:os` → port 5180 | Loopback-only blank launch tool; no live data or authentication |
 | Shared utility | `packages/shared/` | Used by OS / Node tests | Project ID validation; no company records |
 
-Current integration candidate: `feature/private-investor-presentation`, including `feature/multipage-website` / PR9 and earlier showcase work in PR7. Review the stack before merging to stable main. The public preview and completed checks are recorded in the candidate PR and team handoff.
+This candidate preserves the preceding private-presentation, multipage and Contact work. Review the existing PR stack before merging to stable main. The public preview and completed checks are recorded in the candidate PR.
 
 Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
 

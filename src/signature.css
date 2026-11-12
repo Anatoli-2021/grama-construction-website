@@ -1,0 +1,468 @@
+/* Architectural editorial homepage. Only .sig-* components are styled here. */
+:root {
+  --sig-ink: #242b25;
+  --sig-ink-soft: #596153;
+  --sig-paper: #f3f0e7;
+  --sig-stone: #e7e2d5;
+  --sig-line: #cec8b9;
+  --sig-brass: #8b6f4f;
+  --sig-ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+/* A completed residence leads; the proposed development has its own chapter. */
+.sig-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  color: #f7f3e9;
+  background: #1c241d;
+  overflow: hidden;
+}
+.sig-hero__media { position: absolute; inset: 0; z-index: -2; }
+.sig-hero__media picture,
+.sig-hero__media img { width: 100%; height: 100%; display: block; }
+.sig-hero__media img {
+  object-fit: cover;
+  object-position: 50% 57%;
+  transform-origin: 50% 57%;
+  animation: sig-settle 1.5s var(--sig-ease) both;
+}
+@keyframes sig-settle {
+  from { transform: scale(1.025); }
+  to { transform: none; }
+}
+.sig-hero__shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(0deg, rgba(16, 25, 18, .94), rgba(16, 25, 18, .5) 38%, rgba(16, 25, 18, .06) 76%),
+    linear-gradient(90deg, rgba(16, 25, 18, .3), transparent 75%);
+}
+.sig-hero__inner {
+  width: 100%;
+  padding: 156px var(--page-gutter, 6.2vw) clamp(40px, 6vh, 72px);
+}
+.sig-hero__kicker {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: #eee7d6;
+  animation: sig-rise .65s .1s var(--sig-ease) both;
+}
+.sig-hero__kicker > span {
+  width: 32px;
+  height: 1px;
+  flex-shrink: 0;
+  background: #cab18b;
+}
+.experience .sig-hero h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(48px, 6.2vw, 96px);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -.04em;
+  max-width: 24ch;
+  margin-top: 24px;
+  text-wrap: balance;
+  animation: sig-rise .8s .12s var(--sig-ease) both;
+}
+.experience .sig-hero h1 em {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: #e3d8bf;
+}
+.sig-hero__lede {
+  max-width: 48ch;
+  margin-top: 26px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ece7da;
+  animation: sig-rise .7s .2s var(--sig-ease) both;
+}
+@keyframes sig-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.sig-paths {
+  margin-top: clamp(32px, 5vh, 52px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid #eee7d650;
+  animation: sig-rise .7s .3s var(--sig-ease) both;
+}
+.sig-path {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
+  min-height: 114px;
+  padding: 22px 28px 4px 0;
+  position: relative;
+}
+.sig-path + .sig-path {
+  padding-left: 28px;
+  border-left: 1px solid #eee7d630;
+}
+.sig-path::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  height: 1px;
+  width: 0;
+  background: #cab18b;
+  transition: width .35s var(--sig-ease);
+}
+.sig-path:hover::before,
+.sig-path:focus-visible::before { width: 100%; }
+.sig-path__number {
+  font-size: 10px;
+  line-height: 1.6;
+  letter-spacing: .12em;
+  color: #d6c5a4;
+}
+.sig-path__label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: clamp(18px, 1.6vw, 23px);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -.015em;
+}
+.sig-path__label svg { width: 20px; height: 20px; }
+.sig-path__note {
+  max-width: 34ch;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #e0ddcf;
+}
+.sig-hero__credit {
+  position: absolute;
+  top: 112px;
+  right: var(--page-gutter, 6.2vw);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: end;
+  gap: 6px 20px;
+  max-width: calc(100% - 2 * var(--page-gutter, 6.2vw));
+  padding: 7px 12px;
+  background: #1c241db3;
+  font-size: 10px;
+  line-height: 1.6;
+  letter-spacing: .04em;
+  color: #f3eddf;
+}
+.sig-motion {
+  min-height: 32px;
+  padding: 4px 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* These labels describe the available evidence; they are not animated metrics. */
+.sig-proof {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: clamp(32px, 3.6vw, 52px) var(--page-gutter, 6.2vw);
+  border-bottom: 1px solid var(--sig-line);
+  background: var(--sig-paper);
+  color: var(--sig-ink);
+}
+.sig-proof > div {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+  padding-right: 20px;
+}
+.sig-proof > div + div {
+  padding-left: clamp(20px, 2.4vw, 36px);
+  border-left: 1px solid var(--sig-line);
+}
+.sig-proof strong {
+  font: 400 clamp(32px, 3.2vw, 46px) / 1.05 Georgia, serif;
+  letter-spacing: -.035em;
+}
+.sig-proof span {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--sig-ink-soft);
+}
+
+/* A native, keyboard-accessible project rail keeps the imagery in focus. */
+.sig-residences {
+  padding: clamp(80px, 8vw, 128px) 0 clamp(64px, 7vw, 104px);
+  scroll-margin-top: 90px;
+  background: var(--sig-paper);
+  color: var(--sig-ink);
+}
+.sig-residences__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  gap: clamp(32px, 6vw, 88px);
+  align-items: end;
+  margin-bottom: clamp(32px, 4vw, 52px);
+  padding: 0 var(--page-gutter, 6.2vw);
+}
+.sig-eyebrow {
+  font-size: 10px;
+  line-height: 1.7;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #725c43;
+}
+.experience .sig-residences h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(42px, 4.4vw, 66px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -.035em;
+  color: var(--sig-ink);
+  margin-top: 22px;
+}
+.sig-residences__intro > p {
+  max-width: 42ch;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--sig-ink-soft);
+}
+.sig-rail-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+.sig-rail-controls > span {
+  margin-right: auto;
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: .08em;
+  font-variant-numeric: tabular-nums;
+}
+.sig-rail-controls button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--sig-line);
+  color: var(--sig-ink);
+  transition: background .2s, color .2s;
+}
+.sig-rail-controls button svg { width: 20px; height: 20px; }
+.sig-rail-controls button:hover:not(:disabled) {
+  background: var(--sig-ink);
+  color: var(--sig-paper);
+}
+.sig-rail-controls button:disabled { opacity: .4; cursor: default; }
+.sig-rail {
+  list-style: none;
+  margin: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(60vw, 900px);
+  gap: clamp(20px, 2.5vw, 36px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--page-gutter, 6.2vw);
+  padding: 0 var(--page-gutter, 6.2vw) 8px;
+  scrollbar-width: none;
+}
+.sig-rail::-webkit-scrollbar { display: none; }
+.sig-rail:focus-visible { outline: 2px solid var(--sig-brass); outline-offset: 6px; }
+.sig-card { scroll-snap-align: start; min-width: 0; }
+.sig-card > a { display: block; color: inherit; }
+.sig-card__image {
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--sig-stone);
+}
+.sig-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .65s var(--sig-ease);
+}
+.sig-card > a:hover .sig-card__image img { transform: scale(1.025); }
+.sig-card__caption {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 8px 20px;
+  align-items: start;
+  padding-top: 22px;
+}
+.sig-card__index {
+  grid-row: 1 / 3;
+  padding-top: 6px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #725c43;
+  font-variant-numeric: tabular-nums;
+}
+.experience .sig-card h3 {
+  font: 400 clamp(26px, 2.3vw, 36px) / 1.2 Georgia, serif;
+  letter-spacing: -.025em;
+  color: var(--sig-ink);
+}
+.sig-card__caption p {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--sig-ink-soft);
+}
+.sig-card__caption .sig-card__summary {
+  grid-column: 2;
+  max-width: 45ch;
+  font-size: 13px;
+  line-height: 1.65;
+  margin-top: 0;
+}
+.sig-card__cta {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 14px;
+  min-height: 44px;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.sig-card__cta svg { width: 18px; height: 18px; }
+.sig-residences__foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px 40px;
+  margin: clamp(36px, 5vw, 64px) var(--page-gutter, 6.2vw) 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--sig-line);
+}
+.sig-residences__foot > p {
+  max-width: 60ch;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--sig-ink-soft);
+}
+.sig-residences__foot > p strong { color: var(--sig-ink); font-weight: 500; }
+.sig-residences__foot > p a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--sig-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.sig-residences__foot svg { width: 18px; height: 18px; }
+.sig-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 52px;
+  padding: 14px 22px;
+  background: var(--sig-ink);
+  color: var(--sig-paper);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.sig-link svg { width: 18px; height: 18px; }
+
+.experience[data-motion="off"] :is(.sig-hero__media img, .sig-hero__kicker, .sig-hero h1, .sig-hero__lede, .sig-paths) {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+.experience[data-motion="off"] .sig-card__image img { transition: none; }
+.experience[data-motion="off"] .sig-card > a:hover .sig-card__image img { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  :is(.sig-hero__media img, .sig-hero__kicker, .sig-hero h1, .sig-hero__lede, .sig-paths) {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .sig-card__image img,
+  .sig-rail-controls button,
+  .sig-path::before { transition: none; }
+  .sig-card > a:hover .sig-card__image img { transform: none; }
+}
+
+@media (max-width: 1000px) {
+  .sig-paths { grid-template-columns: minmax(0, 1fr); }
+  .sig-path,
+  .sig-path + .sig-path {
+    grid-template-columns: 28px minmax(0, 1fr);
+    min-height: 0;
+    gap: 3px 16px;
+    padding: 16px 0;
+    border-left: 0;
+    border-bottom: 1px solid #eee7d630;
+  }
+  .sig-path__number { grid-row: 1 / 3; padding-top: 4px; }
+  .sig-path__label,
+  .sig-path__note { grid-column: 2; }
+  .sig-proof { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 28px; }
+  .sig-proof > div:nth-child(3) { padding-left: 0; border-left: 0; }
+  .sig-residences__head { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .sig-residences__intro { max-width: 560px; }
+  .sig-rail { grid-auto-columns: 78vw; }
+}
+@media (max-width: 700px) {
+  .sig-hero { flex-direction: column; justify-content: flex-end; align-items: stretch; }
+  .sig-hero__inner { padding: 132px var(--page-gutter, 24px) 24px; }
+  .sig-hero__media img { object-position: 50% 50%; }
+  .sig-hero__shade {
+    background: linear-gradient(0deg, rgba(16, 25, 18, .97), rgba(16, 25, 18, .72) 46%, rgba(16, 25, 18, .16) 100%);
+  }
+  .sig-hero__kicker { font-size: 10px; line-height: 1.6; letter-spacing: .1em; gap: 10px; }
+  .sig-hero__kicker > span { width: 24px; }
+  .experience .sig-hero h1 { font-size: clamp(38px, 9.5vw, 58px); line-height: 1.08; margin-top: 20px; }
+  .sig-hero__lede { font-size: 15px; margin-top: 20px; }
+  .sig-paths { margin-top: 28px; }
+  .sig-path__label { font-size: 18px; }
+  .sig-path__note { font-size: 12px; }
+  .sig-hero__credit {
+    position: static;
+    justify-content: space-between;
+    max-width: none;
+    margin: 0 var(--page-gutter, 24px) 20px;
+    padding: 0;
+    background: none;
+    font-size: 10px;
+    line-height: 1.6;
+    gap: 0 16px;
+  }
+  .sig-motion { min-height: 44px; }
+  .sig-proof { padding: 28px var(--page-gutter, 24px); }
+  .sig-proof > div { gap: 10px; padding-right: 12px; }
+  .sig-proof > div + div { padding-left: 20px; }
+  .sig-proof > div:nth-child(3) { padding-left: 0; }
+  .sig-proof strong { font-size: clamp(30px, 7.6vw, 38px); }
+  .sig-proof span { font-size: 12px; }
+  .sig-residences { padding-top: 72px; }
+  .sig-residences__head { padding: 0 var(--page-gutter, 24px); }
+  .experience .sig-residences h2 { font-size: clamp(36px, 9vw, 48px); line-height: 1.15; }
+  .sig-rail { grid-auto-columns: 86vw; padding: 0 var(--page-gutter, 24px) 8px; scroll-padding-inline: var(--page-gutter, 24px); gap: 16px; }
+  .sig-card__image { aspect-ratio: 4 / 3; }
+  .sig-card__caption { grid-template-columns: 20px minmax(0, 1fr); gap: 6px 14px; padding-top: 18px; }
+  .sig-card__caption .sig-card__summary { grid-column: 2; }
+  .sig-card__cta { grid-column: 2; grid-row: auto; margin-top: 2px; }
+  .sig-rail-controls button { width: 46px; height: 46px; }
+  .sig-residences__foot { margin: 36px var(--page-gutter, 24px) 0; }
+}

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { projects } from '../src/data/projects.js';
 import { dirname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createElement } from 'react';
@@ -17,6 +18,34 @@ assert.equal(new Set(siteRoutes.map(route => route.title)).size, siteRoutes.leng
 assert.equal(new Set(siteRoutes.map(route => route.description)).size, siteRoutes.length, 'Page descriptions must be unique');
 
 const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
+
+// Structured data uses only facts already published on the site. A street
+// address is deliberately omitted until the owner confirms the public NAP
+// (name, address, phone) that matches the Google Business Profile.
+function structuredData(route, canonical) {
+  const business = {
+    '@context': 'https://schema.org',
+    '@type': 'HomeAndConstructionBusiness',
+    '@id': origin.origin + '/#business',
+    name: 'Grama Construction',
+    url: origin.origin + '/',
+    telephone: '+1-773-849-9634',
+    image: new URL('/assets/portfolio-dexter.webp', origin.origin).href,
+    logo: new URL('/assets/logo-dark.png', origin.origin).href,
+    description: 'Family-run builder of luxury custom homes and residential developments in Chicago and the surrounding Illinois suburbs.',
+    founder: { '@type': 'Person', name: 'Anatoli (Tony) Grama' },
+    areaServed: [...new Set(projects.map(project => project.location.replace(/,? Illinois.*$/, '')))].map(name => ({ '@type': 'City', name: name + ', Illinois' })),
+    sameAs: ['https://www.gramaconstruction.com/'],
+  };
+  const graph = route.path === '/' ? [business] : [];
+  if (route.path !== '/') {
+    const crumbs = [{ name: 'Home', path: '/' }];
+    if (route.path.startsWith('/projects/')) crumbs.push({ name: 'Projects', path: '/projects' });
+    crumbs.push({ name: route.title.split(' — ')[0].split(' | ')[0], path: route.path });
+    graph.push({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: crumbs.map((crumb, index) => ({ '@type': 'ListItem', position: index + 1, name: crumb.name, item: new URL(crumb.path, origin.origin).href })) });
+  }
+  return graph.map(item => '<script type="application/ld+json">' + JSON.stringify(item).replace(/</g, '\\u003c') + '</script>').join('\n    ');
+}
 function renderDocument(route, markup) {
   const canonical = new URL(route.path, origin.origin).href;
   const image = route.image || 'residence.webp';
@@ -26,7 +55,7 @@ function renderDocument(route, markup) {
     .replace(/\s*<meta\b(?=[^>]*\bname\s*=\s*["'](?:description|twitter:[^"']*)["'])[^>]*>/gi, '')
     .replace(/\s*<meta\b(?=[^>]*\bproperty\s*=\s*["']og:[^"']*["'])[^>]*>/gi, '')
     .replace(/\s*<link\b(?=[^>]*\brel\s*=\s*["']canonical["'])[^>]*>/gi, '');
-  // The concept hero belongs to the homepage. Other documents let their actual
+  // The completed-project hero belongs to the homepage. Other documents let their actual
   // above-the-fold images (and React's resource hints) drive image loading.
   if (route.path !== '/') html = html.replace(/\s*<link\b(?=[^>]*\brel\s*=\s*["']preload["'])(?=[^>]*\bas\s*=\s*["']image["'])[^>]*>/gi, '');
   const metadata = [
@@ -41,7 +70,8 @@ function renderDocument(route, markup) {
     `<meta name="twitter:title" content="${escapeHtml(route.title)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(route.description)}" />`,
     `<meta name="twitter:image" content="${escapeHtml(imageUrl)}" />`,
-  ].join('\n    ');
+    route.type === 'not-found' ? '' : structuredData(route, canonical),
+  ].filter(Boolean).join('\n    ');
   assert.match(html, /<\/head>/i, 'Built template must have a head');
   html = html.replace(/<\/head>/i, () => '    ' + metadata + '\n  </head>');
   const outlet = /<div\s+id=(["'])root\1\s*><\/div>/;
@@ -70,7 +100,12 @@ try {
     await mkdir(dirname(destination), { recursive: true });
     await writeFile(destination, renderDocument(route, markup));
   }
-  console.log(`Prerendered ${siteRoutes.length} public pages and a separate 404 page.`);
+  // This review target stays unindexed. Company-domain indexing requires a
+  // separate reviewed change to HTML, hosting headers and crawler rules.
+  const urls = siteRoutes.map(route => '  <url><loc>' + escapeHtml(new URL(route.path, origin.origin).href) + '</loc></url>').join('\n');
+  await writeFile(resolve(dist, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + '\n</urlset>\n');
+  await writeFile(resolve(dist, 'robots.txt'), 'User-agent: *\nDisallow: /\nSitemap: ' + new URL('/sitemap.xml', origin.origin).href + '\n');
+  console.log(`Prerendered ${siteRoutes.length} public pages, a separate 404 page, sitemap.xml and robots.txt (indexing blocked).`);
 } finally {
   await vite.close();
 }
