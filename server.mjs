@@ -34,7 +34,7 @@ function validateInterest(input) {
     if (input[field] && (typeof input[field] !== 'string' || input[field].length > limit)) return 'Please shorten the project information.';
   }
   if (input.timing && !['Within 6 months', '6–12 months', 'More than a year'].includes(input.timing)) return 'Please select a valid timeframe.';
-  if (input.consent !== true) return 'Please confirm that Grama may contact you about this enquiry.';
+  if (input.consent !== true) return 'Please confirm that Groma Development may contact you about this enquiry.';
   return null;
 }
 
@@ -84,6 +84,6 @@ if (!production) {
   const { createServer } = await import('vite');
   vite = await createServer({ root, server: { middlewareMode: true, ws: { server } }, appType: 'spa' });
 }
-server.listen(port, '127.0.0.1', () => console.log('\nGrama Construction private preview\nLocal: http://localhost:' + port + '\nPublic deployment: disabled\n'));
+server.listen(port, '127.0.0.1', () => console.log('\nGroma Development private preview\nLocal: http://localhost:' + port + '\nPublic deployment: disabled\n'));
 server.on('error', error => { console.error(error.message); process.exitCode = 1; });
 for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, async () => { await vite?.close(); server.close(() => process.exit(0)); });

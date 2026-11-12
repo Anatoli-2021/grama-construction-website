@@ -90,3 +90,12 @@ Ten photographs were selected from the five official project pages above, visual
 | portfolio-south-barrington-interior.webp | [south-barrington / interior](https://cdn.prod.website-files.com/66117181961169ea1597a104/66324457ceefd9aca6433144_0f3d6becbc6d1066c4645dff9ac58592-o_a.webp) |
 
 The project index separates the eight completed portfolio entries from the proposed Dexter Acres development. The current-listings filter has an honest empty state. Neither the completed category nor its photograph count is presented as sold inventory, sales performance or investment results.
+
+## Animated Experience review
+
+- `brand/groma-development.svg`, `brand/groma-g.svg` and `favicon.svg`: native SVG Concept A wordmark and circular G for the requested **Groma Development** review identity. The founder's surname remains Grama.
+- `animated/house-complete.webp`: selected OpenAI-generated architectural concept, based on the supplied house visual.
+- `animated/house-structure.webp`, `animated/roof.png`, `animated/facade.png`: OpenAI Imagegen derivatives for an independently moving layered illustration. These are concept images, not measured construction or engineering details.
+- The existing `community.webp` provides the neighborhood transition. It is an AI concept, not a surveyed land plan or verified built neighborhood.
+
+The Artlist integration has not produced a video for this review. See [Animated Experience](ANIMATED-EXPERIENCE.md) for the rendering limits and review workflow. Original source portfolio links and partner marks are retained.

@@ -27,7 +27,7 @@ export async function serveWebsiteRequest(req, res, { localApi = false, contactH
     try { pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname); }
     catch { res.writeHead(400); return res.end('Invalid request.'); }
     try { if (await contactHandler(req, res, pathname)) return; }
-    catch { res.writeHead(503, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); return res.end('{"error":"Unable to send your enquiry. Please call Grama or try again later."}'); }
+    catch { res.writeHead(503, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); return res.end('{"error":"Unable to send your enquiry. Please call Groma Development or try again later."}'); }
     try { if (await presentation(req, res, pathname)) return; }
     catch { res.writeHead(500, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); return res.end('{"error":"Unable to load private presentation."}'); }
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405); return res.end('Static preview only.'); }

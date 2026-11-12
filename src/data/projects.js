@@ -1,4 +1,4 @@
-// Completed attribution follows Grama's official portfolio, not a sold/available status.
+// Completed attribution follows the official company portfolio, not a sold/available status.
 // Conflicting specifications, sale prices and financial results are intentionally omitted.
 export const projects = [
   {
@@ -9,7 +9,7 @@ export const projects = [
     image: 'portfolio-dexter.webp',
     alt: 'Garden terrace and outdoor fireplace at 1847 Dexter Lane at dusk',
     summary: 'A reconstructed and expanded residence with connected indoor and outdoor living.',
-    description: 'This Des Plaines project combines a reconstructed and expanded mid-century ranch with spaces for gathering. Grama’s original portfolio describes tall ceilings, broad windows and a landscaped outdoor setting. The garden photograph shows the terrace, outdoor fireplace and illuminated home at dusk.',
+    description: 'This Des Plaines project combines a reconstructed and expanded mid-century ranch with spaces for gathering. The original company portfolio describes tall ceilings, broad windows and a landscaped outdoor setting. The garden photograph shows the terrace, outdoor fireplace and illuminated home at dusk.',
     highlights: ['Reconstructed and expanded residence', 'Garden terrace and outdoor fireplace', 'Interior spaces connected to the outdoors'],
     gallery: [
       { image: 'portfolio-dexter.webp', alt: 'Garden terrace and outdoor fireplace at 1847 Dexter Lane at dusk', caption: 'Garden terrace and outdoor fireplace / 1847 Dexter Lane' },
@@ -56,7 +56,7 @@ export const projects = [
     image: 'portfolio-chicago-avondale.webp',
     alt: 'Avondale bungalow with a green facade, front windows and a fenced garden',
     summary: 'A Chicago bungalow with updated living spaces and a neighborhood setting.',
-    description: 'This Avondale bungalow appears in Grama’s completed portfolio. The original listing describes renovated interiors, hardwood floors, an updated kitchen and a finished basement. The selected photographs show the street-facing exterior and a bright living room with bay windows and dark wood flooring.',
+    description: 'This Avondale bungalow appears in Groma Development’s completed portfolio. The original listing describes renovated interiors, hardwood floors, an updated kitchen and a finished basement. The selected photographs show the street-facing exterior and a bright living room with bay windows and dark wood flooring.',
     highlights: ['Chicago bungalow', 'Updated interior living spaces', 'Living room with bay windows and wood flooring'],
     gallery: [
       { image: 'portfolio-chicago-avondale.webp', alt: 'Avondale bungalow with a green facade, front windows and a fenced garden', caption: 'Street-facing exterior / Avondale, Chicago' },
@@ -72,7 +72,7 @@ export const projects = [
     image: 'portfolio-burr-ridge.webp',
     alt: 'Burr Ridge home with a masonry entrance, broad windows and a landscaped front garden',
     summary: 'A suburban residence combining a landscaped setting with remodeled interiors.',
-    description: 'The Burr Ridge project is presented in Grama’s completed portfolio as a remodeled residence. Its published description covers a custom kitchen, updated bathrooms and a finished walkout basement. The selected photographs show the front elevation and a living room with a fireplace, wood flooring and reflective ceiling finishes.',
+    description: 'The Burr Ridge project is presented in Groma Development’s completed portfolio as a remodeled residence. Its published description covers a custom kitchen, updated bathrooms and a finished walkout basement. The selected photographs show the front elevation and a living room with a fireplace, wood flooring and reflective ceiling finishes.',
     highlights: ['Landscaped suburban setting', 'Remodeled residential interiors', 'Living room with fireplace and wood flooring'],
     gallery: [
       { image: 'portfolio-burr-ridge.webp', alt: 'Burr Ridge home with a masonry entrance, broad windows and a landscaped front garden', caption: 'Front elevation and landscaping / Burr Ridge' },
@@ -88,7 +88,7 @@ export const projects = [
     image: 'portfolio-south-barrington.webp',
     alt: 'South Barrington brick residence behind a curved paved approach and landscaped garden',
     summary: 'A brick residence with established landscaping and generous interior gathering spaces.',
-    description: 'This South Barrington residence appears in Grama’s completed portfolio. The original description highlights woodwork, cabinetry, a remodeled kitchen and a two-story family room. The selected photographs show the landscaped approach and a family room arranged around a tall stone fireplace.',
+    description: 'This South Barrington residence appears in Groma Development’s completed portfolio. The original description highlights woodwork, cabinetry, a remodeled kitchen and a two-story family room. The selected photographs show the landscaped approach and a family room arranged around a tall stone fireplace.',
     highlights: ['Brick exterior and landscaped approach', 'Two-story family room', 'Stone fireplace and large windows'],
     gallery: [
       { image: 'portfolio-south-barrington.webp', alt: 'South Barrington brick residence behind a curved paved approach and landscaped garden', caption: 'Landscaped approach and exterior / South Barrington' },
@@ -104,7 +104,7 @@ export const projects = [
     image: 'portfolio-foster-avenue.webp',
     alt: 'Brick residential building on Foster Avenue with broad bay windows and a central entrance',
     summary: 'A Chicago residential project with a brick exterior and a bright island kitchen.',
-    description: 'Foster Avenue, Unit 1E is included in Grama’s completed Chicago portfolio. The project photography pairs the building’s brick exterior and bay windows with a kitchen featuring white cabinetry, a dark island and seating along the counter.',
+    description: 'Foster Avenue, Unit 1E is included in Groma Development’s completed Chicago portfolio. The project photography pairs the building’s brick exterior and bay windows with a kitchen featuring white cabinetry, a dark island and seating along the counter.',
     highlights: ['Chicago residential project', 'Brick exterior and bay windows', 'Kitchen with white cabinetry and dark island'],
     gallery: [
       { image: 'portfolio-foster-avenue.webp', alt: 'Brick residential building on Foster Avenue with broad bay windows and a central entrance', caption: 'Building exterior / Foster Avenue, Chicago' },
@@ -120,7 +120,7 @@ export const projects = [
     image: 'portfolio-sedgwick-street.webp',
     alt: 'Sedgwick Street residence with a glazed entrance and sidewalk frontage',
     summary: 'An urban residence with a glazed street entrance and a light-filled living room.',
-    description: 'This Sedgwick Street home is part of Grama’s completed Chicago portfolio. The selected photographs show its sidewalk entrance, broad glazing and a living room with tall windows, wood floors and contemporary seating. The original page identifies it as a single-family residence.',
+    description: 'This Sedgwick Street home is part of Groma Development’s completed Chicago portfolio. The selected photographs show its sidewalk entrance, broad glazing and a living room with tall windows, wood floors and contemporary seating. The original page identifies it as a single-family residence.',
     highlights: ['Chicago single-family residence', 'Glazed entrance and street frontage', 'Living room with tall windows and wood flooring'],
     gallery: [
       { image: 'portfolio-sedgwick-street.webp', alt: 'Sedgwick Street residence with a glazed entrance and sidewalk frontage', caption: 'Street entrance / Sedgwick Street, Chicago' },
