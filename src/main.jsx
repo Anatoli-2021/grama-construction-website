@@ -9,3 +9,5 @@ import './precision.css';
 import './signature.css';
 
 createRoot(document.getElementById('root')).render(<App />);
+
+import './brand-concept.css';

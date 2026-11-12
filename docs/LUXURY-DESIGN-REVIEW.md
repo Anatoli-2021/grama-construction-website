@@ -1,6 +1,6 @@
 # Architectural homepage review
 
-This candidate integrates the earlier luxury-homepage prototype with the existing multipage website, configurable Contact delivery and private presentation. The public name and logo remain Grama Construction. It is a review version, not approval of a new company identity or a company-domain launch.
+This candidate integrates the earlier luxury-homepage prototype with the existing multipage website, configurable Contact delivery and private presentation. The live public name/logo remain Grama Construction. The later addendum expands this feature into an explicitly labelled GRAMA Development identity study, with three original logos and13 applications at /brand-review. No rebrand deployment or public identity replacement is authorized before Tony approves it. See [current identity scope](BRAND-REVIEW.md).
 
 ## Included
 

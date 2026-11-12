@@ -31,7 +31,7 @@ export function SignatureHero({ motion = true, onToggleMotion }) {
       </div>
       <div className="sig-hero__shade" />
       <div className="sig-hero__inner">
-        <p className="sig-hero__kicker"><span />Grama Construction / Chicagoland</p>
+        <p className="sig-hero__kicker"><span />GRAMA Development / Chicagoland</p>
         <h1 id="hero-title">Custom homes.<br /><em>Residential development.</em></h1>
         <p className="sig-hero__lede">For homeowners, landowners and development partners.</p>
         <nav className="sig-paths" aria-label="Start here">

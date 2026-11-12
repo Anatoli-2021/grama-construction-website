@@ -4,7 +4,11 @@ One shared repository for the existing React/Vite/GSAP website and the reusable 
 
 Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Owner: **Anatoli-2021**.
 
-Website review preview: [Grama Construction on Railway](https://grama-construction-website-production.up.railway.app/). The current company domain remains separate. The investor/developer showcase restores the official company portraits, completed-project archive and partner logos while preserving Dexter Acres motion and the 14-lot plan.
+## Proposed rebrand — client approval required
+
+`feature/architectural-flagship` now includes the proposed **GRAMA / DEVELOPMENT** identity, three original SVG logo directions and 13 labelled corporate applications at `/brand-review`, plus the website/Dexter concept. It preserves the 14 established website routes and adds the review room as a fifteenth document. Run locally to review. **Do not deploy this identity or replace the current public brand before Tony approves it.** [Identity review guide](docs/BRAND-REVIEW.md).
+
+Website review preview: [Grama Construction on Railway](https://grama-construction-website-production.up.railway.app/). The current company domain remains separate. The existing Railway release is not this unapproved rebrand. The investor/developer showcase restores the official company portraits, completed-project archive and partner logos while preserving Dexter Acres motion and the 14-lot plan.
 
 Hosted enquiries use a server-only Resend integration when the approved sender, recipient, origin and secret key are configured and delivery is explicitly enabled. Unconfigured previews offer a clearly labelled browser-only draft without submitting personal fields. Localhost retains its existing local-save workflow. See [contact delivery setup and verification](docs/CONTACT-DELIVERY.md); do not call inbox delivery verified until a real test is received. Sold-home totals, closing values and company revenue are omitted until supported by approved records.
 
@@ -12,7 +16,7 @@ Hosted enquiries use a server-only Resend integration when the approved sender, 
 
 Current integration candidate: `feature/architectural-flagship`, combining the multipage website, private presentation, configurable Contact delivery and the architectural homepage prototype. The PR records the exact checked SHA and actual Railway deployment state. Existing branch pushes are not proof of deployment. See [architectural review](docs/LUXURY-DESIGN-REVIEW.md).
 
-The review website now has fourteen prerendered public pages. Normal document links and direct URL refreshes work without a catch-all homepage response. Build with `npm run build`; the build emits each page’s HTML, title, description, canonical and sharing metadata. Preview indexing remains disabled.
+The established website has fourteen prerendered pages; this feature adds an explicitly conceptual identity review room. Normal document links and direct URL refreshes work without a catch-all homepage response. Build with `npm run build`; the build emits each page’s HTML, title, description, canonical and sharing metadata. Preview indexing remains disabled.
 
 | Page | Route |
 | --- | --- |
@@ -20,11 +24,11 @@ The review website now has fourteen prerendered public pages. Normal document li
 | About and family | `/about` |
 | Project index and status filters | `/projects` |
 | Eight individual completed cases | `/projects/<project-slug>` |
-| Dexter Acres cinematic and14-lot plan | `/projects/dexter-acres` |
+| Dexter Acres cinematic and 14-lot plan | `/projects/dexter-acres` |
 | Development partnerships and process | `/partnerships` |
 | Contact and contextual enquiry | `/contact` |
 
-Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Unknown URLs return a real404. Runtime hosting serves `dist` plus the explicit contact-delivery and individually authorized presentation APIs; repository files, the OS and local enquiry API remain unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Missing delivery configuration cannot report a successful submission.
+Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Unknown URLs return a real 404. Runtime hosting serves `dist` plus the explicit contact-delivery and individually authorized presentation APIs; repository files, the OS and local enquiry API remain unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Missing delivery configuration cannot report a successful submission.
 
 ## Two products, separate boundaries
 
