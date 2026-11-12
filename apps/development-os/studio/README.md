@@ -1,43 +1,77 @@
-# Workspace prototype — Daily Workspace, Design Studio, New Development Project
+# Workspace prototype — Phase 1 foundation
 
-**Status:** prototype for owner review. Not served by the local tool server, not hosted, not connected to AI, Smartsheet, Wave, Higgsfield or email.
+Continuation of Claude's existing Studio at 239335c, not a new application.
+Source: index.html, studio.css, studio.js. Public repository: synthetic input only.
+Daily Workspace and Design Studio share project navigation and the same browser-local records.
 
-Handoff, tests and open items: [`docs/CLAUDE_HANDOFF.md`](../../../docs/CLAUDE_HANDOFF.md).
+## Current acceptance
+Code and synthetic logic tests pass. **Phase 1 is not fully accepted:** independent
+browser/CSP/layout/persistence checks and reviewed local/protected routes are still
+pending. Existing loopback server and private host are not changed by this UI PR;
+they do not currently serve this Studio. There is no staged OS application URL.
+Do not publish these files through the public website or relax host restrictions.
 
-## Open it
+The HTML loads only its external script/style, has no inline styles or handlers,
+and declares a restrictive CSP. Hosting must enforce equivalent or stricter
+headers. Image previews use raster data URLs under img-src self/data, not a new
+blob image allowance. Uploaded sources download as octet-stream; active HTML/SVG
+is not opened as an executable app document.
 
-Open `index.html` in a browser. No build step and no dependencies.
+## What works in synthetic logic checks
+- Daily Workspace: entered tasks, client requests, follow-ups, waiting decisions,
+  dates and projects; project-linked actions reopen the same Studio/step.
+- Studio: Project → Sources → Design → Review → Takeoff/budget → Wave proposal
+  inputs → Draft work package → Construction tracking.
+- Direct renovation intake includes budget (T16), contract authority (T17) and
+  release-to-build (T19) as Not started gates with no inferred approval.
+- Reopening an older direct renovation adds only missing draft gates; existing
+  statuses, evidence, selection IDs/revisions/costs are preserved.
+- Contractor export refuses absent/unapproved selection predecessors, missing
+  gate IDs and cycles. No dangling rows are emitted. Valid packages stay Draft
+  and Not released, with no invented owner/date.
+- Stable IDs, source/revision columns, former approved cost history, unknown
+  amounts and spreadsheet-facing text protections remain.
+- Real launch-builder subdivision JSON preserves 29 plan task IDs/dependencies;
+  duplicate Project IDs are refused.
+- Sources/options/selections remain in browser localStorage/IndexedDB. The
+  automated checks use memory fallback, not browser durability acceptance.
 
-## What it does
+## Reproducible checks
+From repository root with Node 24:
 
-- **Daily Workspace** — tasks, client requests and follow-ups you type in; decisions waiting; deadlines; projects.
-- **Design Studio** — one project, eight steps: Project → Upload sources → Design → Review & approve → Takeoff & budget → Client proposal → Work package → Construction.
-- **New Development Project** — start a project by address. A development project gets the standard launch checklist grouped by partners, legal documents, feasibility, architecture, permits, budgets, schedules, team responsibilities and closeout.
-- **Higgsfield designs** — add images made in Higgsfield to a project as renderings and attach them to a design option.
+~~~text
+npm ci
+npm run check
+node --test apps/development-os/test/studio.test.mjs
+~~~
 
-## Data rules
+Nine focused tests execute the actual external script with synthetic inputs and
+minimal DOM/storage stubs. This is not a browser, rendered layout, CSP enforcement,
+real approval, provider authentication or hosted integration test.
 
-- The file ships with **one made-up project**. Never commit real addresses, client names, prices, files or exports.
-- What a person adds is stored in that browser only (`localStorage` for records, `IndexedDB` for file contents). Nothing is uploaded or sent.
-- Downloads (CSV and JSON) are generated in the browser. Do not commit them; the repository policy rejects `.csv`.
-- A blank quantity or cost means unknown. It is never treated as zero.
+The older tools/browser-check.mjs belongs to Claude's earlier checkpoint. Its
+35-pass claim is historical, not evidence for this split-asset commit. Do not run
+raw browser tooling as a workaround for an automation/browser policy denial.
+Browser verification must use an allowed surface and record the exact commit.
 
-## Check it
+## Important boundaries
+Demo selection approval is device-local state. Budget approval, purchasing and
+released-for-construction authority remain distinct and are not granted here.
+A supplier name plus entered cost is unverified pricing input, not a vendor quote.
+Proposal inputs go to Wave; this does not issue a client proposal or invoice.
+Smartsheet remains the operational record; no source writes or synchronisation.
+AI, Higgsfield, Gmail, Drive and employee permissions remain disconnected.
+Do not import real records until approved secure hosting/storage/access exists.
 
-```
-node apps/development-os/studio/tools/browser-check.mjs
-```
+One Project ID prefixes selection, file, task and gate IDs. The existing launch
+task labels/ID rule are still embedded in this classic-script prototype; consolidation
+with the existing shared modules/template is a Phase 2 integration item, not
+a second template to maintain. Existing private Desktop dashboard stays untouched.
+Deep links: #daily, #new, #higgsfield, #project/<Project ID>/<step>.
 
-Needs Node 22 or later and a local Chrome (`CHROME_PATH` if it is not in the default Windows location). It starts Chrome headless with a throwaway profile, runs 35 checks and, given a folder as the second argument, writes screenshots.
-
-## IDs
-
-One Project ID, under the same rule as `packages/shared/project-id.mjs`, starts every record ID: `<project>-SEL-01` (selection), `<project>-OPT-01` (design option), `<project>-F-01` (file), `<project>-DS-01` (contractor task), `<project>-T19` (launch plan task). A Draft export from `launch.html` can be added in New Development Project and keeps its Project ID.
-
-## Exports
-
-CSV for people, with formula-leading text neutralised. JSON for programs: Draft tasks (with predecessors and launch-plan-shaped rows) and the approval history. Every output line carries Selection ID, Revision and Project ID.
-
-## Deep links
-
-`#daily`, `#new`, `#higgsfield`, `#studio`, `#studio-1` … `#studio-8`, `#project/<Project ID>`, `#project/<Project ID>/<step>`.
+## Next owner
+See [Phase 1 handoff](../../../docs/handoffs/os-phase1-foundation-2026-11-12.md).
+Codex infrastructure PR #15 owns protected serving/auth; coordinate explicit
+routes/assets before enabling a UI. Google owner-only is approved, but OAuth
+client/callback/private configuration, actual login, storage, image acceptance
+and Railway rollback remain separate unfinished work.
