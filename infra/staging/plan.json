@@ -55,7 +55,7 @@
       "publicExposureApproved": false,
       "blockers": [
         "Existing staged service owner/source reconciliation",
-        "Claude renovation dependency fix and CSP-compatible UI integration",
+        "Claude mandatory-contract-gate and predecessor export fixes; protected UI integration",
         "Exact-head review and container build/runtime acceptance",
         "Private OAuth client/callback/owner/project configuration",
         "Approved synthetic resource activation/spend",

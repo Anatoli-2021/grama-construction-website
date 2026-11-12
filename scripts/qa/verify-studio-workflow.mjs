@@ -13,13 +13,34 @@ const bytes=fs.readFileSync(sourcePath);
 const actualBlob=crypto.createHash('sha1').update(Buffer.concat([Buffer.from('blob '+bytes.length+'\0'),bytes])).digest('hex');
 if(actualBlob!==expectedBlob)throw Error('Source does not match the explicitly reviewed Git blob; refusing to run.');
 const html=bytes.toString('utf8');
-const source=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+const manifestPath=arg('--asset-manifest');
+const assets=[];
+let scripts;
+if(manifestPath){
+  const manifest=JSON.parse(fs.readFileSync(manifestPath,'utf8'));
+  const entries=[...html.matchAll(/<script\s+src="([^"]+)"\s*><\/script>/g)].map(m=>m[1]);
+  const sheets=[...html.matchAll(/<link\s+rel="stylesheet"\s+href="([^"]+)"\s*>/g)].map(m=>m[1]);
+  if(!entries.length||/<script>/.test(html))throw Error('Expected explicitly reviewed external scripts only.');
+  scripts=[];
+  for(const name of [...entries,...sheets]){
+    if(!/^[A-Za-z0-9_-]+\.(js|css)$/.test(name)||typeof manifest[name]!=='string')throw Error('Unreviewed or unsafe asset reference: '+name);
+    const content=fs.readFileSync(path.join(path.dirname(sourcePath),name));
+    const sha=crypto.createHash('sha1').update(Buffer.concat([Buffer.from('blob '+content.length+'\0'),content])).digest('hex');
+    if(sha!==manifest[name])throw Error('Asset does not match reviewed Git blob: '+name);
+    assets.push({path:name,gitBlobSHA:sha});
+    if(entries.includes(name))scripts.push({name,source:content.toString('utf8')});
+  }
+}else{
+  const match=html.match(/<script>([\s\S]*?)<\/script>/);
+  if(!match)throw Error('External Studio requires --asset-manifest with reviewed JS/CSS Git blob identities.');
+  scripts=[{name:sourcePath,source:match[1]}];
+}
 const elements=new Map(), handlers=new Map(), saved=new Map(), blobs=new Map(), downloads=[];
 const element=id=>{if(!elements.has(id))elements.set(id,{id:id.replace(/^#/,''),value:'',textContent:'',innerHTML:'',hidden:false,files:[],style:{},classList:{add(){},remove(){},toggle(){}},focus(){},setSelectionRange(){},scrollIntoView(){},addEventListener(){}});return elements.get(id);};
 class SafeURL extends URL {static createObjectURL(blob){const id='blob:qa-'+blobs.size;blobs.set(id,blob);return id;}static revokeObjectURL(){}}
 const document={querySelector:element,querySelectorAll(){return [];},addEventListener(type,handler){if(!handlers.has(type))handlers.set(type,[]);handlers.get(type).push(handler);},createElement(){return{click(){downloads.push({name:this.download,blob:blobs.get(this.href)});},remove(){}};},body:{appendChild(){}},documentElement:{dataset:{}}};
 const context=vm.createContext({document,console,URL:SafeURL,URLSearchParams,Blob,File,location:{search:'',hash:''},history:{replaceState(){}},scrollTo(){},window:{open(){}},navigator:{clipboard:{async writeText(){}}},matchMedia(){return{matches:false};},confirm(){return false;},localStorage:{getItem:k=>saved.get(k)||null,setItem:(k,v)=>saved.set(k,v)},indexedDB:{open(){throw Error('QA memory fallback; browser persistence is not tested');}}});
-await vm.runInContext(source,context,{timeout:1500});
+for(const script of scripts)await vm.runInContext(script.source,context,{timeout:1500,filename:script.name});
 const run=code=>vm.runInContext(code,context,{timeout:1500});
 const results=[];
 function check(id,condition,detail){results.push({id,result:condition?'PASS':'FAIL',detail});}
@@ -89,8 +110,21 @@ if(run('typeof importLaunch === "function"')){
   const renoID=run('P().selections[0].id');await click('next',{id:renoID});await click('next',{id:renoID});
   const renovation=JSON.parse(run('taskJson(P())')), renoChecklist=new Set(JSON.parse(run('JSON.stringify(P().checklist)')).map(c=>c.id));
   check('DEP-02',renovation.tasks.length>0&&renovation.tasks.every(t=>t.dependsOn.every(d=>renoChecklist.has(d)||renovation.tasks.some(other=>other.taskId===d))),'Quick-created renovation must contain its referenced contract/release gate tasks; dangling predecessors are a setup defect, not satisfied gates.');
+  if(assets.length){
+    const savedChecklist=run('JSON.stringify(P().checklist)');
+    run('P().checklist=P().checklist.filter(c=>c.key!=="T17")');
+    let before=downloads.length;await click('dl',{k:'tasks'});
+    check('DEP-03',downloads.length===before,'Missing contract authority T17 must block actual export, not silently remove the approval gate from dependencies.');
+    run('P().checklist='+savedChecklist);
+    fill({s_name:'DEMO unapproved predecessor',s_cat:'Cabinets',s_vendor:'DEMO supplier',s_spec:'Synthetic only',s_qty:1,s_unit:'EA',s_cost:10,s_code:'DEMO-6400',s_need:'',s_conf:'',s_src:'',s_after:''});submit('selform');
+    run('P().selections[0].after=[P().selections.at(-1).id]');
+    before=downloads.length;await click('dl',{k:'tasks'});
+    let valid=true;
+    if(downloads.length>before){const pack=JSON.parse(await downloads.at(-1).blob.text());const ids=new Set([...JSON.parse(savedChecklist).map(c=>c.id),...pack.tasks.map(t=>t.taskId)]);valid=pack.tasks.every(t=>t.dependsOn.every(id=>ids.has(id)));}
+    check('DEP-04',valid,'An unapproved predecessor must not create a dangling contractor task reference; block export or require the predecessor approval.');
+  }
 }
-const output={date:new Date().toISOString(),source:{branch:'claude/design-studio-prototype',commit:sourceCommit,gitBlobSHA:actualBlob,localSHA256:crypto.createHash('sha256').update(html).digest('hex')},method:'Unmodified committed script in restricted Node vm; actual form/click/download handlers plus actual launch builder import; synthetic inputs; minimal DOM/storage stubs; no network, browser or live systems.',limits:['Not a browser/visual test','Not browser persistence or IndexedDB durability','Not hosted authentication/authorization','Launch import is logic only, not browser upload or a shared project store','Not Smartsheet/Wave/company data','No release approval or live contractor package'],summary:{pass:results.filter(r=>r.result==='PASS').length,fail:results.filter(r=>r.result==='FAIL').length,overall:results.some(r=>r.result==='FAIL')?'FAIL — complete integrated workflow not ready':'PASS — logic harness only; browser and hosted checks still required'},results};
+const output={date:new Date().toISOString(),source:{branch:'claude/design-studio-prototype',commit:sourceCommit,gitBlobSHA:actualBlob,localSHA256:crypto.createHash('sha256').update(html).digest('hex'),assets},method:'Unmodified reviewed scripts in restricted Node vm; actual form/click/download handlers plus actual launch builder import; synthetic inputs; minimal DOM/storage stubs; no network, browser or live systems.',limits:['Not a browser/visual test','Not browser persistence or IndexedDB durability','Not hosted authentication/authorization','Launch import is logic only, not browser upload or a shared project store','Not Smartsheet/Wave/company data','No release approval or live contractor package'],summary:{pass:results.filter(r=>r.result==='PASS').length,fail:results.filter(r=>r.result==='FAIL').length,overall:results.some(r=>r.result==='FAIL')?'FAIL — complete integrated workflow not ready':'PASS — logic harness only; browser and hosted checks still required'},results};
 const outputDir=path.resolve('evidence','studio-qa');
 fs.mkdirSync(outputDir,{recursive:true});
 fs.writeFileSync(path.join(outputDir,'workflow-results.json'),JSON.stringify(output,null,2));

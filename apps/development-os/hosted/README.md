@@ -67,10 +67,11 @@ No automatic public OS previews or real-data import.
 - Review and Tony approval of the exact code and resource activation.
 - Existing Railway staged-create service needs reconciliation: its current
   source main is the website baseline, not this candidate.
-- Claude's quick-created renovation dependency defect, common hosted project
-  records, CSP-compatible UI integration, browser persistence and access tests.
-  His reviewed 239335c fix passes the original six regressions; expanded
-  independent checks are 22 pass / 1 fail. See docs/OS_STATUS.md from repo root.
+- Claude's missing mandatory-contract-gate and unapproved-predecessor export
+  defects, common hosted project records, protected UI integration, browser
+  persistence and access tests. His 8b55c4f fixes the original six and DEP-02;
+  independent expanded checks are 23 pass / 2 fail. External assets now exist;
+  serving/auth integration is still pending. See docs/OS_STATUS.md from repo root.
 - Container build/runtime acceptance and real Railway rollback drill.
 
 The prepared Dockerfile is infra/staging/os.Dockerfile, root build context.
