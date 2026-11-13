@@ -1,0 +1,217 @@
+{
+  "baselineCommit": "f7e9546d24ac38fe8e38cd95062da234e1304475",
+  "originalAssets": [
+    {
+      "path": "public/assets/portfolio-dexter.webp",
+      "sha256": "bb425d0a6d1b21d3cf404b38a0c1e2cb8981b7089e9e00836f3d083222950ec3"
+    },
+    {
+      "path": "public/assets/portfolio-lee.webp",
+      "sha256": "d4c9aff2b3466eafd9d9eb99abedb175bf96cfaad1cf219a00bccfe2bb3225a6"
+    },
+    {
+      "path": "public/assets/portfolio-lee-bath.webp",
+      "sha256": "6dd1f17fffa704d2b40d2c639ff5d8862bf0fdfedf869fa681997600f07eb647"
+    },
+    {
+      "path": "public/assets/portfolio-prospect.webp",
+      "sha256": "fe48fea6b1356c38ddebb74f811547899a16b6d8085ee133e88ff388bb322ec5"
+    },
+    {
+      "path": "public/assets/portfolio-prospect-interior.webp",
+      "sha256": "afacf1080024614c3202a1465835a7871c935892aa327ef7890b773d0e810e05"
+    },
+    {
+      "path": "public/assets/portfolio-1914-entry.webp",
+      "sha256": "86820554ca7eddb3293175c54cf3993faabfff111443a7be4fbc3f5427803914"
+    },
+    {
+      "path": "public/assets/portfolio-chicago-avondale.webp",
+      "sha256": "5a24e562b6373704e66283442109628cba3b651c792f3ac3212a73f716a4b1f3"
+    },
+    {
+      "path": "public/assets/portfolio-chicago-avondale-interior.webp",
+      "sha256": "d2e516dff5aac2205f11bc2e4fed0decba194920fc54796c13674f6c84d406ff"
+    },
+    {
+      "path": "public/assets/portfolio-burr-ridge.webp",
+      "sha256": "3a45c63e709f42e37ed143a55cdd70daecbe5c1591124447d438bcf5384be29f"
+    },
+    {
+      "path": "public/assets/portfolio-burr-ridge-interior.webp",
+      "sha256": "aa6401874daf136a5bf0dd36f0112bdcf37fea8b7b2c203b64c28919ed2ffe2f"
+    },
+    {
+      "path": "public/assets/portfolio-south-barrington.webp",
+      "sha256": "432469a1c212a8c80f223c42d233f50071c050d65cb8d5f5154e386a2856c591"
+    },
+    {
+      "path": "public/assets/portfolio-south-barrington-interior.webp",
+      "sha256": "358598eab88d77e10bf273670a28d21253a49064da8b612c5145093429c1c551"
+    },
+    {
+      "path": "public/assets/portfolio-foster-avenue.webp",
+      "sha256": "9ee4be104b61bb37e4516558adb06137e76aa82150f07c0c04e79dc6c35c60bb"
+    },
+    {
+      "path": "public/assets/portfolio-foster-avenue-interior.webp",
+      "sha256": "694b58a186edb89357e4b447ff9b7dd5baca3a7b9741f78554a82ce0f66c77ab"
+    },
+    {
+      "path": "public/assets/portfolio-sedgwick-street.webp",
+      "sha256": "ff70831f8dc3c67d5e3e39d4e96c97514ab65e16fc0ad8dd27408d0c0efab0d2"
+    },
+    {
+      "path": "public/assets/portfolio-sedgwick-street-interior.webp",
+      "sha256": "a344a8fc9eece40a5fe53f9df432a9b77cfa084072ed513f4406e19df05485c7"
+    },
+    {
+      "path": "public/assets/tony-grama.webp",
+      "sha256": "57d296a30dbf5053d38f41e36fe120b0dd4f4d5828d1af70509f9e1538ffe4d4"
+    },
+    {
+      "path": "public/assets/grama-realtor.webp",
+      "sha256": "7884b8051dcd7cdd3c21ed666c48d1f5319c61f2f414326dff03014d79b50bd2"
+    },
+    {
+      "path": "public/assets/partner-floor-decor.png",
+      "sha256": "53ad5a420884420f11c5f13cd00c66c3cbf0b04aea22a24f9389ffbb3c932e66"
+    },
+    {
+      "path": "public/assets/partner-houzz.png",
+      "sha256": "d57da3499a14934b8d39eb30dfd72f1b3a6051999667110d5911d08d0371a8a6"
+    },
+    {
+      "path": "public/assets/partner-lennox.png",
+      "sha256": "ecc29bd1de8764deff75b51f637bde4ff48f37690bfbc326d510575492f3ad59"
+    },
+    {
+      "path": "public/assets/partner-pella.png",
+      "sha256": "b168e2b7d10bc821ee22075b02dcbae6a1ee4411a00cf63796cb3717ddc06c4b"
+    },
+    {
+      "path": "public/assets/partner-sika.png",
+      "sha256": "afe3f91d04ea37515f779c3ad7b47079d4262be2cb88235d672d772b865bbe3c"
+    },
+    {
+      "path": "public/assets/partner-andersen.png",
+      "sha256": "dbb09892da657fbff06b2cb89b2f92b9216090b3f6ecced3835a84ae9c429c8e"
+    },
+    {
+      "path": "public/assets/partner-bosch.png",
+      "sha256": "6e9ff3039dea4d711f273a41609fbc1276c9ab67d3af97dd294fd0c2f4866470"
+    },
+    {
+      "path": "public/assets/partner-lowes.png",
+      "sha256": "b68480ff7504a986912db1d88a090e29f19a20e14a82e62a8a69441f60c76e6c"
+    },
+    {
+      "path": "public/assets/partner-goodman.png",
+      "sha256": "b3dbe4e4589fa4a88dd87451da3843b732d9383111746bd20624ce6e5331ee3d"
+    },
+    {
+      "path": "public/assets/partner-abc-supply.png",
+      "sha256": "06d91485e6226ca903627a93e910a2dcd30ec30a0057643d4c6665cd01fc917c"
+    },
+    {
+      "path": "public/assets/partner-home-depot.png",
+      "sha256": "d74184b25738bb7cbd1e380c31da63521f8331e9821384147adee8e798bb3703"
+    },
+    {
+      "path": "public/assets/site-plan-original.png",
+      "sha256": "87eb024a2b34e88ae73338a5a9bb0dc497c3c2082ff488ff5ea09dcc4a17da7e"
+    },
+    {
+      "path": "public/assets/general-sans.ttf",
+      "sha256": "4b2539d9ed3367e8f55f7ddd369ab13e17bb279ff2eb7fdca6c713af13d4df84"
+    }
+  ],
+  "protectedAnimationFiles": [
+    {
+      "path": "src/components/AnimatedExperience.css",
+      "sha256": "78f66925dc952e21fc0ab68ffde91757142d17d40935f2abae1772c01bb3848d"
+    },
+    {
+      "path": "src/components/AnimatedExperience.jsx",
+      "sha256": "cc3deafb5c4c831ff192b3c93693ed12f718fba9cd7c71d9fdf17b8440654519"
+    },
+    {
+      "path": "src/components/ArtlistHouseSequence.jsx",
+      "sha256": "af84eb2fd13e6d518e82658725929bf3334e8c7fbe7f140de058c2ce1e1256ac"
+    },
+    {
+      "path": "src/components/animated-timeline.js",
+      "sha256": "fa46d088f38eba46fc6863b623b577713c26669cdcdfddd3e33830228a137034"
+    },
+    {
+      "path": "src/components/artlist-house-sequence.js",
+      "sha256": "96b222f7ace56c5510187880105075d2a7dc7f4333e3e859abfc8e802e36f8c9"
+    },
+    {
+      "path": "public/assets/animated/artlist-house/desktop/sheet-0.webp",
+      "sha256": "3c0687505a56b1d702017769493b1ac83baee1526e06b559e413d9bee243ff77"
+    },
+    {
+      "path": "public/assets/animated/artlist-house/desktop/sheet-1.webp",
+      "sha256": "36e06a9cac7826209df26b89e2c863dd7b9861753a732693c89c16fb89b4427b"
+    },
+    {
+      "path": "public/assets/animated/artlist-house/desktop/sheet-2.webp",
+      "sha256": "9c75955e7e911b8a38ccd83951158c1e99af00329d2e7d645f678d2fada09615"
+    },
+    {
+      "path": "public/assets/animated/artlist-house/desktop/sheet-3.webp",
+      "sha256": "3a491591a420a447be1a831002747462ddf3a20b265d1ef8fad6d89dcac51d9a"
+    },
+    {
+      "path": "public/assets/animated/artlist-house/mobile/sheet-0.webp",
+      "sha256": "a7774d40c8273d5a3905b16bf81c74310e4cfb2ede9c4cb73dab19f5b6ac7d25"
+    },
+    {
+      "path": "public/assets/animated/artlist-house/mobile/sheet-1.webp",
+      "sha256": "3fb7a802bb7704c71ba3842775af3c8a6f67f15161768fb02bf1c520569925db"
+    },
+    {
+      "path": "public/assets/animated/artlist-house/mobile/sheet-2.webp",
+      "sha256": "82e98927978b7fd0e9845f208c21db351a2bf54a4cc5784b6b16da8d0638753d"
+    },
+    {
+      "path": "public/assets/animated/artlist-house/mobile/sheet-3.webp",
+      "sha256": "8313d42cedb4688dff9562b778ce5502e9e528f017b8ca261c16ed11d783aef2"
+    },
+    {
+      "path": "public/assets/animated/facade.png",
+      "sha256": "5a345680c059f11cc793b1aaedeeece07419fad63bf02cca79049fde82569c09"
+    },
+    {
+      "path": "public/assets/animated/house-complete.webp",
+      "sha256": "50474db1c0a590a3af7b495c2049b8f75598f475fa89c167dd9ea7c1d250f14c"
+    },
+    {
+      "path": "public/assets/animated/house-structure.webp",
+      "sha256": "1ad58df623d7fa61fbeeebcf43477037a255bb86a464ceb50758e2bfa746114d"
+    },
+    {
+      "path": "public/assets/animated/roof.png",
+      "sha256": "f686ac59c0b920fe3ee94b8370de49e7824066f67ed3564e85b5ac834d4d7cc3"
+    },
+    {
+      "path": "src/components/HouseAnimationPlayer.css",
+      "sha256": "22011646b9308a6a8293d2e97daa13c39f41b05689f2bccdbf5a6ca8ffb17dfb"
+    },
+    {
+      "path": "src/components/HouseAnimationPlayer.jsx",
+      "sha256": "0015d2eda1d8acb5d7ed8555a83c64fe65318e7ea95221f2a9a9ff8bf9f4b787"
+    },
+    {
+      "path": "public/assets/animated/house-motion-loop.mp4",
+      "sha256": "76ffdbdea79f590f7baf20647271f523633b5159472d0cd4bda4f466f1c33cee"
+    }
+  ],
+  "restoredHero": {
+    "path": "public/assets/original-home-hero.webp",
+    "sha256": "9883685e70b42e139e1fe65e05e65113139e43d7fd9e5cfdf6a8d12ac32a855c",
+    "sourceUrl": "https://cdn.prod.website-files.com/66117180961169ea1597a070/667345df51ac861d97d4a8a9_turnkey%20(2).jpg",
+    "sourceSha256": "8445520b8f65eea37ed88dbca1c44904364f8b635ad24f5a402779d86f36b33c"
+  }
+}
