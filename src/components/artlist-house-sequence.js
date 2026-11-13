@@ -17,8 +17,11 @@ function smooth(value) {
 // Native page progress -> forward take, held open view, reverse assembly.
 export function getHouseClipProgress(value) {
   const progress = clampSequenceProgress(value);
-  if (progress <= 0.08) return 0;
-  if (progress < 0.42) return smooth((progress - 0.08) / 0.34);
+  if (progress < 0.42) {
+    // Respond to the first scroll input, then ease into the held open view.
+    const t = progress / 0.42;
+    return 1 - (1 - t) ** 2;
+  }
   if (progress <= 0.75) return 1;
   if (progress < 0.87) return 1 - smooth((progress - 0.75) / 0.12);
   return 0;

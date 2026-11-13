@@ -13,10 +13,13 @@ test('invalid progress cannot choose an absent frame', () => {
   assert.deepEqual(getFrameBlend(0.5, 1), { lower: 0, upper: 0, blend: 0 });
 });
 
-test('page phases hold, open, hold the structure, and close before the aerial', () => {
+test('page phases respond to the first scroll, hold the structure, and close before the aerial', () => {
   assert.equal(getHouseClipProgress(0), 0);
-  assert.equal(getHouseClipProgress(0.08), 0);
-  assert.ok(Math.abs(getHouseClipProgress(0.25) - 0.5) < 1e-12);
+  for (const [progress, minimumFrame] of [[0.01, 1], [0.03, 5], [0.06, 10]]) {
+    assert.ok(getFrameBlend(getHouseClipProgress(progress)).lower >= minimumFrame,
+      `Small scroll progress ${progress} must visibly advance the house`);
+  }
+  assert.equal(getHouseClipProgress(0.21), 0.75);
   assert.equal(getHouseClipProgress(0.42), 1);
   assert.equal(getHouseClipProgress(0.66), 1);
   assert.equal(getHouseClipProgress(0.75), 1);

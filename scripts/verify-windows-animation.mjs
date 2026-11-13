@@ -160,7 +160,8 @@ async function verifyTarget(target) {
         clipProgress: Number(canvas.dataset.clipProgress),
         canvasSha256: [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join(''),
         canvas: { width: canvas.width, height: canvas.height, x: rect.x, y: rect.y, cssWidth: rect.width, cssHeight: rect.height, visibility: style.visibility, opacity: style.opacity, maskComposite: style.maskComposite, maskImage: style.maskImage },
-        overflow: document.documentElement.scrollWidth - innerWidth,
+        overflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
+        viewport: { innerWidth, clientWidth: document.documentElement.clientWidth, innerHeight },
         dialogCount: document.querySelectorAll('dialog').length,
       };
     });
