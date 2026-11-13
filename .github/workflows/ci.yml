@@ -4,6 +4,18 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      public_animation_url:
+        description: Public Grama or Railway URL to verify after deployment (site root or Animated Experience page)
+        required: false
+        type: string
+        default: https://gramadevelopment.com/animated-experience
+      public_animation_schema:
+        description: Expected public animation (auto keeps legacy production compatible; choose journey for final staging)
+        required: false
+        type: choice
+        default: auto
+        options: [auto, journey, legacy]
 permissions:
   contents: read
 concurrency:
@@ -46,6 +58,9 @@ jobs:
     env:
       BROWSER_CHANNEL: ${{ matrix.browser }}
       CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      # PR/push checks verify final staging; manual dispatch retains prod/auto defaults above.
+      PUBLIC_ANIMATION_URL: ${{ inputs.public_animation_url || 'https://humorous-delight-staging-website.up.railway.app/animated-experience' }}
+      PUBLIC_ANIMATION_SCHEMA: ${{ inputs.public_animation_schema || 'journey' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -67,7 +82,7 @@ jobs:
           "PLAYWRIGHT_MODULE_PATH=$modulePath" >> $env:GITHUB_ENV
           $evidencePath = Join-Path $env:RUNNER_TEMP 'grama-windows-animation-${{ matrix.browser }}'
           "ANIMATION_EVIDENCE_DIR=$evidencePath" >> $env:GITHUB_ENV
-      - name: Verify native wheel scrolling on candidate and public domain
+      - name: Verify native scrolling, reduced motion and poster fallback
         run: node scripts/verify-windows-animation.mjs
       - name: Upload Windows browser evidence
         if: always()

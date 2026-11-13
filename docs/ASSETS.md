@@ -1,6 +1,6 @@
 # Asset and project context
 
-This repository contains optimized website assets, not the owner's complete photo/video library or internal project records. Original source files and private research remain off GitHub.
+This repository contains optimized website assets, not the owner's complete photo/video library or internal project records. Original source files and private research remain off GitHub. The current `feature/final-website-integration` candidate is for [staging review](https://humorous-delight-staging-website.up.railway.app/); production promotion requires Tony's authorization.
 
 | Runtime assets | Source and meaning |
 | --- | --- |
@@ -25,7 +25,7 @@ The company portfolio is the source for completed-project attribution, not curre
 
 The [Noah About](https://www.noahchicago.com/about) and [Custom Build](https://www.noahchicago.com/custombuild) pages informed information hierarchy only. The [Royal Pop reference](https://royal-pop-website.vercel.app/) informed scroll-sequenced storytelling. No reference-site marketing copy, images or code were imported.
 
-Preserve distinctions between concepts and actual photography. The existing materials are for Grama's website development; inclusion in this private repository does not grant a separate license to reuse them for other clients or publish them elsewhere. Obtain owner approval for new public-facing people, roles and claims.
+Preserve distinctions between concepts and actual photography. The existing materials are for Grama's website development; inclusion in this repository does not grant a separate license to reuse them for other clients or publish them elsewhere. Obtain owner approval for new public-facing people, roles and claims.
 
 ## Official-site restoration — November 10, 2026
 
@@ -38,7 +38,7 @@ The user authorized restoring the original company's public photography, portfol
 | tony-grama.webp | [Original homepage About image](https://cdn.prod.website-files.com/66117180961169ea1597a070/662ffb341622859d64c24fef_about%20us.jpg), published on the [Grama homepage](https://www.gramaconstruction.com/) | Anatoli (Tony) Grama, founder; identity and founder context supplied by the user. Original photograph shows him beside a branded Grama vehicle. Optimized to 1280 × 853, WebP. |
 | grama-realtor.webp | [Original realtor portrait](https://cdn.prod.website-files.com/66117180961169ea1597a070/66675008dd69d433fbd09b38_realtor.jpg), published in project enquiry sections including [Foster Avenue](https://www.gramaconstruction.com/projects/w-foster-ave-unit-1e-chicago-il-60640) and [Dexter Lane](https://www.gramaconstruction.com/projects/1847-dexter-des-plaines) | The source caption confirms “Exclusive Realtor of Grama Construction.” The user directly confirmed her first name is Alina and that she is Anatoli (Tony) Grama's wife. The website caption is “ALINA / REAL ESTATE”; no surname is assumed. Optimized to 600 × 852, WebP. |
 
-The source also has a [second crop of the same realtor](https://cdn.prod.website-files.com/66117180961169ea1597a070/6667514e9c4da112a88bd589_anothaone-min.jpg), which is not duplicated in runtime assets. Alina's surname remains unconfirmed and is not needed for the approved caption. Further biography or family claims require direct confirmation.
+The source also has a [second framing of the same realtor](https://cdn.prod.website-files.com/66117180961169ea1597a070/6667514e9c4da112a88bd589_anothaone-min.jpg). It was not included in the November 10 restoration; both native JPEGs are now included across Home and About in the final integration, as documented below. Alina's surname remains unconfirmed and is not needed for the approved caption. Further biography or family claims require direct confirmation.
 
 ### Complete official portfolio
 
@@ -91,11 +91,61 @@ Ten photographs were selected from the five official project pages above, visual
 
 The project index separates the eight completed portfolio entries from the proposed Dexter Acres development. The current-listings filter has an honest empty state. Neither the completed category nor its photograph count is presented as sold inventory, sales performance or investment results.
 
-## Animated Experience review
+## Original house study and retained identity
 
-- `brand/grama-development.svg`, `brand/grama-g.svg` and `favicon.svg`: native SVG Concept A wordmark and circular G for the requested **Grama Development** review identity. The founder's surname remains Grama.
+- `brand/grama-development.svg`, `brand/grama-g.svg` and `favicon.svg`: retained native SVG Concept A wordmark and circular G. The final candidate introduces **GRAMA / Luxury Real Estate Development** on Home while retaining the Grama Development lockup. The founder's surname remains Grama.
 - `animated/house-complete.webp`: selected OpenAI-generated architectural concept, based on the supplied house visual.
 - `animated/house-structure.webp`, `animated/roof.png`, `animated/facade.png`: OpenAI Imagegen derivatives for an independently moving layered illustration. These are concept images, not measured construction or engineering details.
 - The existing `community.webp` provides the neighborhood transition. It is an AI concept, not a surveyed land plan or verified built neighborhood.
 
-The live scroll sequence also uses `animated/artlist-house/desktop/sheet-0.webp` through `sheet-3.webp` and the equivalent mobile files: forty samples from the selected Artlist Kling 3.0 house animation, packed into two-column, five-row WebP sheets. Its start and end frames use the same house concept. `animated/house-motion-loop.mp4` is a 1280 × 720 compatibility version of the same take played forward and in reverse, available through the explicit Play animation link. This is a generated architectural study, not construction footage or a measured model. The original full-resolution film is retained outside the public website artifact. See [Animated Experience](ANIMATED-EXPERIENCE.md) for the rendering limits and review workflow. Original source portfolio links and partner marks are retained.
+The structural scene retains `animated/artlist-house/desktop/sheet-0.webp` through `sheet-3.webp` and the equivalent mobile files: forty samples from the selected Artlist Kling 3.0 house animation, packed into two-column, five-row WebP sheets. Its start and end frames use the same house concept. `animated/house-motion-loop.mp4` remains the 1280 × 720 house-only compatibility version, played forward and in reverse. This is a generated architectural study, not construction footage or a measured model. The original full-resolution film remains outside the public website artifact. Original source portfolio links and partner marks are retained.
+
+## Final integration Artlist journey — November 13, 2026
+
+The separate Animated Experience adds arrival and interior concept scenes to the retained structural study. The Artlist scenes are labelled AI architectural visualizations. They do not depict verified completed work, establish a measured floor plan or document a continuous real-world camera route. Generated interior imagery is separate from the authentic completed-project galleries below.
+
+| Runtime assets | Source and purpose |
+| --- | --- |
+| `film/arrival.mp4`, `film/arrival/desktop/sheet-0.webp` through `sheet-3.webp`, equivalent mobile sheets | Artlist-generated arrival study based on the selected house concept; forty sampled frames. |
+| `film/interior.mp4`, `film/interior/desktop/sheet-0.webp` through `sheet-3.webp`, equivalent mobile sheets | Artlist-generated interior study; forty sampled frames. Interior design and geometry remain illustrative. |
+| `film/interior-poster.webp` | Still from the interior concept for loading/static presentation. |
+| `animated/artlist-house/` | Retained forty-frame structural opening study described above. |
+| `film/journey.mp4` | Approximately 16.04-second, silent 1280 × 720 native playback alternative combining the arrival, interior and structural concept scenes. Requested through the explicit Play animation link. |
+| `film/manifest.json` | Portable frame counts, atlas layout, packaged file paths and native-film metadata; no generation credentials or private prompts. |
+
+Each scene uses four two-column, five-row WebP sheets per viewport variant. Frame tiles are 960 × 540 on desktop and 640 × 360 on mobile. The canvas loads required sheets lazily and retains a bounded image cache. Stills and the native film provide independent alternatives. The final overview uses the existing `community.webp` concept, while lot numbering remains based on the supplied C5 drawing. See [Animated Experience](ANIMATED-EXPERIENCE.md) for motion behavior, limitations and candidate verification.
+
+## Final integration photography — November 13, 2026
+
+The final transformation brief explicitly requests both existing Alina photographs. Both original JPEGs were retrieved from the company's published assets, visually inspected, and retained at native pixels with no face edits, reconstruction, color alteration or upscaling. They are different framings from the same approved portrait setting. Use portrait proportions and keep the face clear when applying responsive crops.
+
+| Runtime file | Exact source / native dimensions | Caption and use |
+| --- | --- | --- |
+| `photo/alina-portrait.jpg` | [Original realtor portrait](https://cdn.prod.website-files.com/66117180961169ea1597a070/66675008dd69d433fbd09b38_realtor.jpg), 794 × 1128, 82,774 bytes | Alina / Real Estate. The user confirmed her first name and wife relationship; the source role is Exclusive Realtor of Grama Construction. No surname or license claim is inferred. |
+| `photo/alina-realtor.jpg` | [Second original framing](https://cdn.prod.website-files.com/66117180961169ea1597a070/6667514e9c4da112a88bd589_anothaone-min.jpg), 786 × 1128, 96,233 bytes | The same confirmed Alina and role, with more headroom. Do not describe it as another person or a different shoot. |
+| `photo/residences.webp` | [Original Grama homepage photograph](https://cdn.prod.website-files.com/66117180961169ea1597a070/667345df51ac861d97d4a8a9_turnkey%20(2).jpg), restored PR #20 derivative, 1536 × 983 | Caption: Residential project photography / Chicago & Chicagoland. The original company photograph shows three neighboring masonry houses; exact addresses and sale status remain unverified. |
+
+The Alina JPEGs are byte-identical to the downloaded originals. The homepage WebP is byte-identical to `public/assets/original-home-hero.webp` in commit `76db6f3b287cce4bdf1105e144ea6898ba89ebd2` (PR #20 branch); its SHA256 is `9883685e70b42e139e1fe65e05e65113139e43d7fd9e5cfdf6a8d12ac32a855c`. No new generated building or person replaces the authentic photographs.
+
+For a coherent real-project presentation, pair `portfolio-prospect.webp` with `portfolio-prospect-interior.webp` (both 1500 × 1000) or the two Sedgwick images (both 1536 × 1025). The images establish the same project, not a verified room-to-room route. The Lee kitchen/bathroom pair is suitable for material/detail storytelling. Preserve visible photographer marks. Existing 1024-pixel images suit smaller case galleries; do not upscale them or mix different properties into a purported continuous walkthrough.
+
+### Recovered same-property galleries
+
+The original company case-page HTML exposes full image galleries. Twelve additional photographs were selected and visually inspected from those same-property sources, then optimized to WebP with native aspect ratios and at most 2000 pixels of width. There is no upscaling, generative/content editing or color alteration. Original selected portfolio files remain unchanged. These images document rooms and details, not a verified continuous camera route or a measured floor plan. Preserve visible photographer marks.
+
+| Runtime file | Factual caption | Exact published source |
+| --- | --- | --- |
+| `photo/prospect-entry.webp` | Entry hall and staircase / 1171 Prospect Lane | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/6665f225923eb0871ba82338_photo_82616469-1500x1000.jpg) |
+| `photo/prospect-living.webp` | Living room and fireplace / 1171 Prospect Lane | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/6665f25822839fe3d2edd124_photo_82616481-1500x1000.jpg) |
+| `photo/prospect-suite.webp` | Bedroom and large windows / 1171 Prospect Lane | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/6665f25894aca41b5f5d36f3_photo_82616488-1500x1000.jpg) |
+| `photo/prospect-bath.webp` | Bathroom and freestanding tub / 1171 Prospect Lane | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/6665f258e736030d93f3b510_photo_82616490-1500x1000.jpg) |
+| `photo/lee-arrival.webp` | Entry hall and living spaces / 1906 Lee Street | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/68029747c4860c7c11983d72_6.jpg) |
+| `photo/lee-kitchen-living.webp` | Kitchen island and open living spaces / 1906 Lee Street | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/6802945269984d37b9b8217e_GRAMA%20Lee%20street-60.jpg) |
+| `photo/lee-living.webp` | Living room and fireplace / 1906 Lee Street | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/680297a237da3515da445f23_3-min.jpg) |
+| `photo/lee-dining.webp` | Dining room / 1906 Lee Street | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/680297450fbb09399a5859d8_13.jpg) |
+| `photo/lee-bedroom.webp` | Bedroom / 1906 Lee Street | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/68029744e000913a9f2e93bc_17.jpg) |
+| `photo/lee-bath.webp` | Freestanding bath and window / 1906 Lee Street | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/6802974315f01e442abdc1b5_20.jpg) |
+| `photo/sedgwick-kitchen.webp` | Kitchen and dining area / Sedgwick Street | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/6631605e021f00cd1c0e65bb_1b21ea74fbddd9cf92199186bc7d17ee-uncropped_scaled_within_1536_1152.webp) |
+| `photo/sedgwick-exterior.webp` | Street-facing elevation / Sedgwick Street | [Original photograph](https://cdn.prod.website-files.com/66117181961169ea1597a104/6631605e67339db10c243b02_fcfcd2a3bffee75ea506e5181b8cd10b-uncropped_scaled_within_1536_1152.webp) |
+
+The Lee originals are 3500 pixels wide; their 2000-pixel derivatives provide higher-resolution interior presentation without shipping multi-megabyte JPEGs. Prospect derivatives remain at 1500 pixels. The portrait Sedgwick exterior is 770 × 1080 and suits a narrow frame rather than a large landscape hero.

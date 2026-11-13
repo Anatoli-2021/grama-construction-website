@@ -1,0 +1,118 @@
+.family-section {
+  padding: 110px var(--site-gutter,6vw);
+  background: var(--site-paper,#f5f3ec);
+  color: var(--site-ink,#252c26);
+}
+.family-section-heading {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr;
+  gap: 36px;
+  align-items: start;
+  margin-bottom: 54px;
+}
+.family-section-heading h2 {
+  font-size: clamp(48px,5.6vw,82px);
+  font-weight: 350;
+  line-height: 1;
+  letter-spacing: -.055em;
+  margin: 0;
+}
+.family-section-heading>div>p {
+  font-size: 15px;
+  line-height: 1.75;
+  max-width: 330px;
+  margin: 0 0 22px;
+  color: #62685f;
+}
+.family-portraits {
+  display: grid;
+  grid-template-columns: 1.5fr .8fr;
+  gap: 7vw;
+  align-items: end;
+}
+.family-portraits figure {
+  margin: 0;
+  min-width: 0;
+}
+.family-tony>img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.5;
+  object-fit: cover;
+}
+.family-alina {
+  min-width: 0;
+  max-width: 390px;
+  justify-self: end;
+}
+.family-alina>img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  background: #e9e5dd;
+}
+.family-portraits figcaption,.family-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 18px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.family-portraits figcaption>span:last-child,.family-caption>span:last-child {
+  color: #777d72;
+}
+@media (max-width:900px) {
+  .family-section {
+    padding-block: 80px;
+  }
+  .family-section-heading {
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+  }
+  .family-section-heading>.site-label {
+    grid-column: 1/-1;
+  }
+  .family-portraits {
+    gap: 30px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .family-portraits figcaption,.family-caption {
+    font-size: 11px;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+@media (max-width:600px) {
+  .family-section {
+    padding: 66px 24px;
+  }
+  .family-section-heading {
+    display: block;
+    margin-bottom: 34px;
+  }
+  .family-section-heading h2 {
+    font-size: 54px;
+    margin: 22px 0;
+  }
+  .family-section-heading>div>p {
+    font-size: 14px;
+    max-width: 340px;
+  }
+  .family-portraits {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  .family-portraits figcaption,.family-caption {
+    flex-direction: row;
+    margin-top: 12px;
+  }
+  .family-caption {
+    font-size: 12px;
+  }
+  .family-section--full {
+    padding-top: 40px;
+  }
+}

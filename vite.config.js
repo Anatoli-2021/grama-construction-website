@@ -10,7 +10,7 @@ export default defineConfig({
     fs: { deny: ['**/.data/**', '**/evidence/**', '**/.env*', '**/server.mjs'] },
   },
   build: {
-    target: 'es2022', sourcemap: true,
+    target: 'es2022', sourcemap: false,
     rollupOptions: { input: {
       website: fileURLToPath(new URL('./index.html', import.meta.url)),
       presentation: fileURLToPath(new URL('./presentation/index.html', import.meta.url)),

@@ -1,30 +1,36 @@
-# Grama Construction development workspace
+# GRAMA website development workspace
 
 One shared repository for the existing React/Vite/GSAP website and the reusable Development OS launch tool. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
 
 Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Owner: **Anatoli-2021**.
 
-Website review preview: [Grama Construction on Railway](https://grama-construction-website-production.up.railway.app/). The current company domain remains separate. The investor/developer showcase restores the official company portraits, completed-project archive and partner logos while preserving Dexter Acres motion and the 14-lot plan.
+Current integration branch: `feature/final-website-integration`. It reconciles stable `main` at `af3faf5` with the Windows-verified website stack at `21d8a6f`; `94d8759` is the integration baseline, before the new design changes. Use this integration branch’s pull request for the final review. The staging review target is [GRAMA on Railway staging](https://humorous-delight-staging-website.up.railway.app/); confirm its deployment SHA and checks in the final PR before treating a preview as verified.
 
-Hosted enquiries use a server-only Resend integration when the approved sender, recipient, origin and secret key are configured and delivery is explicitly enabled. Unconfigured previews offer a clearly labelled browser-only draft without submitting personal fields. Localhost retains its existing local-save workflow. See [contact delivery setup and verification](docs/CONTACT-DELIVERY.md); do not call inbox delivery verified until a real test is received. Sold-home totals, closing values and company revenue are omitted until supported by approved records.
+Production at [gramadevelopment.com](https://gramadevelopment.com/) remains pinned to `21d8a6f8fceda7ff129390d141bd3eccdcf79ef1`. The final transformation requires Tony's review and authorization before promotion to production. A staging deployment does not authorize a production release or a DNS change.
 
-## Multipage website
+The design presents **GRAMA / Luxury Real Estate Development**, retaining the Concept A wordmark and circular G. Home introduces authentic project photography, selected completed work, Tony and Alina, the proposed Dexter Acres development and partnerships. Both original Alina photographs are retained across Home and About. The original Dexter Acres cinematic sequence and fourteen-lot map remain on its project page.
 
-Current implementation: `6fb4308` / [PR9](https://github.com/Anatoli-2021/grama-construction-website/pull/9), branch `feature/multipage-website`. The existing Railway review service follows this branch; the PR records its actual deployed SHA and status.
+Hosted Contact delivery remains disabled. The retained server-only Resend integration requires approved sender, recipient, origin and secret configuration plus explicit enablement. The preview offers phone contact and a clearly labelled browser-only draft that sends no personal fields. Localhost retains its consented local-save workflow. See [contact delivery setup and verification](docs/CONTACT-DELIVERY.md). Sold-home totals, closing values and company revenue remain omitted without approved records.
 
-The review website now has fourteen prerendered public pages. Normal document links and direct URL refreshes work without a catch-all homepage response. Build with `npm run build`; the build emits each page’s HTML, title, description, canonical and sharing metadata. Preview indexing remains disabled.
+## Public website
+
+The integration contains sixteen prerendered public pages. Build with `npm run build` to emit each page's HTML, title, description, canonical and sharing metadata. Normal document links and direct URL refreshes work; unknown URLs return a real 404. Preview indexing remains disabled.
 
 | Page | Route |
 | --- | --- |
-| Company homepage | `/` |
+| Home and selected work | `/` |
+| Proposed developments | `/developments` |
 | About and family | `/about` |
-| Project index and status filters | `/projects` |
+| Portfolio and status filters | `/projects` |
 | Eight individual completed cases | `/projects/<project-slug>` |
-| Dexter Acres cinematic and14-lot plan | `/projects/dexter-acres` |
+| Dexter Acres cinematic and 14-lot plan | `/projects/dexter-acres` |
 | Development partnerships and process | `/partnerships` |
+| Three-scene architectural journey | `/animated-experience` |
 | Contact and contextual enquiry | `/contact` |
 
-Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Unknown URLs return a real404. Runtime hosting serves `dist` plus the explicit contact-delivery and individually authorized presentation APIs; repository files, the OS and local enquiry API remain unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Missing delivery configuration cannot report a successful submission.
+The Animated Experience combines Artlist arrival, interior and structural concept scenes with a neighborhood overview. Scroll drives the canvas without clicking Play; required frame atlases load lazily with a bounded cache. Stills, reduced-motion behavior and an independently playable native film remain available. These are labelled architectural visualizations, not recorded project footage or a measured walkthrough. See [animation implementation and review](docs/ANIMATED-EXPERIENCE.md).
+
+Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Runtime hosting serves `dist` plus the explicit contact-delivery and individually authorized presentation APIs; repository files, the OS and local enquiry API remain unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Missing delivery configuration cannot report a successful submission.
 
 ## Two products, separate boundaries
 
@@ -34,7 +40,7 @@ Project links come from `src/data/projects.js`; the public page registry is `src
 | Development OS | `apps/development-os/` | `npm run dev:os` → port 5180 | Loopback-only blank launch tool; no live data or authentication |
 | Shared utility | `packages/shared/` | Used by OS / Node tests | Project ID validation; no company records |
 
-Current integration candidate: `feature/private-investor-presentation`, including `feature/multipage-website` / PR9 and earlier showcase work in PR7. Review the stack before merging to stable main. The public preview and completed checks are recorded in the candidate PR and team handoff.
+Earlier showcase, multipage, private-presentation and Windows fixes are reconciled in `feature/final-website-integration`. Review this final integration as one candidate; do not deploy an older feature branch over it. The final PR and team handoff must record the actual preview SHA and completed checks.
 
 Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
 
@@ -100,10 +106,15 @@ Visit the same localhost URL. Rebuild after source edits before restarting produ
 
 | Path | Purpose |
 | --- | --- |
-| src/App.jsx | Navigation, hero, section assembly, lot enquiry and project dialogs |
-| src/components/BrandSections.jsx | About, properties, capabilities and partnerships |
+| src/App.jsx, src/site-routes.js | Navigation, public route assembly and metadata registry |
+| src/components/HomePage.jsx | Photography-led homepage and selected work |
+| src/components/FamilySection.jsx, src/components/CompanyPages.jsx | Tony and Alina, About, Developments, Partnerships and Contact |
+| src/components/ProjectPages.jsx, src/data/projects.js | Eight completed cases and the proposed Dexter Acres page |
+| src/components/BrandSections.jsx | Retained official partner-logo section |
 | src/components/DevelopmentProcess.jsx | Seven-step development experience |
 | src/components/Consultation.jsx | Homeowner and development-partner forms |
+| src/components/AnimatedExperience.jsx, src/components/JourneySequence.jsx | Three-scene scroll journey, lazy canvas atlases and static alternative |
+| src/components/journey-timeline.js, src/components/HouseAnimationPlayer.jsx | Chapter timing and independent native film fallback |
 | src/components/CinematicStory.jsx | Residence → detail → neighborhood scroll sequence |
 | src/components/SitePlan.jsx | Fourteen C5-derived lots and drawing-reported areas |
 | src/styles.css, src/refinement.css, component CSS | Desktop/mobile styling |
@@ -116,9 +127,9 @@ Visit the same localhost URL. Rebuild after source edits before restarting produ
 
 Hosted forms check delivery availability before enabling submission. A configured server sends a plain-text notification only to its approved recipient; visitor email addresses are used as validated Reply-To values. A successful response means the provider accepted that notification, not guaranteed inbox delivery or a reservation. No enquiry records are stored in the website filesystem and no automatic messages are sent to visitors. If delivery is unavailable, phone contact and an explicitly selected browser-only draft remain available. Localhost/loopback retains its consented local-save API. Deployment never copies local enquiry records.
 
-The consented enquiry forms append to **.data/interest.jsonl on the developer's computer**. There is no email/CRM delivery, reservation, allocation or production lead service. Client and development-partner enquiries have separate types; lots are accepted only for Dexter Acres home enquiries.
+On localhost only, consented enquiry forms append to **.data/interest.jsonl on the developer's computer** without email or CRM delivery. Client and development-partner enquiries have separate types; lots are accepted only for Dexter Acres home enquiries. The staging review does not enable live delivery or reserve a property.
 
-.gitignore excludes enquiry records, .env files, credentials/certificates, node_modules/, dist/, local research/screenshots/raw media in evidence/, and the owner's local handoff. These files stay on their original computer. Do not force-add them. The optimized 2.8 MB runtime film is included because the current hero uses it; its large original master is excluded.
+.gitignore excludes enquiry records, .env files, credentials/certificates, node_modules/, dist/, local research/screenshots/raw media in evidence/, and the owner's local handoff. These files stay on their original computer. Do not force-add them. Optimized runtime films and atlases are included; large original generation masters remain excluded.
 
 ## Content and asset context
 

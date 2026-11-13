@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { projects } from '../data/projects.js';
+import { enquiryHref } from '../enquiry-context.js';
 import './ProjectPages.css';
 
 function Arrow({ reverse = false }) {
@@ -34,7 +35,7 @@ export function ProjectsPage() {
             <p className="eyebrow">CURRENT LISTINGS</p>
             <h2 id="current-listings-title">Ask about current availability.</h2>
             <p>Contact Grama Development for the latest property information or to discuss a home or development project.</p>
-            <a className="text-link" href="/contact">Discuss an opportunity <Arrow /></a>
+            <a className="text-link" href={enquiryHref({ path: 'home', topic: 'Custom home' })}>Discuss an opportunity <Arrow /></a>
           </section>
         ) : (
           <div className="projects-page-grid">
@@ -49,7 +50,7 @@ export function ProjectsPage() {
             {showUpcoming && <article className="projects-page-card projects-page-card--upcoming"><a href="/projects/dexter-acres"><div className="projects-page-card-image"><img src="/assets/community.webp" alt="AI-generated architectural concept of the proposed fourteen-home Dexter Acres neighborhood" width="1800" height="817" loading="lazy" /><span>PROPOSED DEVELOPMENT</span></div><div className="projects-page-card-copy"><p>Des Plaines, Illinois</p><h2>Dexter Acres</h2><p>A planned neighborhood at Webster and Dexter Lanes. Explore the architectural concept, cinematic sequence and fourteen-lot plan.</p><span>Explore Dexter Acres <Arrow /></span></div></a></article>}
           </div>
         )}
-        <div className="projects-page-contact"><p>Planning your next home or development?</p><a className="text-link" href="/contact">Start a conversation <Arrow /></a></div>
+        <div className="projects-page-contact"><p>Planning your next home or development?</p><a className="text-link" href={enquiryHref({ path: 'home', topic: 'Custom home' })}>Start a conversation <Arrow /></a></div>
       </div>
     </div>
   );
@@ -67,7 +68,7 @@ export function ProjectCase({ project, onView }) {
       images: project.gallery,
       index: imageIndex,
       title: project.name,
-      caption: project.summary,
+      caption: project.gallery[imageIndex].caption || project.summary,
       source: project.source,
     });
   }
@@ -91,9 +92,9 @@ export function ProjectCase({ project, onView }) {
         </section>
         <section className="project-case-gallery" aria-labelledby="project-gallery-title">
           <div className="project-case-gallery-heading"><p className="eyebrow">PROJECT PHOTOGRAPHY</p><h2 id="project-gallery-title">A closer look.</h2></div>
-          <div className="project-case-gallery-grid">{project.gallery.map((photo, photoIndex) => <figure key={photo.image}><button type="button" onClick={() => openGallery(photoIndex)} aria-label={'Enlarge ' + photo.caption}><img src={'/assets/' + photo.image} alt={photo.alt} width="1600" height="1067" loading="lazy" /><span><Arrow /></span></button><figcaption>{photo.caption}</figcaption></figure>)}</div>
+          <div className="project-case-gallery-grid">{project.gallery.map((photo, photoIndex) => <figure key={photo.image}><button type="button" onClick={() => openGallery(photoIndex)} aria-label={'Enlarge ' + photo.caption}><img src={'/assets/' + photo.image} alt={photo.alt} width={photo.width || 1600} height={photo.height || 1067} loading="lazy" /><span><Arrow /></span></button><figcaption>{photo.caption}</figcaption></figure>)}</div>
         </section>
-        <section className="project-case-cta" aria-labelledby="project-contact-title"><div><p className="eyebrow">BUILD WITH GRAMA DEVELOPMENT</p><h2 id="project-contact-title">Discuss your home<br /><em>or development.</em></h2></div><a className="text-link" href="/contact">Talk to Grama Development <Arrow /></a></section>
+        <section className="project-case-cta" aria-labelledby="project-contact-title"><div><p className="eyebrow">BUILD WITH GRAMA DEVELOPMENT</p><h2 id="project-contact-title">Discuss your home<br /><em>or development.</em></h2></div><div className="project-case-enquiry-links"><a className="text-link" href={enquiryHref({ path: 'home', topic: 'Custom home' })}>Discuss a custom home <Arrow /></a><a className="text-link" href={enquiryHref({ path: 'development', topic: 'Development partnership' })}>Discuss a development <Arrow /></a></div></section>
         <nav className="project-case-navigation" aria-label="More completed projects"><a href={'/projects/' + previous.slug}><span>PREVIOUS PROJECT</span><strong><Arrow reverse />{previous.name}</strong></a><a href={'/projects/' + next.slug}><span>NEXT PROJECT</span><strong>{next.name}<Arrow /></strong></a></nav>
       </div>
     </article>
