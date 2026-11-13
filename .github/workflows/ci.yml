@@ -46,7 +46,6 @@ jobs:
     env:
       BROWSER_CHANNEL: ${{ matrix.browser }}
       CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      ANIMATION_EVIDENCE_DIR: ${{ runner.temp }}/grama-windows-animation-${{ matrix.browser }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -66,6 +65,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $modulePath = Join-Path $browserTools 'node_modules/playwright/index.mjs'
           "PLAYWRIGHT_MODULE_PATH=$modulePath" >> $env:GITHUB_ENV
+          $evidencePath = Join-Path $env:RUNNER_TEMP 'grama-windows-animation-${{ matrix.browser }}'
+          "ANIMATION_EVIDENCE_DIR=$evidencePath" >> $env:GITHUB_ENV
       - name: Verify native wheel scrolling on candidate and public domain
         run: node scripts/verify-windows-animation.mjs
       - name: Upload Windows browser evidence
@@ -73,7 +74,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: windows-animation-${{ matrix.browser }}
-          path: ${{ env.ANIMATION_EVIDENCE_DIR }}
+          path: ${{ runner.temp }}/grama-windows-animation-${{ matrix.browser }}
           if-no-files-found: error
           retention-days: 7
           compression-level: 0
