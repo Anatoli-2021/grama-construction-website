@@ -64,4 +64,4 @@ check('custom-home lot is rejected', { interest: 'Custom home', lot: '3' }, path
 check('development lot is rejected', { path: 'development', interest: 'Investment partnership', lot: 3 }, pathError);
 check('custom home without a lot remains valid', { interest: 'Custom home', lot: '' }, null);
 check('development without a lot remains valid', { path: 'development', interest: 'Investment partnership', lot: '' }, null);
-check('consent remains mandatory', { lot: '3', consent: false }, 'Please confirm that Grama may contact you about this enquiry.');
+check('consent remains mandatory', { lot: '3', consent: false }, 'Please confirm that Grama Development may contact you about this enquiry.');

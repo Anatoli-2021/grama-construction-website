@@ -1,0 +1,15 @@
+.animated-experience .ae-film-link{display:inline-flex;align-items:center;gap:9px;min-height:44px;margin-top:12px;padding:8px 15px;border:1px solid #efeee140;border-radius:999px;background:#151817e8;color:#eeeee4;font:400 11px/1.4 General Sans,Arial,sans-serif;letter-spacing:.01em}
+.animated-experience .ae-film-link:hover{background:#2b342a;border-color:#efeee180}
+.animated-experience .ae-film-link svg{width:16px;height:16px}
+.animated-experience .ae-film-dialog{width:calc(100vw - 32px);max-width:1100px;max-height:92vh;padding:0;border:1px solid #f0f0df30;border-radius:10px;background:#0e1210;color:#eeeee5;overflow:auto;box-shadow:0 24px 120px #0009}
+.animated-experience .ae-film-dialog::backdrop{background:#030706e8;backdrop-filter:blur(10px)}
+.animated-experience .ae-film-toolbar{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:12px 14px 12px 22px}
+.animated-experience .ae-film-toolbar h2{font:400 16px/1.4 General Sans,Arial,sans-serif;letter-spacing:-.02em;margin:0}
+.animated-experience .ae-film-toolbar button{display:grid;place-items:center;width:44px;height:44px;border:1px solid #c9d1c42b;border-radius:50%;background:transparent;color:#eeeee5;font-size:26px;line-height:1;cursor:pointer}
+.animated-experience .ae-film-dialog video{display:block;width:100%;height:auto;max-height:70vh;object-fit:contain;background:#080b09}
+.animated-experience .ae-film-caption{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 22px 20px;font:400 11px/1.6 General Sans,Arial,sans-serif;color:#adb5a7}
+.animated-experience .ae-film-caption p{margin:0}
+.animated-experience .ae-film-caption a{color:#e0e4d7;text-decoration:underline;text-underline-offset:4px}
+.animated-experience .ae-film-message{padding:0 22px 20px;margin:0;color:#d0d6c7;font:400 12px/1.7 General Sans,Arial,sans-serif}
+@media(max-width:600px){.animated-experience .ae-film-link{margin-top:9px;min-height:40px;font-size:10px;padding:7px 12px}.animated-experience .ae-film-dialog{width:calc(100vw - 20px);border-radius:7px}.animated-experience .ae-film-toolbar{padding:8px 9px 8px 15px}.animated-experience .ae-film-caption{padding:14px 15px 17px;font-size:10px}}
+@media(max-height:430px){.animated-experience .ae-film-link{margin-top:6px;min-height:36px;padding:6px 12px;font-size:10px}.animated-experience .ae-film-dialog{max-height:96vh}.animated-experience .ae-film-dialog video{max-height:62vh}.animated-experience .ae-film-toolbar{padding-block:5px}.animated-experience .ae-film-caption{padding-block:10px}}
