@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { createWriteStream } from 'node:fs';
+import { openSync, closeSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import { join, resolve } from 'node:path';
@@ -248,7 +248,7 @@ try {
   assert.ok(['chrome', 'msedge'].includes(channel), 'BROWSER_CHANNEL must select installed Chrome or Edge');
   assert.ok(process.env.PLAYWRIGHT_MODULE_PATH, 'Isolated Playwright module path is required');
   const { chromium } = await import(pathToFileURL(resolve(process.env.PLAYWRIGHT_MODULE_PATH)).href);
-  serverLog = createWriteStream(join(output, 'local-server.log'));
+  serverLog = openSync(join(output, 'local-server.log'), 'w');
   server = spawn(process.execPath, ['scripts/serve-website.mjs'], {
     env: { ...process.env, PORT: '5189' },
     stdio: ['ignore', serverLog, serverLog],
@@ -269,7 +269,7 @@ try {
 } finally {
   await browser?.close().catch(() => {});
   server?.kill();
-  serverLog?.end();
+  if (serverLog !== undefined) closeSync(serverLog);
   report.finishedAt = new Date().toISOString();
   await writeFile(join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify({ windows: report.environment, browser: channel, version: report.browserVersion, passed: report.passed, report: join(output, 'report.json'), error: report.error?.message }));
