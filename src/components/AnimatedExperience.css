@@ -1,0 +1,589 @@
+.architectural-journey {
+  background: #111713;
+  color: #f0f0e7;
+  --site-gutter: clamp(24px,5.5vw,100px);
+}
+.architectural-journey .ae-scroll-track {
+  position: relative;
+}
+.architectural-journey[data-mode="scroll"] .ae-scroll-track {
+  height: 690svh;
+}
+.architectural-journey .ae-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 620px;
+  overflow: clip;
+  isolation: isolate;
+  background: #111713;
+  --journey-progress: 0;
+  --journey-overview: 0;
+  --journey-introduction: 1;
+}
+.journey-picture {
+  position: absolute;
+  inset: 0;
+  opacity: calc(1 - var(--journey-overview));
+  background: #111713;
+}
+.journey-picture .journey-poster,.journey-picture .ae-artlist-sequence {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  mask: none;
+  -webkit-mask: none;
+  transition: none;
+}
+.journey-picture .journey-poster {
+  object-fit: contain;
+  z-index: 1;
+}
+.journey-overview {
+  position: absolute;
+  inset: 0;
+  opacity: var(--journey-overview);
+  transform: scale(calc(1.07 - var(--journey-overview)*.07));
+  pointer-events: none;
+}
+.journey-overview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 55% center;
+}
+.journey-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,#09140c65,transparent 35%,#07110935 55%,#09130bea 100%);
+  pointer-events: none;
+}
+.journey-intro {
+  position: absolute;
+  top: 145px;
+  left: var(--site-gutter);
+  opacity: var(--journey-introduction);
+  pointer-events: none;
+}
+.journey-intro>.site-label {
+  color: #ced4c3;
+  font-size: 10px;
+}
+.journey-intro h1 {
+  font-size: clamp(55px,6.5vw,100px);
+  font-weight: 350;
+  line-height: .98;
+  letter-spacing: -.06em;
+  margin: 27px 0 25px;
+}
+.journey-intro>p:last-child {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #bdc5b3;
+  margin: 0;
+}
+.architectural-journey .ae-view-options {
+  position: absolute;
+  z-index: 3;
+  right: var(--site-gutter);
+  top: 142px;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+.architectural-journey .ae-view-options button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 6px 0;
+  background: none;
+  border: 0;
+  color: #e3e8d9;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.architectural-journey .ae-view-options svg {
+  width: 20px;
+  height: 20px;
+}
+.journey-caption {
+  position: absolute;
+  left: var(--site-gutter);
+  bottom: 185px;
+  max-width: 430px;
+  pointer-events: none;
+}
+.journey-caption>.site-label {
+  font-size: 10px;
+  color: #b9c4ad;
+}
+.journey-caption h2 {
+  font-size: clamp(34px,4.1vw,60px);
+  font-weight: 350;
+  line-height: 1.05;
+  letter-spacing: -.05em;
+  margin: 20px 0 16px;
+}
+.journey-caption>p {
+  max-width: 360px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #c0cbb7;
+  margin: 0;
+}
+.journey-film {
+  position: absolute;
+  right: var(--site-gutter);
+  bottom: 205px;
+}
+.journey-film .ae-film-link {
+  margin: 0;
+  border-color: #eff3df60;
+  background: #1723179c;
+  font-size: 12px;
+  padding: 11px 20px;
+}
+.ae-journey-disclosure {
+  position: absolute;
+  right: var(--site-gutter);
+  bottom: 175px;
+  max-width: 350px;
+  margin: 0;
+  color: #b1bda8;
+  font-size: 10px;
+  line-height: 1.7;
+  text-align: right;
+}
+.architectural-journey .ae-scroll-controls {
+  position: absolute;
+  left: var(--site-gutter);
+  right: var(--site-gutter);
+  bottom: 30px;
+  z-index: 2;
+}
+.architectural-journey .ae-scroll-instruction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 20px;
+  color: #c6d1bc;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.architectural-journey .ae-scroll-instruction>span:first-child>span {
+  font-size: 20px;
+  margin-left: 15px;
+}
+.architectural-journey .ae-scroll-instruction>span:last-child {
+  font-size: 10px;
+  color: #8c9b80;
+}
+.architectural-journey .ae-range-label {
+  display: block;
+  position: relative;
+  height: 28px;
+}
+.architectural-journey .ae-range-label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: calc(var(--journey-progress)*100%);
+  height: 1px;
+  background: #e3e8d3;
+  pointer-events: none;
+}
+.architectural-journey .ae-range-label input {
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  margin: 0;
+  cursor: pointer;
+}
+.architectural-journey .ae-range-label input::-webkit-slider-runnable-track {
+  height: 1px;
+  background: #e6ebd640;
+}
+.architectural-journey .ae-range-label input::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 8px;
+  height: 8px;
+  margin-top: -3.5px;
+  border: 0;
+  border-radius: 50%;
+  background: #e1e6d3;
+}
+.architectural-journey .ae-range-label input::-moz-range-track {
+  height: 1px;
+  background: #e6ebd640;
+}
+.architectural-journey .ae-range-label input::-moz-range-thumb {
+  width: 8px;
+  height: 8px;
+  border: 0;
+  border-radius: 50%;
+  background: #e1e6d3;
+}
+.architectural-journey .ae-chapters {
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  gap: 25px;
+  margin-top: 8px;
+}
+.architectural-journey .ae-chapters button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  padding: 8px 0;
+  text-align: left;
+  background: none;
+  border: 0;
+  color: #8e9e80;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.architectural-journey .ae-chapters button>span {
+  font-size: 9px;
+  color: #6f8162;
+}
+.architectural-journey .ae-chapters button[aria-current="step"] {
+  color: #e5ebd7;
+}
+.architectural-journey .ae-chapters button[aria-current="step"]>span {
+  color: #c1cead;
+}
+.architectural-journey .ae-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+.architectural-journey[data-mode="stills"] .ae-stage {
+  position: relative;
+  height: min(800px,100svh);
+  min-height: 620px;
+}
+.architectural-journey[data-mode="stills"] .journey-caption {
+  bottom: 80px;
+}
+.architectural-journey[data-mode="stills"] .journey-film {
+  bottom: 105px;
+}
+.architectural-journey[data-mode="stills"] .ae-journey-disclosure {
+  bottom: 70px;
+}
+.architectural-journey .ae-storyboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #d8e0c725;
+}
+.architectural-journey .ae-storyboard figure {
+  margin: 0;
+  min-width: 0;
+  background: #172019;
+}
+.architectural-journey .ae-storyboard figure>img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  object-fit: contain;
+  background: #111713;
+}
+.architectural-journey .ae-storyboard figcaption {
+  padding: 30px 35px 40px;
+}
+.architectural-journey .ae-storyboard figcaption>span {
+  font-size: 10px;
+  color: #a6b797;
+}
+.architectural-journey .ae-storyboard h2 {
+  font-size: 32px;
+  font-weight: 350;
+  letter-spacing: -.04em;
+  margin: 15px 0 0;
+}
+.journey-error {
+  position: absolute;
+  left: var(--site-gutter);
+  top: 240px;
+  max-width: 280px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #d6dfc8;
+}
+.journey-continue {
+  padding: 100px var(--site-gutter);
+  background: #e9ebdf;
+  color: #253122;
+}
+.journey-continue h2 {
+  font-size: clamp(44px,5.5vw,82px);
+  font-weight: 350;
+  line-height: 1.05;
+  letter-spacing: -.055em;
+  margin: 25px 0;
+}
+.journey-continue>p:not(.site-label) {
+  max-width: 470px;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #6b765e;
+}
+.journey-continue>div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 50px;
+  margin-top: 30px;
+}
+.journey-continue a {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-height: 48px;
+  border-bottom: 1px solid #75846560;
+  font-size: 13px;
+}
+.journey-continue svg {
+  width: 22px;
+  height: 22px;
+}
+@media (max-width:900px) {
+  .journey-intro {
+    top: 120px;
+  }
+  .journey-intro h1 {
+    font-size: 65px;
+  }
+  .architectural-journey .ae-view-options {
+    top: 110px;
+    gap: 18px;
+  }
+  .journey-caption {
+    bottom: 210px;
+    max-width: 360px;
+  }
+  .journey-caption h2 {
+    font-size: 42px;
+  }
+  .journey-film {
+    bottom: 165px;
+    left: var(--site-gutter);
+    right: auto;
+  }
+  .ae-journey-disclosure {
+    bottom: 170px;
+    max-width: 290px;
+  }
+  .architectural-journey .ae-chapters {
+    gap: 15px;
+  }
+  .architectural-journey .ae-chapters button {
+    font-size: 10px;
+    gap: 8px;
+  }
+}
+@media (max-width:600px) {
+  .architectural-journey[data-mode="scroll"] .ae-scroll-track {
+    height: 620svh;
+  }
+  .architectural-journey .ae-stage {
+    min-height: 580px;
+  }
+  .journey-picture {
+    top: 22%;
+    bottom: 28%;
+  }
+  .journey-picture .ae-artlist-sequence {
+    object-fit: contain;
+  }
+  .journey-picture .journey-poster {
+    object-fit: contain;
+  }
+  .journey-overview img {
+    object-position: 56% center;
+  }
+  .journey-intro {
+    top: 110px;
+    left: 24px;
+  }
+  .journey-intro>.site-label {
+    font-size: 8px;
+  }
+  .journey-intro h1 {
+    font-size: 46px;
+    margin: 20px 0 15px;
+    line-height: 1;
+  }
+  .journey-intro>p:last-child {
+    font-size: 11px;
+  }
+  .architectural-journey .ae-view-options {
+    top: 100px;
+    right: 24px;
+    gap: 12px;
+  }
+  .architectural-journey .ae-view-options button {
+    font-size: 10px;
+    gap: 5px;
+  }
+  .architectural-journey .ae-view-options button>span {
+    font-size: 11px;
+  }
+  .journey-caption {
+    left: 24px;
+    right: 24px;
+    bottom: 183px;
+    max-width: 340px;
+  }
+  .journey-caption>.site-label {
+    font-size: 8px;
+  }
+  .journey-caption h2 {
+    font-size: 33px;
+    margin: 12px 0 10px;
+  }
+  .journey-caption>p {
+    font-size: 12px;
+    line-height: 1.65;
+    max-width: 270px;
+  }
+  .journey-film {
+    left: 24px;
+    bottom: 135px;
+  }
+  .journey-film .ae-film-link {
+    min-height: 36px;
+    padding: 8px 13px;
+    font-size: 10px;
+  }
+  .ae-journey-disclosure {
+    right: 24px;
+    bottom: 142px;
+    max-width: 148px;
+    font-size: 8px;
+    line-height: 1.6;
+  }
+  .architectural-journey .ae-scroll-controls {
+    left: 24px;
+    right: 24px;
+    bottom: 17px;
+  }
+  .architectural-journey .ae-scroll-instruction {
+    font-size: 9px;
+    margin-bottom: 7px;
+  }
+  .architectural-journey .ae-scroll-instruction>span:last-child {
+    font-size: 8px;
+  }
+  .architectural-journey .ae-chapters {
+    gap: 9px;
+    margin-top: 7px;
+  }
+  .architectural-journey .ae-chapters button {
+    display: block;
+    font-size: 9px;
+    line-height: 1.6;
+    padding: 4px 0;
+    min-height: 44px;
+  }
+  .architectural-journey .ae-chapters button>span {
+    display: block;
+    font-size: 7px;
+    margin-bottom: 3px;
+  }
+  .architectural-journey[data-mode="stills"] .ae-stage {
+    min-height: 650px;
+  }
+  .architectural-journey[data-mode="stills"] .journey-caption {
+    bottom: 170px;
+  }
+  .architectural-journey[data-mode="stills"] .journey-film {
+    bottom: 115px;
+  }
+  .architectural-journey[data-mode="stills"] .ae-journey-disclosure {
+    bottom: 120px;
+  }
+  .architectural-journey .ae-storyboard {
+    grid-template-columns: 1fr;
+  }
+  .architectural-journey .ae-storyboard figcaption {
+    padding: 25px 24px 35px;
+  }
+  .journey-continue {
+    padding: 65px 24px;
+  }
+  .journey-continue h2 {
+    font-size: 47px;
+  }
+  .journey-continue>p:not(.site-label) {
+    font-size: 14px;
+  }
+  .journey-continue>div {
+    display: grid;
+    gap: 14px;
+  }
+}
+@media (max-height:600px) and (min-width:601px) {
+  .architectural-journey .ae-stage {
+    min-height: 420px;
+  }
+  .journey-intro {
+    top: 108px;
+  }
+  .journey-intro h1 {
+    font-size: 42px;
+    margin-block: 15px;
+  }
+  .journey-intro>p:last-child {
+    display: none;
+  }
+  .architectural-journey .ae-view-options {
+    top: 98px;
+  }
+  .journey-caption {
+    bottom: 145px;
+  }
+  .journey-caption h2 {
+    font-size: 34px;
+    margin-block: 12px;
+  }
+  .journey-caption>p {
+    font-size: 12px;
+  }
+  .journey-film {
+    bottom: 140px;
+    left: auto;
+    right: var(--site-gutter);
+  }
+  .ae-journey-disclosure {
+    bottom: 110px;
+    font-size: 8px;
+  }
+  .architectural-journey .ae-scroll-controls {
+    bottom: 14px;
+  }
+  .architectural-journey .ae-scroll-instruction {
+    margin-bottom: 4px;
+  }
+  .architectural-journey .ae-chapters button {
+    min-height: 35px;
+    padding: 5px 0;
+  }
+}

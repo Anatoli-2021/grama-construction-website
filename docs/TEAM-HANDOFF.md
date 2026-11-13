@@ -1,46 +1,50 @@
-# Developer team handoff — November 10, 2026
+# Developer team handoff — November 13, 2026
 
-## Start here
+## Final integration under review
 
-- Repository: https://github.com/Anatoli-2021/grama-construction-website (private).
-- Working setup branch: `feature/unified-development`.
-- Website preview source: PR #1. Unified deployment/tooling: PR #2, based on PR #1. Review and merge #1 first; then retarget #2 to `main` for review. Neither is automatically merged.
-- Setup: Node 24, `npm ci`, `npm run check`. Website: `npm run dev` (5173). OS: `npm run dev:os` (5180).
-- Full developer steps and permissions: [ONBOARDING.md](ONBOARDING.md).
+- Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Private business records, investor data and source conversations remain excluded.
+- Current branch: `feature/final-website-integration`. Integration baseline `94d8759` reconciles stable `main` at `af3faf5b924865f898bb32f022ef84ab7e4aca94` with the Windows-verified feature stack at `21d8a6f8fceda7ff129390d141bd3eccdcf79ef1`. New design work follows that baseline.
+- Use this integration branch’s pull request for the final review. Review target: [Railway staging](https://humorous-delight-staging-website.up.railway.app/). The final PR must record the candidate commit, deployment result, CI and browser evidence; the target URL alone is not proof of a verified release.
+- Production at [gramadevelopment.com](https://gramadevelopment.com/) remains pinned to `21d8a6f8fceda7ff129390d141bd3eccdcf79ef1`. The final transformation has not been authorized for production. Obtain Tony's review and authorization before promotion; do not change company DNS as part of staging.
+- Hosted Contact delivery remains disabled. Phone contact and an explicit browser-only draft are retained; no email provider is activated by the visual integration.
 
-## What is ready
+## What the candidate contains
 
-The original website and assets remain intact. A website-only Dockerfile and static host are ready for Railway; the runtime excludes the OS and local enquiry records. Existing source paths are unchanged. The reusable blank OS launch tool is shared and tested, including common/subdivision tasks, stable IDs, Draft status and access boundaries.
+The public identity is **GRAMA / Luxury Real Estate Development**, retaining Concept A and the circular G. Home leads with authentic company photography and selected completed cases. Developments separates proposed Dexter Acres from the completed Portfolio. About and Home show Tony and both approved original Alina photographs across the two pages. Official partner marks remain intact.
 
-GitHub Actions ran successfully on the clean Linux runner after correcting build-before-test order. Local checks also passed, including the existing nine website API/media checks. The browser downloaded a real synthetic 29-task Draft export without console errors. Desktop source HTML and JSON hashes remained unchanged.
+There are sixteen prerendered public pages: Home, Developments, About, Portfolio, eight completed cases, Dexter Acres, Partnerships, Animated Experience and Contact. Routes and metadata live in `src/site-routes.js`; case records and galleries live in `src/data/projects.js`. Completed-project attribution follows the original company portfolio and does not establish a sale or current availability.
 
-## Existing Railway target
+The separate Animated Experience combines three Artlist concept scenes: arrival, interior and structural opening. Five chapters lead to a neighborhood overview. Scrolling drives the canvas without clicking Play; required desktop/mobile atlases load lazily into a bounded cache. Stills, reduced-motion opt-in, keyboard controls and a separately playable native MP4 remain available. The original Dexter Acres cinematic sequence and fourteen-lot map stay on its project page. The new sequence is an AI architectural visualization, not verified footage, engineering geometry or a measured room-to-room route. See [animation notes](ANIMATED-EXPERIENCE.md) and [asset provenance](ASSETS.md).
 
-- Project: `earnest-wisdom`, ID `ffb7baed-e751-41be-9874-c4eb4c4ae290`.
-- Service: `grama-construction-website`, ID `875425ae-8bb5-4d47-a026-49a9df71dc22`.
-- Environment: Railway labels it `production`, ID `15058afa-2401-4d42-83a7-5e807d7d1258`; its intended use here is a temporary website preview, not replacement of the company site.
-- Observed state before configuration: online initial GitHub deployment, `main` source, no public domain, private `*.railway.internal` endpoint. GitHub branch loading reported an error.
-- Existing Railway trial shows 30 days / $5 credit remaining at inspection; no paid upgrade was purchased. This is a point-in-time UI observation, not a permanent hosting allowance.
-- A project invitation already existed. Verify the recipient and acceptance in Railway before creating another invitation. Do not publish invite links, auth codes or tokens in GitHub.
+Contact carries only allowed topic/path and optional lot context between pages. Prerendered form controls cannot submit personal fields through native GET. Missing delivery configuration cannot report success. The local consented save workflow remains separate from hosted delivery; use synthetic data when testing. See [CONTACT-DELIVERY.md](CONTACT-DELIVERY.md).
 
-## Immediate deployment work
+## Setup and release boundary
 
-Tony authorized this temporary Railway website deployment and keeping the company domain unchanged. Browser connectivity stopped before settings/domain changes could be applied. Restore the existing browser connection or authorize the Railway connector, then:
+Use your own GitHub account; `axmatea` is the correct collaborator identity. Verify access and current shared source before editing. Use Node 24, `npm ci`, `npm run dev` at port 5173, and `npm run check` for the shared build, tests and repository policy checks. The blank OS tool runs separately with `npm run dev:os` at port 5180.
 
-1. Confirm this exact project/service; do not create another repository or service.
-2. Select the reviewed deployment commit/branch without replacing stable `main`. Refresh/repair the GitHub repository integration if branches cannot load.
-3. Use the root Dockerfile, service PORT and `/healthz`; remove conflicting old build/start overrides. See [Railway settings](../infra/website/README.md).
-4. Generate a temporary Railway HTTPS domain. Do not edit company DNS or add a custom company domain.
-5. Wait for the deployment, record its source SHA and deployment ID, then verify anonymous HTTP 200, actual images/video, mobile contact, console errors and blocked private/OS/API paths.
-6. Update this handoff with the verified URL and result. A running container or private internal hostname alone is not public deployment completion.
+Work on a focused feature branch and open a PR into stable `main`; request owner review before merging. Never force-push shared history. For this transformation, use the final integration PR and staging target rather than issuing competing releases from older branches. Follow [ONBOARDING.md](ONBOARDING.md), [CONTRIBUTING.md](../CONTRIBUTING.md) and [RELEASES.md](RELEASES.md).
 
-The working Sites review URL remains available: https://grama-dexter-acres-preview.anatoli-gram-1564.chatgpt.site.
+Before claiming the candidate ready, record the exact deployed SHA, checks, desktop/mobile review, direct-route behavior, forward/reverse scroll, chapter and range controls, reduced-motion/stills/native-film fallback, original Dexter map and lot-to-Contact flow. The new three-scene journey requires its own browser evidence. Earlier Windows results apply to the production baseline, not automatically to the redesign.
 
-## Remaining gates and owners
+The static runtime serves the website and the separate presentation authorization API. OS source, local enquiry records and private data are excluded. `/presentation` remains a generic login shell; actual financial records and individually authorized accounts require separate private runtime configuration. No populated deck or account list is committed. See [SECURITY.md](SECURITY.md) and [INVESTOR-PRESENTATION.md](INVESTOR-PRESENTATION.md).
 
-- Tony: review PRs, confirm Railway team invitation recipient/acceptance, approve future paid hosting or GitHub plan changes, and approve any eventual company-domain release.
-- Developers: complete/verify Railway preview after connection restoration; keep all OS records private. Issues #3 and #4 track OS authentication and enforceable owner review.
-- OS: no hosted service, database, live connector or company-data migration exists. Follow [SECURITY.md](SECURITY.md) before connecting private records.
-- GitHub: `main` is unprotected under the current plan. CI and documented owner review exist; enforced review/production gates require further setup.
+## Existing production target
 
-Source details: [SOURCE-INVENTORY.md](SOURCE-INVENTORY.md). Platform decision: [HOSTING.md](HOSTING.md). Approval and rollback: [RELEASES.md](RELEASES.md).
+The existing Railway project is `earnest-wisdom`, project `ffb7baed-e751-41be-9874-c4eb4c4ae290`, service `875425ae-8bb5-4d47-a026-49a9df71dc22`, production environment `15058afa-2401-4d42-83a7-5e807d7d1258`. These identifiers describe the existing production target, not permission to deploy the new integration there. The root Dockerfile and [hosting settings](../infra/website/README.md) define the runtime.
+
+Confirm the effective environment, source branch or commit pin, staged diff and intended deployment before applying a Railway change. A generic latest-commit command has previously selected older `main`; authenticated connector access does not prove the separate GitHub App or push-trigger configuration works. Verify deployment metadata against the tested commit instead of assuming autodeployment.
+
+## Historical release evidence
+
+The November 11 branch-repair release was `dcc95a45b00fda37667dbfb7554e47d8605fa489`, deployment `e713d762-3ff5-43bf-9fd5-62c4a21280ef`. [PR #10](https://github.com/Anatoli-2021/grama-construction-website/pull/10) and [CI run 42921303047](https://github.com/Anatoli-2021/grama-construction-website/actions/runs/42921303047) retain that evidence. Its fourteen-page checks, repaired feature-branch configuration and earlier deployment instruction describe that release; they are not current source declarations or authorization to publish this redesign.
+
+The later Windows baseline is `21d8a6f8fceda7ff129390d141bd3eccdcf79ef1`, with production deployment `719a9f35-2ee9-43a2-956b-64a35f920c23`. [PR #22](https://github.com/Anatoli-2021/grama-construction-website/pull/22) records its Chrome/Edge wheel-only verification and the removal of the initial stationary scroll interval. Preserve those fixes when reviewing the new journey. Historical checks must not be relabelled as final-integration results.
+
+## Remaining review items
+
+- Complete one final integration PR with current staging deployment and browser evidence; obtain Tony's review before any production promotion.
+- Verify the new journey on Chrome and Edge, mobile layouts, reduced motion, buffering/failure fallback and the original Dexter Acres map flow.
+- Keep live Contact delivery disabled until approved configuration and a separately authorized end-to-end delivery test are complete.
+- Keep financial claims, sales totals, availability, licenses and commercial commitments out of public copy until supported by approved records. OS authentication and operational integrations remain separate work.
+
+References: [source inventory](SOURCE-INVENTORY.md), [assets](ASSETS.md), [release steps](RELEASES.md), [security](SECURITY.md), [hosting](HOSTING.md).
