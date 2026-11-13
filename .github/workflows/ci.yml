@@ -34,3 +34,46 @@ jobs:
             sleep 1
           done
           VERIFY_URL=http://localhost:5179 npm run verify
+
+  windows-animation:
+    name: Windows scroll animation (${{ matrix.browser }})
+    runs-on: windows-2025
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, msedge]
+    env:
+      BROWSER_CHANNEL: ${{ matrix.browser }}
+      CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      ANIMATION_EVIDENCE_DIR: ${{ runner.temp }}/grama-windows-animation-${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          ref: ${{ env.CANDIDATE_SHA }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Install isolated browser test tools
+        shell: pwsh
+        run: |
+          $browserTools = Join-Path $env:RUNNER_TEMP 'grama-browser-tools'
+          npm install --prefix "$browserTools" --no-save --no-package-lock --ignore-scripts @playwright/test@1.65.0
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $modulePath = Join-Path $browserTools 'node_modules/playwright/index.mjs'
+          "PLAYWRIGHT_MODULE_PATH=$modulePath" >> $env:GITHUB_ENV
+      - name: Verify native wheel scrolling on candidate and public domain
+        run: node scripts/verify-windows-animation.mjs
+      - name: Upload Windows browser evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: windows-animation-${{ matrix.browser }}
+          path: ${{ env.ANIMATION_EVIDENCE_DIR }}
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
