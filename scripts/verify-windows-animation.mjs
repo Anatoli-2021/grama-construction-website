@@ -435,7 +435,8 @@ async function verifyCandidateFallbacks(target) {
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.locator('.animated-experience[data-mode="stills"]').waitFor();
-    await page.locator('.ae-journey-sequence[data-status="idle"]').waitFor();
+    await page.locator('.ae-journey-sequence[data-status="idle"]').waitFor({ state: 'attached' });
+    assert.equal(await page.locator('.ae-journey-sequence').isVisible(), false, 'Reduced motion keeps the idle canvas hidden');
     assert.ok(await page.locator('.ae-storyboard').isVisible(), 'A new reduce preference must restore the stills');
     assert.ok(await page.getByRole('button', { name: 'Enable scroll animation', exact: true }).isEnabled(), 'Opt-in control remains available after the preference reset');
     result.preferenceResetMode = 'stills';
