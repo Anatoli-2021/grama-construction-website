@@ -5,7 +5,7 @@ This repository contains optimized website assets, not the owner's complete phot
 | Runtime assets | Source and meaning |
 | --- | --- |
 | residence.webp, residence-angle.webp, residence-garden.webp | Owner-supplied Lot 10/12 architectural concepts; not completed Dexter Acres homes |
-| community.webp | Garage-aligned v3 neighborhood concept; AI visualization, not a measured or approved engineering plan |
+| masterplan/dexter-acres-828082967e9d.webp, masterplan/provenance.json | Separately disclosed illustrative masterplan informed by supplied C5 lot organization; controlled 3D plus Artlist refinement/restoration. Home designs, openings, placements and landscaping are conceptual; not project photography, exact surveyed geometry, approved building pads or a film frame |
 | site-plan-original.png | Supplied C5 plan; basis for interactive numbering and drawing-reported areas; approval/current revision unverified |
 | portfolio-dexter.webp | Actual 1847 Dexter Lane photograph from the official Grama completed portfolio |
 | portfolio-lee.webp | Actual 1906 Lee Street photograph from the official Grama completed portfolio |
@@ -13,7 +13,8 @@ This repository contains optimized website assets, not the owner's complete phot
 | portfolio-prospect-interior.webp, portfolio-lee-bath.webp | Authentic photographs from the corresponding original project photo folders |
 | portfolio-1914-entry.webp | Authentic 1914 Lee entry photograph; labeled project photography, without a listing-status claim |
 | logo-dark.png, logo-light.png, general-sans.ttf | Existing Grama brand assets |
-| residence-film.mp4, sequence/* | Existing five-second Higgsfield AI concept animation; optimized film, 32 WebP frames and a higher-resolution detail still; not construction footage |
+| residence-film.mp4, sequence/* | Retained five-second Higgsfield AI concept animation; optimized film, 32 WebP frames and a higher-resolution detail still; not construction footage |
+| construction/* | Controlled v10 neighborhood-to-residence sequence: seven phases, 224 sampled atlas frames, eight posters including a residence alias, and a 672-native-frame / 28-second film contract. Final packaging and playback checks pending; details below |
 
 Official project sources:
 
@@ -56,21 +57,25 @@ Do not reuse conflicting source specifications without resolution: Prospect Lane
 
 ### Original partner-logo section
 
-The [official homepage](https://www.gramaconstruction.com/) publishes eleven logos under “We are honored to be trusted partners for.” All eleven are retained in their original order. Logo identities were verified visually, including the previously ambiguous assets. The optimized files are 440 × 180 PNGs on a white field, preserving the brand colors. Restoring the original display does not assert certification, exclusivity, sponsorship terms or additional endorsements.
+The approved [original GRAMA website](https://www.gramaconstruction.com/) material is the source for the eleven displayed relationships and the heading “We are honored to be trusted partners for.” All eleven remain in their original order; no additional partnerships were added. The artwork sources below identify the logos and do not independently verify commercial terms, certification, exclusivity or sponsorship.
 
-| Runtime file | Brand shown / direct original asset |
+The runtime now uses eight native SVGs and three native transparent PNGs under `public/assets/partners/`, preserving their source colors and proportions without white card backgrounds. Artwork bytes are unchanged from the downloaded sources; no company logo was generated, traced, recolored or processed to remove a raster background. Pella and ABC Supply use native transparent assets from the approved original client website. The original padded PNG versions remain archived in `public/assets/` but are no longer used by this section.
+
+Houzz uses its official full-color vector with a separate “Featured on” caption, preserving the original badge's meaning. Andersen uses its official horizontal lockup. Goodman uses its current official header logo with “Air Conditioning & Heating.” The Home Depot's official transparent white vector is displayed on its own square in official orange `#F96302`; the surrounding cell stays transparent.
+
+| Runtime file | Brand shown / public artwork source |
 | --- | --- |
-| partner-floor-decor.png | [Floor & Decor](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734de5050305318aff0b25_Floor_%26_Decor_logo.svg.png) |
-| partner-houzz.png | [Featured on Houzz](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734ebc8c4d7409a68939a4_images-removebg-preview.png) |
-| partner-lennox.png | [Lennox](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734eed2abcf673b03c0a98_images__1_-removebg-preview.png) |
-| partner-pella.png | [Pella](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734de3c932e3b783c1c664_pella-windows-logo-1EC6165366-seeklogo.com.png) |
-| partner-sika.png | [Sika](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734de3f976fca956c00a39_Sika_Building_Trust.png) |
-| partner-andersen.png | [Andersen Windows & Doors](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734de4621dcb2c3edf1170_Aw-logo-2021.png) |
-| partner-bosch.png | [Bosch](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734de529929317ff35b1dc_Bosch-logo.svg.png) |
-| partner-lowes.png | [Lowe's](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734de328d6bf187512d0fa_logo.svg) |
-| partner-goodman.png | [Goodman](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734de6901cd5d448539bba_2560px-Goodman_Global_logo.svg.png) |
-| partner-abc-supply.png | [ABC Supply](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734f8d0d06de5fbb45d3fe_idrjvO-611-removebg-preview.png) |
-| partner-home-depot.png | [The Home Depot](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734fd42008534cfbbe69cd_Home-Depot-Logo.png) |
+| partners/floor-decor.svg | [Floor & Decor — official header SVG](https://www.flooranddecor.com/on/demandware.static/Sites-floor-decor-Site/-/default/dwa3cbddd6/img/default.svg) |
+| partners/houzz.svg | [Featured on Houzz — official Houzz SVG](https://www.houzz.com/res/29907517/pic/houzz_logo.svg?v=29907517) |
+| partners/lennox.svg | [Lennox — official SVG](https://www.lennox.com/application/themes/lennox/assets/global/lennox_logo.svg) |
+| partners/pella.png | [Pella — approved original client asset](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734de3c932e3b783c1c664_pella-windows-logo-1EC6165366-seeklogo.com.png) |
+| partners/sika.svg | [Sika — official Building Trust SVG](https://sika.scene7.com/is/content/sika/Sika_ClaimU_pos_rgb) |
+| partners/andersen.svg | [Andersen Windows & Doors — official SVG](https://www.andersenwindows.com/-/media/Project/AndersenCorporation/AndersenWindows/AndersenWindows/images/brand-launch-2020/andersen_logo_tm_rectangle_rgb.svg?h=260&iar=0&w=1440) |
+| partners/bosch.svg | [Bosch — unchanged inline header SVG from the official homepage](https://www.bosch.com/) |
+| partners/lowes.svg | [Lowe's — official SVG](https://www.lowescdn.com/images/ui/LowesLogo_DT.svg) |
+| partners/goodman.png | [Goodman — official transparent header PNG](https://www.goodmanmfg.com/images/librariesprovider6/default-album/gdmnlogo.png) |
+| partners/abc-supply.png | [ABC Supply — approved original client asset](https://cdn.prod.website-files.com/66117180961169ea1597a070/66734f8d0d06de5fbb45d3fe_idrjvO-611-removebg-preview.png) |
+| partners/home-depot.svg | [The Home Depot — official transparent header SVG](https://corporate.homedepot.com/themes/custom/bootstrap_thd/images/logo-site-header-homedepot.svg) |
 
 ## Individual project-page photographs
 
@@ -91,18 +96,48 @@ Ten photographs were selected from the five official project pages above, visual
 
 The project index separates the eight completed portfolio entries from the proposed Dexter Acres development. The current-listings filter has an honest empty state. Neither the completed category nor its photograph count is presented as sold inventory, sales performance or investment results.
 
-## Original house study and retained identity
+## Current illustrative masterplan — November 14, 2026
 
-- `brand/grama-development.svg`, `brand/grama-g.svg` and `favicon.svg`: retained native SVG Concept A wordmark and circular G. The final candidate introduces **GRAMA / Luxury Real Estate Development** on Home while retaining the Grama Development lockup. The founder's surname remains Grama.
+`masterplan/dexter-acres-828082967e9d.webp` is the selected restored static masterplan concept, encoded as a 2048 × 1152 WebP, 633,504 bytes. Its SHA256 is `828082967e9d565b8097f4b50c7dc8aba794745ea4344d21afacca74b351405b`. Portable source/meaning limits are recorded in `masterplan/provenance.json` without account identifiers, private paths or client operational data.
+
+The workflow used a controlled 3D community informed by the supplied C5 lot organization, followed by Artlist image refinement and one targeted restoration. Visual review retained fourteen visible houses in the broad 4 / 4 / 1 / 3 / 2 groupings, one internal connection to Dexter Lane, a dead-end turning bulb and an unbuilt east reserve. This is an illustrative organization check, not a survey or exact coordinate/parcel-boundary verification.
+
+The selected still retains interpreted house openings, facade/roof details, curb edges and landscaping. It must not be described as a material-only pass, unchanged model geometry, approved house designs or pads, construction documentation, a built neighborhood or actual project photography. Use a visible concept caption and keep the interactive C5-based map authoritative for lot organization and enquiry selection. No lot availability, pricing, approval or investment claim is supplied by this image.
+
+The still is separate from the controlled film and scroll frames. Do not splice it into that sequence or imply an exact camera/architecture match. Suggested caption: **Illustrative masterplan concept. Home designs and landscaping are conceptual.** Additional image notes can state that house placements and site details are illustrative and are not approved building pads or construction documents.
+
+## Current controlled cinematic sequence — packaging contract
+
+The revised Animated Experience uses the controlled v10 model and one continuous modeled world. The same source house geometry is repeated at fourteen conceptual placements informed by the C5-derived interactive trace. A single selected residence remains in that world through approach, interior, structural study and reassembly. This is a controlled architectural visualization, not recorded construction progress, verified engineering or a measured/approved house design.
+
+| Phase | Native source frames | Purpose |
+| --- | --- | --- |
+| Land | 1–96 | Elevated site and lot-organization introduction |
+| Community | 97–192 | Grounded foundations, frames and homes across the fourteen placements |
+| Approach | 193–288 | Continuous approach to the selected residence |
+| Interior | 289–384 | Enter its controlled interior |
+| Structure | 385–480 | Architectural cutaway of the same source model |
+| Reassembly | 481–576 | Return the same parts to the finished residence |
+| Reveal | 577–672 | Pull back to the controlled community and a separate composited brand moment |
+
+The current packaging contract is 672 native rendered frames at 24 fps, producing a 28-second silent 1280 × 720 H.264 playback film at `construction/construction-film.mp4`. No AI masterplan still or unrelated Artlist clip is inserted into its frames. The browser samples 224 source frames with `round(1 + browserFrameIndex × 671 / 223)`, packaged into 56 two-column, two-row sheets per viewport variant. Desktop tiles are 960 × 540; mobile tiles are 640 × 360.
+
+Under `construction/`, eight 1280 × 720 concept posters are packaged: `land.webp`, `community.webp`, `approach.webp`, `interior.webp`, `structure.webp`, `reassemble.webp`, `reveal.webp` and `residence.webp`. The last is an alias for the finished-residence presentation, not an eighth chapter. These `construction/` assets are controlled-render derivatives and are distinct from the separately generated `masterplan/dexter-acres-828082967e9d.webp` masterplan.
+
+**Packaging verified November 14, 2026:** all 672 native frames are complete. The package contains 112 atlases, eight posters, the film and a sanitized manifest with exact hashes and CC0 environment/tree attribution. The 28-second film is 12,915,223 bytes, silent H.264 baseline at 1280 × 720 / 24 fps; full decoding passed. Local build, all 143 tests and 335 read-only HTTP/artifact checks passed, including preservation of all 123 baseline media assets. Scroll, native playback, stills and keyboard focus were exercised in the in-app browser. Independent CI browser results and the actual Railway commit/deployment must be recorded in the final PR; this packaging note does not claim a production release. See [Animated Experience](ANIMATED-EXPERIENCE.md) for the interface and its limits.
+
+## Retained original house study and identity assets
+
+- `brand/grama-development.svg`, `brand/grama-g.svg` and `favicon.svg`: retained native SVG Concept A wordmark and circular G. The earlier integration candidate introduced **GRAMA / Luxury Real Estate Development** on Home with the Grama Development lockup. The founder's surname remains Grama.
 - `animated/house-complete.webp`: selected OpenAI-generated architectural concept, based on the supplied house visual.
 - `animated/house-structure.webp`, `animated/roof.png`, `animated/facade.png`: OpenAI Imagegen derivatives for an independently moving layered illustration. These are concept images, not measured construction or engineering details.
-- The existing `community.webp` provides the neighborhood transition. It is an AI concept, not a surveyed land plan or verified built neighborhood.
+- The earlier neighborhood transition used the AI `community.webp` concept. That original top-level file remains byte-identical to the integration baseline for historical media preservation. Active site and social-image references use the separately disclosed, content-versioned `masterplan/dexter-acres-828082967e9d.webp` above so returning visitors receive the new still without reusing the old asset URL. Neither static masterplan is part of the controlled film or current scroll-frame atlases.
 
 The structural scene retains `animated/artlist-house/desktop/sheet-0.webp` through `sheet-3.webp` and the equivalent mobile files: forty samples from the selected Artlist Kling 3.0 house animation, packed into two-column, five-row WebP sheets. Its start and end frames use the same house concept. `animated/house-motion-loop.mp4` remains the 1280 × 720 house-only compatibility version, played forward and in reverse. This is a generated architectural study, not construction footage or a measured model. The original full-resolution film remains outside the public website artifact. Original source portfolio links and partner marks are retained.
 
-## Final integration Artlist journey — November 13, 2026
+## Historical Artlist journey — retained media, November 13, 2026
 
-The separate Animated Experience adds arrival and interior concept scenes to the retained structural study. The Artlist scenes are labelled AI architectural visualizations. They do not depict verified completed work, establish a measured floor plan or document a continuous real-world camera route. Generated interior imagery is separate from the authentic completed-project galleries below.
+A previous review candidate combined arrival and interior concept scenes with the retained structural study. These Artlist media remain available as an earlier architectural film, separate from the current controlled sequence. They are AI architectural visualizations, not verified completed work, a measured floor plan or a continuous real-world camera route. Generated interior imagery remains separate from the authentic completed-project galleries below.
 
 | Runtime assets | Source and purpose |
 | --- | --- |
@@ -110,10 +145,10 @@ The separate Animated Experience adds arrival and interior concept scenes to the
 | `film/interior.mp4`, `film/interior/desktop/sheet-0.webp` through `sheet-3.webp`, equivalent mobile sheets | Artlist-generated interior study; forty sampled frames. Interior design and geometry remain illustrative. |
 | `film/interior-poster.webp` | Still from the interior concept for loading/static presentation. |
 | `animated/artlist-house/` | Retained forty-frame structural opening study described above. |
-| `film/journey.mp4` | Approximately 16.04-second, silent 1280 × 720 native playback alternative combining the arrival, interior and structural concept scenes. Requested through the explicit Play animation link. |
+| `film/journey.mp4` | Approximately 16.04-second, silent 1280 × 720 film combining the earlier arrival, interior and structural concept scenes. Retained compatibility media; not linked as the current controlled construction film. |
 | `film/manifest.json` | Portable frame counts, atlas layout, packaged file paths and native-film metadata; no generation credentials or private prompts. |
 
-Each scene uses four two-column, five-row WebP sheets per viewport variant. Frame tiles are 960 × 540 on desktop and 640 × 360 on mobile. The canvas loads required sheets lazily and retains a bounded image cache. Stills and the native film provide independent alternatives. The final overview uses the existing `community.webp` concept, while lot numbering remains based on the supplied C5 drawing. See [Animated Experience](ANIMATED-EXPERIENCE.md) for motion behavior, limitations and candidate verification.
+The historical scenes use four two-column, five-row WebP sheets per viewport variant, with 960 × 540 desktop tiles and 640 × 360 mobile tiles. Their former canvas journey used lazy sheet loading and a bounded cache. The earlier overview used the then-current AI neighborhood concept. These retained assets and their approximately 16.04-second combined film are not spliced into the new controlled 28-second film or its scroll frames; the current static masterplan has its own provenance and the interactive lot numbering remains C5-based.
 
 ## Final integration photography — November 13, 2026
 

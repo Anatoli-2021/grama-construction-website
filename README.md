@@ -8,9 +8,9 @@ Current integration branch: `feature/final-website-integration`. It reconciles s
 
 Production at [gramadevelopment.com](https://gramadevelopment.com/) remains pinned to `21d8a6f8fceda7ff129390d141bd3eccdcf79ef1`. The final transformation requires Tony's review and authorization before promotion to production. A staging deployment does not authorize a production release or a DNS change.
 
-The design presents **GRAMA / Luxury Real Estate Development**, retaining the Concept A wordmark and circular G. Home introduces authentic project photography, selected completed work, Tony and Alina, the proposed Dexter Acres development and partnerships. Both original Alina photographs are retained across Home and About. The original Dexter Acres cinematic sequence and fourteen-lot map remain on its project page.
+The design presents **GRAMA / Luxury Real Estate Development**, retaining Concept A with a minimal wordmark-only header and footer. Home introduces authentic project photography, selected completed work, Tony and Alina, the proposed Dexter Acres development and partnerships. Both original Alina photographs are retained across Home and About. All eleven existing partner marks use transparent assets. The original Dexter Acres cinematic sequence and fourteen-lot map remain on its project page.
 
-Hosted Contact delivery remains disabled. The retained server-only Resend integration requires approved sender, recipient, origin and secret configuration plus explicit enablement. The preview offers phone contact and a clearly labelled browser-only draft that sends no personal fields. Localhost retains its consented local-save workflow. See [contact delivery setup and verification](docs/CONTACT-DELIVERY.md). Sold-home totals, closing values and company revenue remain omitted without approved records.
+Hosted automatic Contact delivery remains disabled. The retained server-only Resend integration requires approved sender, recipient, origin and secret configuration plus explicit enablement. With an approved public `VITE_CONTACT_EMAIL`, visitors can review an email and deliberately open their own email app; the website clearly states that nothing has been sent. Phone contact and a browser-only draft remain available. Localhost retains its consented local-save workflow. See [contact delivery setup and verification](docs/CONTACT-DELIVERY.md). Sold-home totals, closing values and company revenue remain omitted without approved records.
 
 ## Public website
 
@@ -25,10 +25,10 @@ The integration contains sixteen prerendered public pages. Build with `npm run b
 | Eight individual completed cases | `/projects/<project-slug>` |
 | Dexter Acres cinematic and 14-lot plan | `/projects/dexter-acres` |
 | Development partnerships and process | `/partnerships` |
-| Three-scene architectural journey | `/animated-experience` |
+| Continuous neighborhood-to-residence experience | `/animated-experience` |
 | Contact and contextual enquiry | `/contact` |
 
-The Animated Experience combines Artlist arrival, interior and structural concept scenes with a neighborhood overview. Scroll drives the canvas without clicking Play; required frame atlases load lazily with a bounded cache. Stills, reduced-motion behavior and an independently playable native film remain available. These are labelled architectural visualizations, not recorded project footage or a measured walkthrough. See [animation implementation and review](docs/ANIMATED-EXPERIENCE.md).
+The Animated Experience follows one controlled 3D world through land, community, approach, interior, structure, reassembly and final reveal. Scroll drives 224 canvas samples without clicking Play; required desktop/mobile atlases load lazily with a bounded cache. Seven stills, reduced-motion behavior and a separate native 28-second film remain available. The Artlist-refined Dexter masterplan is a separate illustrative still. These visualizations do not establish approved architecture, project specifications or actual construction footage. See [animation implementation and review](docs/ANIMATED-EXPERIENCE.md).
 
 Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Runtime hosting serves `dist` plus the explicit contact-delivery and individually authorized presentation APIs; repository files, the OS and local enquiry API remain unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Missing delivery configuration cannot report a successful submission.
 
@@ -113,8 +113,8 @@ Visit the same localhost URL. Rebuild after source edits before restarting produ
 | src/components/BrandSections.jsx | Retained official partner-logo section |
 | src/components/DevelopmentProcess.jsx | Seven-step development experience |
 | src/components/Consultation.jsx | Homeowner and development-partner forms |
-| src/components/AnimatedExperience.jsx, src/components/JourneySequence.jsx | Three-scene scroll journey, lazy canvas atlases and static alternative |
-| src/components/journey-timeline.js, src/components/HouseAnimationPlayer.jsx | Chapter timing and independent native film fallback |
+| src/components/AnimatedExperience.jsx, src/components/ConstructionSequence.jsx | Continuous construction journey, lazy canvas atlases and static alternative |
+| src/components/construction-timeline.js, src/components/HouseAnimationPlayer.jsx | Seven-stage timing and independent native film fallback |
 | src/components/CinematicStory.jsx | Residence → detail → neighborhood scroll sequence |
 | src/components/SitePlan.jsx | Fourteen C5-derived lots and drawing-reported areas |
 | src/styles.css, src/refinement.css, component CSS | Desktop/mobile styling |
@@ -125,7 +125,7 @@ Visit the same localhost URL. Rebuild after source edits before restarting produ
 
 ## Local data and excluded files
 
-Hosted forms check delivery availability before enabling submission. A configured server sends a plain-text notification only to its approved recipient; visitor email addresses are used as validated Reply-To values. A successful response means the provider accepted that notification, not guaranteed inbox delivery or a reservation. No enquiry records are stored in the website filesystem and no automatic messages are sent to visitors. If delivery is unavailable, phone contact and an explicitly selected browser-only draft remain available. Localhost/loopback retains its consented local-save API. Deployment never copies local enquiry records.
+Hosted forms check delivery availability before enabling submission. A configured server sends a plain-text notification only to its approved recipient; visitor email addresses are used as validated Reply-To values. A successful response means the provider accepted that notification, not guaranteed inbox delivery or a reservation. No enquiry records are stored in the website filesystem and no automatic messages are sent to visitors. If delivery is unavailable, an approved public email can enable a visitor-controlled review and email-app handoff, with an explicit unsent state and manual copy fallback. Phone contact and a browser-only draft remain available. Localhost/loopback retains its consented local-save API. Deployment never copies local enquiry records.
 
 On localhost only, consented enquiry forms append to **.data/interest.jsonl on the developer's computer** without email or CRM delivery. Client and development-partner enquiries have separate types; lots are accepted only for Dexter Acres home enquiries. The staging review does not enable live delivery or reserve a property.
 

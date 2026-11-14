@@ -10,6 +10,8 @@ COPY presentation ./presentation
 COPY scripts/build-pages.mjs ./scripts/build-pages.mjs
 ARG SITE_URL=https://gramadevelopment.com
 ENV SITE_URL=$SITE_URL
+ARG VITE_CONTACT_EMAIL
+ENV VITE_CONTACT_EMAIL=$VITE_CONTACT_EMAIL
 RUN npm run build
 
 FROM node:24-alpine AS runtime

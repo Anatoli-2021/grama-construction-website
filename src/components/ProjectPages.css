@@ -87,7 +87,7 @@
 .projects-page-card-copy > span { display: inline-flex; align-items: center; gap: 26px; min-height: 44px; margin-top: 16px; font-size: 13px; line-height: 1.6; }
 .projects-page-card > a:hover h2 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 7px; }
 .projects-page-card--upcoming { grid-column: 1 / -1; }
-.projects-page-card--upcoming .projects-page-card-image { aspect-ratio: 1800 / 817; background: #dfe3d7; }
+.projects-page-card--upcoming .projects-page-card-image { aspect-ratio: 16 / 9; background: #dfe3d7; }
 .projects-page-card--upcoming .projects-page-card-image > img { object-fit: contain; }
 .projects-page-empty { padding: 36px 0 64px; max-width: 660px; }
 .projects-page-empty > h2 { margin: 24px 0; font: 350 clamp(36px, 4vw, 56px)/1.1 'General Sans', Arial, sans-serif; letter-spacing: -.045em; }
@@ -162,7 +162,7 @@
   .project-case-content { padding-top: 40px; padding-bottom: 72px; }
   .projects-page-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .projects-page-card-copy > h2 { font-size: 34px; }
-  .projects-page-card--upcoming .projects-page-card-image { aspect-ratio: 1800 / 817; }
+  .projects-page-card--upcoming .projects-page-card-image { aspect-ratio: 16 / 9; }
   .projects-page-card--upcoming .projects-page-card-image > span { bottom: 12px; left: 12px; padding: 6px 8px; font-size: 9px; }
   .projects-page-contact { margin-top: 56px; }
   .project-case-back { margin-bottom: 24px; }

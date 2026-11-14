@@ -47,7 +47,7 @@ export function ProjectsPage() {
                 </a>
               </article>
             ))}
-            {showUpcoming && <article className="projects-page-card projects-page-card--upcoming"><a href="/projects/dexter-acres"><div className="projects-page-card-image"><img src="/assets/community.webp" alt="AI-generated architectural concept of the proposed fourteen-home Dexter Acres neighborhood" width="1800" height="817" loading="lazy" /><span>PROPOSED DEVELOPMENT</span></div><div className="projects-page-card-copy"><p>Des Plaines, Illinois</p><h2>Dexter Acres</h2><p>A planned neighborhood at Webster and Dexter Lanes. Explore the architectural concept, cinematic sequence and fourteen-lot plan.</p><span>Explore Dexter Acres <Arrow /></span></div></a></article>}
+            {showUpcoming && <article className="projects-page-card projects-page-card--upcoming"><a href="/projects/dexter-acres"><div className="projects-page-card-image"><img src="/assets/masterplan/dexter-acres-828082967e9d.webp" alt="Architectural masterplan concept based on the supplied Dexter Acres lot layout" width="2048" height="1152" loading="lazy" /><span>PROPOSED DEVELOPMENT</span></div><div className="projects-page-card-copy"><p>Des Plaines, Illinois</p><h2>Dexter Acres</h2><p>A planned neighborhood at Webster and Dexter Lanes. Explore the architectural concept, cinematic sequence and fourteen-lot plan.</p><span>Explore Dexter Acres <Arrow /></span></div></a></article>}
           </div>
         )}
         <div className="projects-page-contact"><p>Planning your next home or development?</p><a className="text-link" href={enquiryHref({ path: 'home', topic: 'Custom home' })}>Start a conversation <Arrow /></a></div>

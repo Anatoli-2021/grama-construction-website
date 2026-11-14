@@ -8,7 +8,7 @@ Contact notifications use a server-side HTTP request to Resend. Browser code nev
 
 Delivery requires the literal CONTACT_ENABLED value true and all required configuration below. Missing, invalid or disabled configuration leaves GET /api/contact/status reporting {"enabled":false}; POST /api/contact returns 503 before collecting the request body.
 
-The hosted interface must identify delivery as unavailable and offer an explicitly labelled draft option. A browser-only draft is not a sent enquiry. An error, timeout or unavailable provider must never produce a success message. Localhost's existing local-test-save flow remains separate from hosted email delivery.
+When server delivery is unavailable, the hosted interface offers telephone contact and an explicitly labelled draft or mail-app option. It must not imply that the website has sent a message. An error, timeout or unavailable provider must never produce a success message. Localhost's existing local-test-save flow remains separate from hosted email delivery.
 
 | Endpoint | Contract |
 | --- | --- |
@@ -33,6 +33,14 @@ Before changing DNS, record the proposed sender domain, provider region, each re
 Add only the records required for the approved sending setup. If Resend specifies a Return-Path or MX record, confirm its exact subdomain and purpose before applying it. Preserve existing mailbox MX, SPF/DMARC settings and website A/AAAA/CNAME records unless a specific modification is approved. Do not replace a company's receiving-mail configuration or repoint its website just to enable notifications. Receiving email through Resend is a separate feature and is not required by this outbound-only integration.
 
 Return to Resend and verify the actual sending-domain status. A copied DNS record or a pending verification screen is not completion. This guide supplies no account-specific DNS values and does not authorize record changes.
+
+## Visitor-controlled email option
+
+When server delivery is unavailable, the website can prepare a message in the visitor's own email app. Set the optional **public build variable** `VITE_CONTACT_EMAIL` to one approved bare business address, then rebuild. This address is deliberately visible to visitors and embedded in the bundle; it must never contain credentials. It is separate from the private runtime notification settings below.
+
+The visitor enters project details, reviews the draft, opens their email app and sends the message themselves. All five enquiry topics and a selected Dexter Acres lot are retained. The page never claims this handoff was sent or received. Visitors without a configured email app can copy the displayed details to the displayed destination or call the business. No enquiry body is posted to the website in this mode.
+
+Validate the generated destination, subject and body with synthetic details without sending a message. A working mail-app link verifies the configured contact destination; it does **not** verify server delivery, mailbox receipt or a provider integration. Without this build variable, the site retains its telephone and browser-draft fallback.
 
 ## Railway configuration
 

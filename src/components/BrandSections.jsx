@@ -10,17 +10,17 @@ const projects = projectCases.slice(0, 3);
 const archive = projectCases.slice(3);
 
 const partners = [
-  ['Floor & Decor', 'floor-decor'],
-  ['Featured on Houzz', 'houzz'],
-  ['Lennox', 'lennox'],
-  ['Pella', 'pella'],
-  ['Sika', 'sika'],
-  ['Andersen Windows & Doors', 'andersen'],
-  ['Bosch', 'bosch'],
-  ['Lowe’s', 'lowes'],
-  ['Goodman', 'goodman'],
-  ['ABC Supply', 'abc-supply'],
-  ['The Home Depot', 'home-depot'],
+  ['Floor & Decor', 'floor-decor.svg', 169, 48],
+  ['Featured on Houzz', 'houzz.svg', 557, 128],
+  ['Lennox', 'lennox.svg', 150, 50],
+  ['Pella', 'pella.png', 300, 171],
+  ['Sika', 'sika.svg', 209, 229],
+  ['Andersen Windows & Doors', 'andersen.svg', 1317, 192],
+  ['Bosch', 'bosch.svg', 433, 97],
+  ['Lowe’s', 'lowes.svg', 147, 68],
+  ['Goodman', 'goodman.png', 309, 117],
+  ['ABC Supply', 'abc-supply.png', 679, 367],
+  ['The Home Depot', 'home-depot.svg', 80, 80],
 ];
 
 export function AboutGrama({ onConsultation }) {
@@ -77,7 +77,7 @@ export function PropertyCollection({ motion }) {
         <span className="collection-location">CHICAGO & THE SUBURBS</span>
       </div>
       <div id="collection-panel" role="tabpanel" aria-labelledby={'collection-tab-' + category} className="collection-grid" data-motion={motion ? 'on' : 'off'}>
-        {showUpcoming && <article className="collection-development"><a className="collection-image" href="#architecture"><img src="/assets/community.webp" alt="AI-generated concept aerial of Dexter Acres, a proposed fourteen-home development" width="1800" height="817" loading="lazy" /><span className="collection-image-tag">PROPOSED DEVELOPMENT</span><span className="collection-view"><Arrow /></span><span className="collection-image-note">ARCHITECTURAL CONCEPT</span></a><div className="collection-caption"><div><span>WEBSTER–DEXTER / DES PLAINES</span><h3>Dexter Acres</h3></div><p>14 planned homes<br />Des Plaines, Illinois</p></div><div className="development-line"><p>A proposed residential neighborhood at Webster and Dexter Lanes. Explore the architectural concept and fourteen-lot plan.</p><a className="text-link light-link" href="#community">Explore Dexter Acres <Arrow /></a></div></article>}
+        {showUpcoming && <article className="collection-development"><a className="collection-image" href="#architecture"><img src="/assets/masterplan/dexter-acres-828082967e9d.webp" alt="Architectural masterplan concept of the proposed fourteen-home Dexter Acres neighborhood" width="2048" height="1152" loading="lazy" /><span className="collection-image-tag">PROPOSED DEVELOPMENT</span><span className="collection-view"><Arrow /></span><span className="collection-image-note">ARCHITECTURAL CONCEPT</span></a><div className="collection-caption"><div><span>WEBSTER–DEXTER / DES PLAINES</span><h3>Dexter Acres</h3></div><p>14 planned homes<br />Des Plaines, Illinois</p></div><div className="development-line"><p>A proposed residential neighborhood at Webster and Dexter Lanes. Explore the architectural concept and fourteen-lot plan.</p><a className="text-link light-link" href="#community">Explore Dexter Acres <Arrow /></a></div></article>}
         {completed.map((project, index) => <article className={'collection-project ' + (index === 0 ? 'collection-project-wide' : '')} key={project.name}><a className="collection-image" aria-label={'View ' + project.name + ' case study'} href={'/projects/' + project.slug}><img src={'/assets/' + project.image} alt={project.alt} width="1800" height="1200" loading="lazy" /><span className="collection-view"><Arrow /></span></a><div className="collection-caption"><div><span>COMPLETED PROJECT / DES PLAINES</span><h3>{project.name}</h3></div><p>{project.location}</p></div></article>)}
         {category !== 'upcoming' && <div className="collection-archive"><div className="collection-archive-heading"><p className="eyebrow light">MORE COMPLETED PROJECTS</p><a href="https://www.gramaconstruction.com/completed-projects" target="_blank" rel="noreferrer">View the original portfolio <Arrow /></a></div><div className="collection-archive-list">{archive.map(project => <a href={'/projects/' + project.slug} key={project.name}><div><h3>{project.name}</h3><p>{project.location}</p></div><span>Completed project</span><Arrow /></a>)}</div></div>}
       </div>
@@ -100,5 +100,5 @@ export function Partnerships({ onExplore }) {
 }
 
 export function TrustedPartners() {
-  return <section className="trusted-partners section-pad" id="trusted-partners" aria-labelledby="trusted-partners-title"><div className="trusted-partners-heading"><p className="eyebrow">OUR NETWORK</p><h2 id="trusted-partners-title">We are honored to be<br /><em>trusted partners for</em></h2></div><div className="trusted-partners-grid">{partners.map(([name, image]) => <div className="trusted-partner" key={image}><img src={'/assets/partner-' + image + '.png'} alt={name} width="440" height="180" loading="lazy" /></div>)}</div></section>;
+  return <section className="trusted-partners section-pad" id="trusted-partners" aria-labelledby="trusted-partners-title"><div className="trusted-partners-heading"><p className="eyebrow">OUR NETWORK</p><h2 id="trusted-partners-title">We are honored to be<br /><em>trusted partners for</em></h2></div><div className="trusted-partners-grid">{partners.map(([name, image, width, height]) => <div className={'trusted-partner trusted-partner--' + image.split('.')[0]} key={image}>{image === 'houzz.svg' && <span className="trusted-partner-note" aria-hidden="true">Featured on</span>}<img src={'/assets/partners/' + image} alt={name} width={width} height={height} loading="lazy" /></div>)}</div></section>;
 }

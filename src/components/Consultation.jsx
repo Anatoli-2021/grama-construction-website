@@ -3,6 +3,7 @@ import { lotData } from './SitePlan.jsx';
 import './Consultation.css';
 import { isLocalPreview } from '../preview-mode.js';
 import { checkContactDelivery, contactPayload, createSubmissionSession, sendContactSubmission } from '../contact-submission.js';
+import { contactEmailLink, publicContactEmail } from '../contact-email.js';
 
 const topics = { home: ['Dexter Acres', 'Custom home'], development: ['Landowner opportunity', 'Investment partnership', 'Development partnership'] };
 const paths = [
@@ -10,6 +11,7 @@ const paths = [
   ['home', '02', 'Build a home', 'For custom homes and Dexter Acres enquiries.'],
 ];
 const blank = { name: '', email: '', phone: '', location: '', timing: '', details: '', consent: false, website: '' };
+const emailDestination = publicContactEmail(import.meta.env.VITE_CONTACT_EMAIL);
 function Arrow() { return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" strokeWidth="1.3" /></svg>; }
 
 export default function Consultation({ request, motion }) {
@@ -37,7 +39,10 @@ export default function Consultation({ request, motion }) {
     let active = true;
     setDelivery({ state: 'checking', confirmed: false });
     checkContactDelivery().then(result => {
-      if (active) setDelivery({ state: result.enabled ? 'enabled' : 'unavailable', confirmed: result.confirmed });
+      if (active) {
+        setDelivery({ state: result.enabled ? 'enabled' : 'unavailable', confirmed: result.confirmed });
+        if (!result.enabled && emailDestination) setDraftOnly(true);
+      }
     });
     return () => { active = false; };
   }, [readinessAttempt]);
@@ -109,13 +114,14 @@ export default function Consultation({ request, motion }) {
   const sending = status.state === 'sending';
   const fieldsEnabled = interactive && (isLocalPreview || liveEnabled || draftOnly) && !sending;
   const isHome = path === 'home';
+  const emailLink = contactEmailLink(emailDestination, contactPayload(values, { path, topic, lot }));
 
   async function submit(event) {
     event.preventDefault();
     if (!interactive || inFlight.current) return;
     if (!isLocalPreview && !liveEnabled) {
       if (draftOnly) setStatus({ state: 'draft', message: '' });
-      else setStatus({ state: 'error', message: 'Online delivery is not available. Call Grama Development or prepare a browser-only draft.' });
+      else setStatus({ state: 'error', message: 'Online delivery is not available. Call Grama Development or prepare an email enquiry.' });
       return;
     }
     if (!values.consent) {
@@ -158,15 +164,15 @@ export default function Consultation({ request, motion }) {
       <div ref={panel} className="consultation-panel" id="consultation-panel" role="tabpanel" aria-labelledby={'consultation-tab-' + path} tabIndex={-1}>
         <div className="consultation-form-title"><span className="eyebrow">{isHome ? 'YOUR HOME' : 'YOUR OPPORTUNITY'}</span><h3>{isHome ? 'Tell us about your home.' : 'Tell us about the opportunity.'}</h3></div>
         {!isLocalPreview && status.state !== 'success' && <div className="contact-delivery-notice">
-          <p role="status">{draftOnly ? 'Browser-only draft: nothing entered here is sent or saved to a server.' : delivery.state === 'checking' ? 'Checking online enquiry delivery…' : delivery.state === 'enabled' ? 'Online enquiries are available. Submit your project details for Grama Development to follow up.' : delivery.confirmed ? 'Online enquiry delivery is not connected. Call Grama Development or prepare a browser-only draft.' : 'Online delivery could not be confirmed. Call Grama Development, try again, or prepare a browser-only draft.'}</p>
+          <p role="status">{draftOnly ? emailDestination ? 'Prepare your message below, then review and send it in your email app.' : 'Prepare your project details below. Nothing is sent or saved to a server.' : delivery.state === 'checking' ? 'Checking enquiry options…' : delivery.state === 'enabled' ? 'Send your project details for Grama Development to follow up.' : emailDestination ? 'Call us directly or prepare an email enquiry below.' : 'Call us directly or prepare your project details below.'}</p>
           <a href="tel:+17738499634">Call +1 773 849 9634</a>
           <div className="contact-delivery-actions">
-            {delivery.state !== 'enabled' && <button type="button" disabled={delivery.state === 'checking' || sending} onClick={() => setReadinessAttempt(current => current + 1)}>{delivery.state === 'checking' ? 'Checking delivery…' : 'Check delivery again'}</button>}
-            {!draftOnly && delivery.state === 'unavailable' && <button type="button" onClick={() => changeMode(true)}>Prepare a browser-only draft</button>}
+            {!emailDestination && delivery.state !== 'enabled' && <button type="button" disabled={delivery.state === 'checking' || sending} onClick={() => setReadinessAttempt(current => current + 1)}>{delivery.state === 'checking' ? 'Checking delivery…' : 'Check delivery again'}</button>}
+            {!draftOnly && delivery.state === 'unavailable' && <button type="button" onClick={() => changeMode(true)}>{emailDestination ? 'Write an email enquiry' : 'Prepare your project details'}</button>}
             {draftOnly && delivery.state === 'enabled' && <button type="button" onClick={() => changeMode(false)}>Use online submission</button>}
           </div>
         </div>}
-        {status.state === 'draft' ? <div ref={outcome} className="enquiry-draft" tabIndex={-1} role="region" aria-labelledby="enquiry-result-title"><p className="eyebrow">DRAFT ONLY — NOT SENT</p><h4 id="enquiry-result-title">Your enquiry draft</h4><p>This draft stays in this browser. It has not been submitted. Call Grama Development to discuss your project.</p><dl><div><dt>Name</dt><dd>{values.name}</dd></div><div><dt>Email</dt><dd>{values.email}</dd></div>{values.phone && <div><dt>Phone</dt><dd>{values.phone}</dd></div>}<div><dt>Topic</dt><dd>{topic}{isHome && topic === 'Dexter Acres' && lot ? ' · Lot ' + lot : ''}</dd></div>{values.location && <div><dt>Location</dt><dd>{values.location}</dd></div>}{values.timing && <div><dt>Timeframe</dt><dd>{values.timing}</dd></div>}{values.details && <div><dt>Details</dt><dd>{values.details}</dd></div>}</dl><a className="button button-dark" href="tel:+17738499634">Call +1 773 849 9634 <Arrow /></a><button type="button" className="text-link" onClick={() => { setStatus({ state: 'idle', message: '' }); focusFirstInput(); }}>Edit this draft <Arrow /></button></div>
+        {status.state === 'draft' ? <div ref={outcome} className="enquiry-draft" tabIndex={-1} role="region" aria-labelledby="enquiry-result-title"><p className="eyebrow">DRAFT ONLY — NOT SENT</p><h4 id="enquiry-result-title">{emailDestination ? 'Review your email' : 'Your enquiry draft'}</h4><p>{emailDestination ? 'Open your email app to review and send this message. Nothing has been sent from this page.' : 'This draft stays in this browser. It has not been submitted. Call Grama Development to discuss your project.'}</p><dl><div><dt>Name</dt><dd>{values.name}</dd></div><div><dt>Email</dt><dd>{values.email}</dd></div>{values.phone && <div><dt>Phone</dt><dd>{values.phone}</dd></div>}<div><dt>Topic</dt><dd>{topic}{isHome && topic === 'Dexter Acres' && lot ? ' · Lot ' + lot : ''}</dd></div>{values.location && <div><dt>Location</dt><dd>{values.location}</dd></div>}{values.timing && <div><dt>Timeframe</dt><dd>{values.timing}</dd></div>}{values.details && <div><dt>Details</dt><dd>{values.details}</dd></div>}</dl>{emailLink && <><a className="button button-dark" href={emailLink}>Open email app <Arrow /></a><p className="form-preview-note">To: {emailDestination}. If no email app opens, copy the details above into a message to this address.</p></>}<a className={emailLink ? 'text-link' : 'button button-dark'} href="tel:+17738499634">Call +1 773 849 9634 <Arrow /></a><button type="button" className="text-link" onClick={() => { setStatus({ state: 'idle', message: '' }); focusFirstInput(); }}>Edit this draft <Arrow /></button></div>
           : status.state === 'success' ? <div ref={outcome} className="consultation-success" tabIndex={-1} role="region" aria-labelledby="enquiry-result-title"><span aria-hidden="true">✓</span><h4 id="enquiry-result-title">{status.kind === 'live' ? 'Enquiry submitted.' : 'Enquiry saved locally.'}</h4><p role="status">{status.message}</p>{status.reference && <p className="enquiry-reference">Reference: <strong>{status.reference}</strong></p>}<button type="button" className="text-link" onClick={beginAnother}>Begin another enquiry <Arrow /></button></div>
             : <form onSubmit={submit} aria-busy={sending}>
               <noscript><p className="form-preview-note">Enable JavaScript to use the enquiry form, or call +1 773 849 9634.</p></noscript>
@@ -178,8 +184,8 @@ export default function Consultation({ request, motion }) {
                 <label className="form-field consultation-details">{isHome ? 'Tell us about your home' : 'Tell us about the opportunity'} <span>(optional)</span><textarea name="details" value={values.details} onChange={change} maxLength={2000} rows={3} placeholder={isHome ? 'Your priorities, a site you have in mind, or what draws you to Dexter Acres…' : 'The land, development idea, or partnership you would like to discuss…'} /></label>
                 <label className="honeypot" aria-hidden="true">Website<input name="website" value={values.website} onChange={change} tabIndex={-1} autoComplete="off" /></label>
                 {(isLocalPreview || liveEnabled) && <label className="consent"><input name="consent" checked={values.consent} onChange={change} type="checkbox" required /><span>{isLocalPreview ? 'I understand this preview saves the enquiry only on this computer.' : 'Grama Development may contact me about this enquiry.'}</span></label>}
-                <button className="button button-dark" type="submit" disabled={!fieldsEnabled}>{sending ? isLocalPreview ? 'Saving your enquiry…' : 'Submitting your enquiry…' : isLocalPreview ? 'Save enquiry locally' : liveEnabled ? 'Submit enquiry to Grama Development' : draftOnly ? 'Review enquiry draft' : 'Online delivery unavailable'}<Arrow /></button>
-                <p className="form-preview-note">{isLocalPreview ? 'Local preview. No email or CRM submission is sent.' : liveEnabled ? 'Submission is accepted for delivery; it does not reserve a property.' : draftOnly ? 'Draft only. This form does not submit an enquiry or reserve a property.' : 'Online submission is disabled until delivery is confirmed. You can call Grama Development instead.'}</p>
+                <button className="button button-dark" type="submit" disabled={!fieldsEnabled}>{sending ? isLocalPreview ? 'Saving your enquiry…' : 'Submitting your enquiry…' : isLocalPreview ? 'Save enquiry locally' : liveEnabled ? 'Submit enquiry to Grama Development' : draftOnly ? emailDestination ? 'Review your email' : 'Review enquiry draft' : 'Choose an enquiry option above'}<Arrow /></button>
+                <p className="form-preview-note">{isLocalPreview ? 'Local preview. No email or CRM submission is sent.' : liveEnabled ? 'Submission is accepted for delivery; it does not reserve a property.' : draftOnly ? emailDestination ? 'Your message is prepared here. You send it from your own email app.' : 'Draft only. This form does not submit an enquiry or reserve a property.' : 'Call us or choose the email enquiry option above.'}</p>
               </fieldset>
               {status.state === 'error' && <p ref={errorMessage} className="form-error" role="alert" tabIndex={-1}>{status.message}</p>}
             </form>}

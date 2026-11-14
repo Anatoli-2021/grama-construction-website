@@ -64,11 +64,11 @@ test('the prerendered experience exposes a native film link without requiring it
   assert.equal(response.status, 200);
   const html = (await response.text()).replace(/<noscript\b[\s\S]*?<\/noscript>/gi, '');
   const link = [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)]
-    .find(([, attributes]) => /aria-label="Play animation of the house"/.test(attributes));
+    .find(([, attributes]) => /aria-label="Play the architectural film"/.test(attributes));
   assert.ok(link, 'A regular playback anchor must exist even when ES modules cannot execute');
   const href = link[1].match(/\bhref="([^"]+)"/)?.[1];
   assert.match(href || '', /^\/assets\/[^?#]+\.mp4$/);
-  assert.match(text(link[2]), /Play animation/);
+  assert.match(text(link[2]), /Play film/);
   const head = await fetch(base + href, { method: 'HEAD' });
   assert.equal(head.status, 200, 'The native playback target must be a built asset');
   assert.equal(head.headers.get('content-type'), 'video/mp4');

@@ -1,31 +1,39 @@
 # Animated Experience
 
-## Final integration candidate
+## Construction candidate
 
-The separate `/animated-experience` page is part of `feature/final-website-integration`. Review it on [Railway staging](https://humorous-delight-staging-website.up.railway.app/animated-experience). The final PR must record the actual deployed commit and browser evidence. Production remains pinned to `21d8a6f8fceda7ff129390d141bd3eccdcf79ef1`; Tony's authorization is required before promoting the new experience.
+The separate `/animated-experience` page presents one controlled architectural concept from a fourteen-lot neighborhood into one residence and its structure. Its review release must record the exact Git commit, Railway deployment and completed browser evidence in the final PR. Production promotion follows Tony's review; a staging URL alone is not a production release.
 
-The design retains Concept A and the circular G within the **GRAMA / Luxury Real Estate Development** presentation. Home links to the experience. The original Dexter Acres cinematic sequence and fourteen-lot map remain on `/projects/dexter-acres`, with a continuation link from the experience to the plan.
+The design retains Concept A’s minimal GRAMA wordmark; the extra header/footer symbol has been removed. Home introduces the experience beneath authentic residential photography. The original Dexter Acres cinematic and fourteen-lot map remain on `/projects/dexter-acres`; the construction page links directly to that plan and a contextual enquiry.
 
-## Journey and rendering
+## Seven stages and scroll rendering
 
-Three Artlist-generated architectural scenes provide forty sampled frames each: arrival, interior and structural opening. Five chapters—Arrival, Entrance, Interior, Structure and Overview—organize the scroll journey. The last chapter transitions to the existing neighborhood concept. Forward and reverse scroll seek the same timeline; normal motion mode starts responding to scroll without activating Play. Chapter buttons, keyboard navigation and the progress range provide alternative controls.
+Land → Community → Approach → Interior → Structure → Reassembly → Reveal. A continuous camera moves from the supplied C5 lot arrangement toward one house, enters its rooms, reveals an aligned structural cutaway, and returns to the completed neighborhood. All seven phases occupy 96 authored frames each. The hero retains the same geometry and world transform; thirteen lighter exterior neighbors use the source-derived lot arrangement. Construction grows from supported positions, and the cutaway keeps structural parts aligned.
 
-`journey-timeline.js` defines chapter positions and scene transitions. `JourneySequence.jsx` draws adjacent-frame blends and scene crossfades on one canvas. Each scene has four two-column, five-row WebP atlas sheets per viewport variant: 960 × 540 frame tiles on desktop, 640 × 360 on mobile. The renderer requests required sheets lazily, prefetches adjacent sheets and the next scene near the end, and bounds decoded/pending image references to six. It retains the last painted view while buffering and cancels obsolete requests on variant changes or cleanup. It does not run an idle animation loop.
+`construction-timeline.js` maps scroll progress linearly across 224 sampled frames. `ConstructionSequence.jsx` draws adjacent-frame blends on one canvas. Fifty-six 2-by-2 WebP sheets per variant supply 960 × 540 desktop tiles and 640 × 360 mobile tiles. Assets live under `/assets/construction/`; its manifest records sampling, dimensions, licenses and file hashes.
 
-The arrival atlases are in `public/assets/film/arrival/`; interior atlases and their poster are in `public/assets/film/interior/` and `public/assets/film/interior-poster.webp`. The existing structural take remains in `public/assets/animated/artlist-house/`. `public/assets/film/manifest.json` records the packaged sizes and frame layout. Original generation masters and prompts are excluded from the public artifact.
+Required sheets load lazily with directional prefetch. Decoded and pending image references share a maximum of four, with no more than two pending requests. The renderer retains its last paint during buffering, cancels obsolete loads and clears references on resize, disable and unmount. It has no idle animation loop. Scroll uses ordinary document movement without wheel interception or a smooth-scroll dependency.
 
-## Stills and native film
+Chapter buttons, arrow/Home/End keys and an accessible progress range provide alternatives. Pause freezes the current view; Resume returns to scroll position. Short phone layouts keep controls within the viewport and the full house fits inside the mobile image band.
 
-Reduced motion starts with four stills: residence, interior, structure and neighborhood. Visitors can choose **Enable scroll animation** for this page. Returning to stills or a new system reduced-motion preference clears that override; it does not change the system or website-wide preference. Pause/Resume freezes or restores scroll updates.
+## Motion preferences, stills and film
 
-The independent **Play animation** link opens `/assets/film/journey.mp4`, a silent, approximately 16.04-second, 1280 × 720 native film combining the arrival, interior and structural study. The video is requested after activation and supplies native controls plus a direct-file link. The ordinary anchor is present in prerendered HTML so the file remains reachable without the interactive page. The website server supports single byte ranges for playback and seeking. The earlier `animated/house-motion-loop.mp4` remains packaged as the original house-only compatibility film.
+Reduced motion begins with seven captioned stills. **Enable scroll animation** opts into motion for this page only. View stills or a newly enabled system reduced-motion preference revokes that override. Switching to stills returns keyboard focus to the replacement enable control.
 
-Loading or unavailable canvas views retain a poster/static alternative and a path to the native film. Do not remove keyboard access, readable captions, visible focus or reduced-motion choices when revising the experience.
+**Play film** opens a separate, silent 28-second H.264 film with native controls, inline playback and a direct-file fallback. The MP4 is requested only after deliberate activation. Its ordinary anchor remains present in prerendered HTML, and the server supports byte ranges for seeking. Escape closes the dialog and returns focus to its trigger.
 
-## Source limits and verification
+An unavailable canvas keeps a poster and offers stills or the film. An unavailable video reports its failure and retains the direct-file link. Previous Artlist film assets remain packaged for compatibility and provenance; they are separate from this continuous construction experience.
 
-These scenes are an **AI architectural concept**, not recorded project footage, a measured floor plan, an engineering model or a verified room-to-room walkthrough. The arrival and interior are visual studies; they do not establish finished Dexter Acres interiors or approved specifications. The structural take uses the previously selected OpenAI house concepts. The neighborhood image is the existing AI concept; the supplied C5 drawing remains the source for lot organization. Authentic completed-project galleries are documented separately in [ASSETS.md](ASSETS.md).
+## Authenticity and source limits
 
-The production baseline at `21d8a6f` was verified with wheel-only scrolling on Windows Chrome and Edge before this redesign. That evidence does not automatically verify the new three-scene journey. The **Windows scroll animation** CI jobs run `scripts/verify-windows-animation.mjs` with `BROWSER_CHANNEL=chrome` or `msedge`; inspect completed job artifacts for the browser version, scene/frame progression and screenshots. PR Windows checks verify the local Journey build and the final Railway staging in Chrome and Edge. Manual dispatch can target production or another allowed public preview, with schema auto-detection for the legacy release. A workflow definition alone is not a passing browser result.
+This is an **illustrative architectural concept**, using a front-view study and the supplied C5 lot trace. Lot and road organization follow that trace; house footprints, orientations, driveways, landscaping and final specifications are illustrative because no approved building pads were supplied. It is not measured project plans, structural engineering, an approved building design, a construction schedule or actual construction footage. Unseen elevations and interiors are conceptual. It does not establish Dexter Acres specifications or lot availability.
 
-Before release, verify forward/reverse wheel scrolling without Play, every chapter, the progress range, viewport resizing, mobile layout, buffering/error handling, stills, reduced-motion opt-in, native film seeking and the original Dexter Acres lot-to-Contact path. Record candidate and deployed SHAs with the results. Contact delivery remains disabled and needs separate authorized delivery verification.
+Real completed-project galleries and both original Alina portraits remain separate. The supplied C5 drawing remains the source for Dexter Acres lot organization. Environment assets use source-verified CC0 licenses, recorded in the construction manifest. Production tooling, private prompts and original working files are excluded from the public website artifact.
+
+## Verification
+
+Run `npm run check` and live HTTP/asset verification. `scripts/verify-windows-animation.mjs` verifies native wheel movement without Play, all seven stages, reversal and exact origin pixels, bounded image references and zero unsolicited MP4 requests. Separate cases cover reduced motion, blocked-sheet fallback, Pause/Resume, chapters/range, stills focus and deliberate film playback/seeking.
+
+CI retains actual headed Windows Chrome and Edge and adds installed Google Chrome headless on macOS plus WebKit/Firefox engine tests. Mobile/tablet contexts are explicitly labelled browser/device emulation, not physical iPhone, Android or tablet testing. Native Safari/Chrome visual checks must be reported separately when performed. A workflow definition or old production test is not evidence that the current candidate passed.
+
+Before promotion, inspect actual desktop/phone layouts, the construction film, all five enquiry contexts and the original Dexter map-to-Contact path. Record unperformed checks honestly. A visitor-controlled email handoff is separate from verified automatic email delivery; see [Contact delivery](CONTACT-DELIVERY.md).

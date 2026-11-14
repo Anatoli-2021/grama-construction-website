@@ -194,7 +194,7 @@
   aspect-ratio: 2.15;
 }
 .collection-development .collection-image {
-  aspect-ratio: 2.2;
+  aspect-ratio: 16 / 9;
 }
 .collection-image-tag,
 .collection-image-note {
@@ -570,7 +570,7 @@
     aspect-ratio: 1.15;
   }
   .collection-development .collection-image {
-    aspect-ratio: 1.5;
+    aspect-ratio: 16 / 9;
   }
   .collection-image-tag {
     max-width: calc(100% - 28px);
@@ -822,29 +822,37 @@
   color: #858470;
 }
 .trusted-partners-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  background: #fff;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 24px 32px;
+  background: transparent;
   border-top: 1px solid var(--line, #d8d6cc);
   border-bottom: 1px solid var(--line, #d8d6cc);
-  padding: 16px 0;
+  padding: 24px 0;
 }
 .trusted-partner {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 calc(100% / 6);
+  grid-column: span 2;
   min-width: 0;
-  min-height: 116px;
-  padding: 20px 16px;
+  min-height: 96px;
+  padding: 14px 8px;
 }
+.trusted-partner:nth-child(7) { grid-column: 2 / span 2; }
+.trusted-partner--houzz { flex-direction: column; gap: 5px; }
+.trusted-partner-note { font-size: 10px; line-height: 1.4; color: #313b2e; letter-spacing: .025em; }
 .trusted-partner > img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 64px;
+  max-width: 180px;
   object-fit: contain;
 }
+.trusted-partner--houzz > img { height: 36px; }
+.trusted-partner--pella > img { max-width: 145px; }
+.trusted-partner--sika > img { height: 72px; }
+.trusted-partner--home-depot > img { width: 64px; height: 64px; background: #f96302; }
 @media (max-width: 899px) {
   .about-people {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
@@ -856,9 +864,9 @@
   .collection-current > .text-link {
     margin-top: 20px;
   }
-  .trusted-partner {
-    flex-basis: 25%;
-  }
+  .trusted-partners-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 20px 24px; }
+  .trusted-partner:nth-child(7) { grid-column: span 2; }
+  .trusted-partner:nth-child(9) { grid-column: 2 / span 2; }
 }
 @media (max-width: 600px) {
   .about-people {
@@ -904,9 +912,13 @@
     font-size: clamp(34px, 8.8vw, 46px);
     line-height: 1.14;
   }
-  .trusted-partner {
-    flex-basis: 50%;
-    min-height: 96px;
-    padding: 18px 20px;
-  }
+  .trusted-partners-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px 20px; }
+  .trusted-partner:nth-child(9) { grid-column: span 2; }
+  .trusted-partner:nth-child(11) { grid-column: 2 / span 2; }
+  .trusted-partner { min-height: 86px; padding: 10px 4px; }
+  .trusted-partner > img { height: 56px; }
+  .trusted-partner--houzz > img { height: 30px; }
+  .trusted-partner--sika > img { height: 64px; }
 }
+
+.collection-development .collection-image > img { object-fit: contain; }

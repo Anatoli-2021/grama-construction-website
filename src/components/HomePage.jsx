@@ -26,6 +26,24 @@ export default function HomePage() {
       <div className="home-hero-bottom"><a href="/projects">Explore the portfolio <Arrow /></a><a href="/projects/dexter-acres">Discover Dexter Acres <Arrow /></a><span>Residential project photography</span></div>
     </section>
 
+    <section className="home-construction" aria-labelledby="home-construction-title">
+      <img className="home-construction-image" src="/assets/construction/residence.webp" alt="Conceptual gabled residence within the proposed neighborhood" width="1280" height="720" loading="lazy" decoding="async" fetchPriority="low" />
+      <div className="home-construction-shade" aria-hidden="true" />
+      <div className="home-construction-copy">
+        <p className="site-label">THE GRAMA EXPERIENCE / ARCHITECTURAL CONCEPT</p>
+        <h2 id="home-construction-title">A closer<br />look.</h2>
+        <p>From a neighborhood to the spaces within.</p>
+        <a className="site-link" href="/animated-experience">Explore the story <Arrow /></a>
+      </div>
+      <div className="home-construction-footer">
+        <p className="home-construction-stages">
+          <span className="home-construction-stages-full">Land <span aria-hidden="true">→</span> Community <span aria-hidden="true">→</span> Approach <span aria-hidden="true">→</span> Interior <span aria-hidden="true">→</span> Structure <span aria-hidden="true">→</span> Reassembly <span aria-hidden="true">→</span> Reveal</span>
+          <span className="home-construction-stages-compact">Neighborhood <span aria-hidden="true">→</span> Residence <span aria-hidden="true">→</span> Structure</span>
+        </p>
+        <p className="home-construction-caption">Illustrative construction sequence.</p>
+      </div>
+    </section>
+
     <section className="home-work" aria-labelledby="home-work-title">
       <div className="home-section-heading"><div><p className="site-label">CHICAGO & THE SURROUNDING SUBURBS</p><h2 id="home-work-title">Selected work.</h2></div><a className="site-link" href="/projects">View the portfolio <Arrow /></a></div>
       <div className="home-projects">{featured.map((project, index) => <article key={project.slug} className={'home-project home-project--' + index}>
@@ -37,13 +55,8 @@ export default function HomePage() {
 
     <section className="home-development" aria-labelledby="home-development-title">
       <div className="home-development-heading"><p className="site-label">PROPOSED DEVELOPMENT / DES PLAINES</p><h2 id="home-development-title">Dexter Acres.</h2><div><p>Fourteen planned homes.<br />Webster and Dexter Lanes.</p><a className="site-link" href="/projects/dexter-acres">Explore the development <Arrow /></a></div></div>
-      <a className="home-development-image" href="/projects/dexter-acres"><img src="/assets/community.webp" alt="Architectural concept of the proposed fourteen-home Dexter Acres neighborhood" width="1800" height="817" loading="lazy" /><span>Architectural concept</span></a>
+      <a className="home-development-image" href="/projects/dexter-acres"><img src="/assets/masterplan/dexter-acres-828082967e9d.webp" alt="Architectural concept of the proposed fourteen-home Dexter Acres neighborhood" width="2048" height="1152" loading="lazy" /><span>Architectural concept</span></a>
       <div className="home-development-links"><span>DES PLAINES, ILLINOIS</span><a href="/projects/dexter-acres#community">Explore the fourteen-lot plan <Arrow /></a></div>
-    </section>
-
-    <section className="home-film" aria-labelledby="home-film-title">
-      <div className="home-film-copy"><p className="site-label">DEXTER ACRES / ARCHITECTURAL CONCEPT</p><h2 id="home-film-title">Animated<br />Experience.</h2><p>Explore a residence, its spaces and the structure within.</p><a className="site-link" href="/animated-experience">Enter the experience <Arrow /></a></div>
-      <a className="home-film-image" href="/animated-experience" aria-label="Open the Animated Experience"><img src="/assets/animated/house-complete.webp" alt="Gabled residence concept from the Animated Experience" width="1672" height="941" loading="lazy" /></a>
     </section>
 
     <section className="home-partnerships" aria-labelledby="home-partnerships-title"><div className="home-section-heading"><div><p className="site-label">WORK WITH GRAMA</p><h2 id="home-partnerships-title">The next project.</h2></div><a className="site-link" href="/partnerships">Development partnerships <Arrow /></a></div><div className="home-opportunities">{opportunities.map(item => <a key={item.topic} href={enquiryHref({ path: 'development', topic: item.topic })}><span>{item.label}</span><h3>{item.action}</h3><Arrow /></a>)}</div><p className="home-partnerships-note">Project scope, terms and responsibilities are agreed individually.</p></section>

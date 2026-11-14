@@ -32,8 +32,8 @@ const chapters = [
     first: '14 planned homes.',
     second: 'Des Plaines.',
     body: 'The proposed neighborhood at Webster and Dexter Lanes. Explore all 14 lots in the plan below.',
-    image: '/assets/community.webp',
-    alt: 'AI-generated concept aerial showing all fourteen proposed Dexter Acres homes',
+    image: '/assets/masterplan/dexter-acres-828082967e9d.webp',
+    alt: 'Architectural masterplan concept of the fourteen-home lot layout',
     target: 0.84,
   },
 ];
@@ -222,7 +222,7 @@ export default function CinematicStory({ motion = true }) {
       // frames arrive first, providing a reliable picture during progressive load.
       const queue = [
         { key: 'poster', source: '/assets/residence.webp' },
-        { key: 'aerial', source: '/assets/community.webp' },
+        { key: 'aerial', source: '/assets/masterplan/dexter-acres-828082967e9d.webp' },
         { key: 'detail', source: '/assets/sequence/detail.webp' },
         { frame: 0, source: '/assets/sequence/house-001.webp' },
         { frame: 31, source: '/assets/sequence/house-032.webp' },
@@ -366,7 +366,7 @@ export default function CinematicStory({ motion = true }) {
           </div>
           <div className="cinema__bottom">
             {chapterNavigation()}
-            <p className="cinema__disclosure">Architectural visualization / AI concept</p>
+            <p className="cinema__disclosure">Architectural visualization / Concept study</p>
           </div>
           <div className="cinema__progress" aria-hidden="true"><span /></div>
         </div>
@@ -385,7 +385,7 @@ export default function CinematicStory({ motion = true }) {
                 <p className="cinema__eyebrow">{chapter.eyebrow}</p>
                 <h2 className="cinema__title">{chapter.first}<br /><em>{chapter.second}</em></h2>
                 <p className="cinema__body">{chapter.body}</p>
-                <p className="cinema__disclosure">Architectural visualization / AI concept</p>
+                <p className="cinema__disclosure">Architectural visualization / Concept study</p>
               </div>
             </article>
           ))}

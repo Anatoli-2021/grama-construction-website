@@ -41,21 +41,14 @@
 .brand.development-lockup, .footer-brand.development-lockup {
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 0;
   flex-shrink: 0;
-  width: 213px;
+  width: 200px;
   line-height: 0;
-}
-.development-lockup .development-g {
-  display: block;
-  width: 27px;
-  height: 27px;
-  flex: none;
-  filter: invert(1);
 }
 .development-lockup .development-wordmark {
   display: block;
-  width: 173px;
+  width: 100%;
   height: auto;
   max-height: none;
   object-fit: contain;
@@ -144,12 +137,8 @@ html:has(.animated-route) {
   border: 0;
 }
 .footer-brand.development-lockup {
-  width: 295px;
-  gap: 18px;
-}
-.footer-brand.development-lockup .development-g {
-  width: 36px;
-  height: 36px;
+  width: 240px;
+  gap: 0;
 }
 .footer-brand.development-lockup .development-wordmark {
   width: 240px;
@@ -234,15 +223,11 @@ html:has(.animated-route) {
 }
 @media (min-width: 901px) and (max-width: 1180px) {
   .brand.development-lockup {
-    width: 183px;
-    gap: 10px;
-  }
-  .brand.development-lockup .development-g {
-    width: 23px;
-    height: 23px;
+    width: 170px;
+    gap: 0;
   }
   .brand.development-lockup .development-wordmark {
-    width: 150px;
+    width: 170px;
   }
   .site-header {
     gap: 22px;
@@ -269,15 +254,11 @@ html:has(.animated-route) {
     padding-inline: 24px;
   }
   .brand.development-lockup {
-    width: 187px;
-    gap: 11px;
-  }
-  .brand.development-lockup .development-g {
-    width: 24px;
-    height: 24px;
+    width: 160px;
+    gap: 0;
   }
   .brand.development-lockup .development-wordmark {
-    width: 152px;
+    width: 160px;
   }
   .site-header .menu-button {
     display: flex;
@@ -377,12 +358,8 @@ html:has(.animated-route) {
     padding: 35px 0;
   }
   .footer-brand.development-lockup {
-    width: 248px;
-    gap: 15px;
-  }
-  .footer-brand.development-lockup .development-g {
-    width: 30px;
-    height: 30px;
+    width: 203px;
+    gap: 0;
   }
   .footer-brand.development-lockup .development-wordmark {
     width: 203px;
