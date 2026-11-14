@@ -234,6 +234,7 @@
 }
 @media (max-width: 600px) and (max-height: 600px) {
   .ce-intro { top: 94px; }
+  .construction-experience .ce-intro > .site-label { visibility: hidden; }
   .construction-experience .ce-intro h1 { font-size: 38px; margin: 18px 0; }
   .ce-intro > p:last-child { display: none; }
   .construction-experience .ae-view-options { top: 86px; gap: 14px; }
