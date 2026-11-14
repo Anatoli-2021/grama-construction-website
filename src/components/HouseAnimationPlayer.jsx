@@ -13,6 +13,7 @@ export default function HouseAnimationPlayer({
   loop = true,
 }) {
   const titleId = useId();
+  const triggerRef = useRef(null);
   const dialogRef = useRef(null);
   const videoRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -23,7 +24,9 @@ export default function HouseAnimationPlayer({
     if (!open) return undefined;
     const dialog = dialogRef.current;
     const video = videoRef.current;
-    const previousFocus = document.activeElement;
+    // Safari may leave a mouse-activated link unfocused. Always return to
+    // this player's trigger when its modal closes.
+    const previousFocus = triggerRef.current || document.activeElement;
     let alive = true;
     try { dialog.showModal(); }
     catch { window.location.assign(source); return undefined; }
@@ -49,7 +52,7 @@ export default function HouseAnimationPlayer({
   }
 
   return <>
-    <a className="ae-film-link" href={source} onClick={watch} aria-label={ariaLabel}>
+    <a ref={triggerRef} className="ae-film-link" href={source} onClick={watch} aria-label={ariaLabel}>
       <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6V4Z" fill="currentColor" /></svg>
       {label}
     </a>

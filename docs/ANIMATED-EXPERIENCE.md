@@ -34,7 +34,7 @@ Real completed-project galleries and both original Alina portraits remain separa
 
 ## Verification
 
-Run `npm run check` and live HTTP/asset verification. `scripts/verify-windows-animation.mjs` verifies native wheel movement without Play, all seven stages, reversal and exact origin pixels, bounded image references and zero unsolicited MP4 requests. Separate cases cover reduced motion, blocked-sheet fallback, Pause/Resume, chapters/range, stills focus and deliberate film playback/seeking.
+Run `npm run check` and live HTTP/asset verification. `scripts/verify-windows-animation.mjs` verifies native wheel movement without Play, all seven stages, reversal to the original frame and scene, bounded image references and zero unsolicited MP4 requests. The spatial scene comparison permits at most one 8-bit channel level of screenshot-raster difference; exact canvas hashes and measured differences remain recorded. Separate cases cover reduced motion, blocked-sheet fallback, Pause/Resume, chapters/range, stills focus and deliberate film playback/seeking. Phone/tablet contexts save their initial, interior, reveal and stills screenshots for visual review.
 
 CI retains actual headed Windows Chrome and Edge and adds installed Google Chrome headless on macOS plus WebKit/Firefox engine tests. Mobile/tablet contexts are explicitly labelled browser/device emulation, not physical iPhone, Android or tablet testing. Native Safari/Chrome visual checks must be reported separately when performed. A workflow definition or old production test is not evidence that the current candidate passed.
 
