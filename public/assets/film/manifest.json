@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "label": "AI-generated architectural concept",
+  "description": "Illustrative home interior and structure, not verified project footage or a measured floor plan.",
+  "scenes": [
+    {
+      "id": "arrival",
+      "duration": 5.04,
+      "frameCount": 40,
+      "sheetCount": 4,
+      "sheetColumns": 2,
+      "sheetRows": 5,
+      "atlasBase": "/assets/film/arrival",
+      "video": "/assets/film/arrival.mp4",
+      "frameSizes": {
+        "desktop": {
+          "width": 960,
+          "height": 540
+        },
+        "mobile": {
+          "width": 640,
+          "height": 360
+        }
+      }
+    },
+    {
+      "id": "interior",
+      "duration": 5.04,
+      "frameCount": 40,
+      "sheetCount": 4,
+      "sheetColumns": 2,
+      "sheetRows": 5,
+      "atlasBase": "/assets/film/interior",
+      "video": "/assets/film/interior.mp4",
+      "frameSizes": {
+        "desktop": {
+          "width": 960,
+          "height": 540
+        },
+        "mobile": {
+          "width": 640,
+          "height": 360
+        }
+      }
+    }
+  ],
+  "poster": "/assets/film/interior-poster.webp",
+  "structuralAtlasBase": "/assets/animated/artlist-house",
+  "overviewImage": "/assets/community.webp",
+  "nativeFilm": {
+    "url": "/assets/film/journey.mp4",
+    "width": 1280,
+    "height": 720,
+    "frameRate": 24,
+    "frameCount": 385,
+    "duration": 16.041666666666668,
+    "silent": true
+  }
+}

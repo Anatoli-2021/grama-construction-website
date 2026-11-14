@@ -35,3 +35,188 @@
 @media(max-width:899px){.development-process{padding-top:85px;padding-bottom:85px}.process-heading{display:block;margin-bottom:45px}.process-heading .display{font-size:clamp(43px,6.5vw,59px)}.process-heading-copy{max-width:620px;margin-top:28px;display:flex;gap:35px;align-items:flex-end}.process-heading-copy>p{font-size:11px;max-width:370px}.process-heading-copy>.text-link{white-space:nowrap;gap:18px;flex-shrink:0}.process-explorer{min-height:650px}.process-selector-label{font-size:7px;gap:10px}.process-step-button{font-size:10px;gap:10px;min-height:64px}.process-step-number{font-size:8px}.process-detail h3{font-size:32px;margin-top:28px}.process-detail-topline{font-size:7px}.process-photo>img{height:210px}.process-coordination-note{width:38%;line-height:1.9}}
 @media(max-width:600px){.development-process{padding-top:70px;padding-bottom:70px}.process-heading{margin-bottom:32px}.process-heading .eyebrow{font-size:8px;letter-spacing:.13em}.process-heading .display{font-size:clamp(37px,9.5vw,49px);margin-top:22px}.process-heading-copy{display:block;margin-top:24px}.process-heading-copy>p{font-size:12px;line-height:1.85;max-width:360px}.process-heading-copy>.text-link{font-size:10px;margin-top:15px;gap:30px}.process-explorer{min-height:0}.process-selector-label,.process-step{width:100%}.process-selector-label{font-size:7px;padding-bottom:15px}.process-step-button{font-size:12px;gap:20px;min-height:62px;padding:18px 0}.process-step-number{font-size:8px}.process-step-marker{font-size:22px}.process-detail{position:relative;top:auto;right:auto;width:100%;padding:6px 0 27px 32px}.process-detail-topline{border:0;padding-top:5px;font-size:6px;letter-spacing:.1em}.process-detail h3{font-size:29px;line-height:1.14;margin:20px 0 17px}.process-detail>p{font-size:11px;line-height:1.9;min-height:0}.process-detail ul{margin:19px 0 22px}.process-detail li{font-size:8px}.process-photo>img{height:190px}.process-photo>figcaption{font-size:7px;padding-top:10px}.process-coordination-note{width:100%;max-width:360px;font-size:8px;margin-top:24px;line-height:1.9}}
 @media(prefers-reduced-motion:reduce){.process-detail{animation:none}}
+
+/* Editorial refinement: readable stages with details in the document flow. */
+.development-process {
+  padding-block: var(--space-section, 112px);
+  padding-inline: var(--page-gutter, 6.2vw);
+}
+.process-heading {
+  gap: clamp(40px, 7vw, 112px);
+  margin-bottom: clamp(40px, 5vw, 64px);
+}
+.process-heading .eyebrow,
+.process-selector-label,
+.process-step-number,
+.process-detail-topline {
+  font-size: var(--type-label, 10px);
+  line-height: 1.65;
+}
+.process-heading-copy {
+  max-width: 38ch;
+}
+.process-heading-copy > p,
+.process-detail > p {
+  font-size: var(--type-body, 15px);
+  line-height: 1.75;
+}
+.process-heading-copy > .text-link {
+  min-height: 44px;
+  font-size: var(--type-small, 12px);
+  line-height: 1.5;
+}
+.process-explorer {
+  min-height: 0;
+}
+.process-step-button {
+  min-height: 72px;
+  padding-block: 20px;
+  gap: 18px;
+  font-size: var(--type-body, 15px);
+  line-height: 1.5;
+}
+.process-step-button > span:nth-child(2) {
+  min-width: 0;
+}
+.process-detail h3 {
+  font-size: clamp(32px, 3vw, 44px);
+  line-height: 1.18;
+  margin-block: 26px 22px;
+}
+.process-detail > p {
+  min-height: 0;
+  max-width: 60ch;
+}
+.process-detail ul {
+  display: grid;
+  gap: 9px;
+  margin-block: 24px 28px;
+}
+.process-detail li,
+.process-photo > figcaption,
+.process-coordination-note {
+  font-size: var(--type-small, 12px);
+  line-height: 1.75;
+}
+.process-detail li {
+  margin-top: 0;
+}
+.process-photo > img {
+  height: clamp(220px, 21vw, 300px);
+}
+.process-photo > figcaption {
+  padding-top: 14px;
+  max-width: 64ch;
+}
+.process-coordination-note {
+  max-width: 38ch;
+  margin-top: 24px;
+}
+
+/* The seven selector rows and their note determine the left column's height.
+   The active detail spans those rows, so longer copy grows the grid naturally. */
+@media (min-width: 900px) {
+  .process-explorer {
+    display: grid;
+    grid-template-columns: minmax(230px, .8fr) minmax(0, 1.2fr);
+    grid-template-rows: auto repeat(7, min-content) 1fr;
+    column-gap: clamp(40px, 7vw, 112px);
+    align-items: start;
+  }
+  .process-selector-label {
+    grid-column: 1;
+    grid-row: 1;
+    width: auto;
+    padding-bottom: 20px;
+  }
+  .process-step {
+    display: contents;
+  }
+  .process-step:nth-of-type(1) { --process-row: 2; }
+  .process-step:nth-of-type(2) { --process-row: 3; }
+  .process-step:nth-of-type(3) { --process-row: 4; }
+  .process-step:nth-of-type(4) { --process-row: 5; }
+  .process-step:nth-of-type(5) { --process-row: 6; }
+  .process-step:nth-of-type(6) { --process-row: 7; }
+  .process-step:nth-of-type(7) { --process-row: 8; }
+  .process-step-button {
+    grid-column: 1;
+    grid-row: var(--process-row);
+    border-bottom: 1px solid #cacdbd;
+  }
+  .process-step.is-active > .process-step-button {
+    border-bottom-color: #777f66;
+  }
+  .process-detail {
+    position: static;
+    grid-column: 2;
+    grid-row: 1 / 10;
+    width: auto;
+    min-width: 0;
+    padding: 0;
+  }
+  .process-coordination-note {
+    grid-column: 1;
+    grid-row: 9;
+    width: auto;
+  }
+}
+
+/* Tablet uses the same in-place detail layout as the narrow accordion.
+   JavaScript's existing <=600px scroll behavior remains unchanged. */
+@media (max-width: 899px) {
+  .process-heading-copy {
+    display: block;
+    max-width: 58ch;
+  }
+  .process-heading-copy > p {
+    max-width: none;
+  }
+  .process-heading-copy > .text-link {
+    white-space: normal;
+    margin-top: 18px;
+  }
+  .process-selector-label,
+  .process-step {
+    width: 100%;
+  }
+  .process-selector-label {
+    padding-bottom: 20px;
+  }
+  .process-step-button {
+    min-height: 72px;
+  }
+  .process-detail {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    padding: 14px 0 32px 34px;
+  }
+  .process-detail-topline {
+    border: 0;
+    padding-top: 4px;
+  }
+  .process-photo > img {
+    height: clamp(220px, 43vw, 320px);
+  }
+  .process-coordination-note {
+    width: 100%;
+    max-width: 58ch;
+    margin-top: 28px;
+  }
+}
+@media (max-width: 600px) {
+  .process-detail {
+    padding: 12px 0 32px;
+  }
+  .process-detail h3 {
+    font-size: clamp(30px, 7.7vw, 36px);
+  }
+  .process-photo > img {
+    height: clamp(190px, 48vw, 280px);
+  }
+  .process-step-button {
+    gap: 16px;
+  }
+}

@@ -34,7 +34,7 @@ function validateInterest(input) {
     if (input[field] && (typeof input[field] !== 'string' || input[field].length > limit)) return 'Please shorten the project information.';
   }
   if (input.timing && !['Within 6 months', '6–12 months', 'More than a year'].includes(input.timing)) return 'Please select a valid timeframe.';
-  if (input.consent !== true) return 'Please confirm that Grama may contact you about this enquiry.';
+  if (input.consent !== true) return 'Please confirm that Grama Development may contact you about this enquiry.';
   return null;
 }
 
@@ -72,14 +72,8 @@ const server = http.createServer(async (request, response) => {
     }
     if (url.pathname.startsWith('/api/')) return json(response, 404, { error: 'Not found.' });
     if (!production) return vite.middlewares(request, response);
-    const base = resolve(root, 'dist');
-    let path = resolve(base, '.' + decodeURIComponent(url.pathname));
-    if (path !== base && !path.startsWith(base + sep)) return json(response, 403, { error: 'Forbidden.' });
-    try { if ((await stat(path)).isDirectory()) path = resolve(path, 'index.html'); }
-    catch { path = resolve(base, 'index.html'); }
-    const content = await readFile(path);
-    response.writeHead(200, { 'Content-Type': mime[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600' });
-    response.end(content);
+    const { serveWebsiteRequest } = await import('./scripts/serve-website.mjs');
+    return await serveWebsiteRequest(request, response, { localApi: true });
   } catch (error) {
     console.error('Request failed:', error.message);
     if (!response.headersSent) json(response, 500, { error: 'The local preview could not save your enquiry. Please try again.' });
@@ -90,6 +84,6 @@ if (!production) {
   const { createServer } = await import('vite');
   vite = await createServer({ root, server: { middlewareMode: true, ws: { server } }, appType: 'spa' });
 }
-server.listen(port, '127.0.0.1', () => console.log('\nGrama Construction private preview\nLocal: http://localhost:' + port + '\nPublic deployment: disabled\n'));
+server.listen(port, '127.0.0.1', () => console.log('\nGrama Development private preview\nLocal: http://localhost:' + port + '\nPublic deployment: disabled\n'));
 server.on('error', error => { console.error(error.message); process.exitCode = 1; });
 for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, async () => { await vite?.close(); server.close(() => process.exit(0)); });

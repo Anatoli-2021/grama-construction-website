@@ -4,6 +4,18 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      public_animation_url:
+        description: Public Grama or Railway URL to verify after deployment (site root or Animated Experience page)
+        required: false
+        type: string
+        default: https://gramadevelopment.com/animated-experience
+      public_animation_schema:
+        description: Expected public animation (auto keeps older production compatible; choose construction for staging)
+        required: false
+        type: choice
+        default: auto
+        options: [auto, construction, journey, legacy]
 permissions:
   contents: read
 concurrency:
@@ -34,3 +46,103 @@ jobs:
             sleep 1
           done
           VERIFY_URL=http://localhost:5179 npm run verify
+
+  windows-animation:
+    name: Windows scroll animation (${{ matrix.browser }})
+    runs-on: windows-2025
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, msedge]
+    env:
+      BROWSER_CHANNEL: ${{ matrix.browser }}
+      CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      # PR/push checks verify final staging; manual dispatch retains prod/auto defaults above.
+      PUBLIC_ANIMATION_URL: ${{ inputs.public_animation_url || 'https://humorous-delight-staging-website.up.railway.app/animated-experience' }}
+      PUBLIC_ANIMATION_SCHEMA: ${{ inputs.public_animation_schema || 'construction' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          ref: ${{ env.CANDIDATE_SHA }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Install isolated browser test tools
+        shell: pwsh
+        run: |
+          $browserTools = Join-Path $env:RUNNER_TEMP 'grama-browser-tools'
+          npm install --prefix "$browserTools" --no-save --no-package-lock --ignore-scripts @playwright/test@1.65.0
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $modulePath = Join-Path $browserTools 'node_modules/playwright/index.mjs'
+          "PLAYWRIGHT_MODULE_PATH=$modulePath" >> $env:GITHUB_ENV
+          $evidencePath = Join-Path $env:RUNNER_TEMP 'grama-windows-animation-${{ matrix.browser }}'
+          "ANIMATION_EVIDENCE_DIR=$evidencePath" >> $env:GITHUB_ENV
+      - name: Verify construction, alternatives and emulated mobile controls
+        run: node scripts/verify-windows-animation.mjs
+      - name: Upload Windows browser evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: windows-animation-${{ matrix.browser }}
+          path: ${{ runner.temp }}/grama-windows-animation-${{ matrix.browser }}
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+
+  macos-animation:
+    name: macOS animation (${{ matrix.engine }})
+    runs-on: macos-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chrome-macos, webkit, firefox]
+    env:
+      BROWSER_CHANNEL: ${{ matrix.engine }}
+      CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PUBLIC_ANIMATION_URL: ${{ inputs.public_animation_url || 'https://humorous-delight-staging-website.up.railway.app/animated-experience' }}
+      PUBLIC_ANIMATION_SCHEMA: ${{ inputs.public_animation_schema || 'construction' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          ref: ${{ env.CANDIDATE_SHA }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Install isolated tools and missing browser
+        shell: bash
+        env:
+          BROWSER_ENGINE: ${{ matrix.engine }}
+        run: |
+          browser_tools="$RUNNER_TEMP/grama-browser-tools"
+          npm install --prefix "$browser_tools" --no-save --no-package-lock --ignore-scripts @playwright/test@1.65.0
+          if [[ "$BROWSER_ENGINE" == 'chrome-macos' ]]; then
+            # Use Google's installed stable browser, not bundled Chromium.
+            if [[ ! -x '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' ]]; then
+              node "$browser_tools/node_modules/playwright/cli.js" install chrome
+            fi
+          else
+            node "$browser_tools/node_modules/playwright/cli.js" install "$BROWSER_ENGINE"
+          fi
+          echo "PLAYWRIGHT_MODULE_PATH=$browser_tools/node_modules/playwright/index.mjs" >> "$GITHUB_ENV"
+          echo "ANIMATION_EVIDENCE_DIR=$RUNNER_TEMP/grama-macos-animation-$BROWSER_ENGINE" >> "$GITHUB_ENV"
+      - name: Verify construction and browser alternatives
+        run: node scripts/verify-windows-animation.mjs
+      - name: Upload macOS engine evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: macos-animation-${{ matrix.engine }}
+          path: ${{ runner.temp }}/grama-macos-animation-${{ matrix.engine }}
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0

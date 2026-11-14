@@ -1,0 +1,268 @@
+.construction-experience {
+  --ce-gutter: clamp(24px, 5.5vw, 100px);
+  background: #111913;
+  color: #f5f3e8;
+}
+.construction-experience .ae-scroll-track { position: relative; }
+.construction-experience[data-mode="scroll"] .ae-scroll-track { height: 780svh; }
+.construction-experience .ae-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 620px;
+  overflow: clip;
+  isolation: isolate;
+  background: #111913;
+  --ce-introduction: 1;
+  --ce-progress: 0;
+  --ce-reveal: 0;
+}
+.ce-picture { position: absolute; inset: 0; z-index: 0; background: #111913; }
+.ce-picture > .ce-poster,
+.ce-picture > .ae-construction-sequence {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+.ce-picture > .ce-poster { z-index: 1; }
+.ce-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #09110d68, transparent 30%, #09110d22 50%, #09110de8 100%), linear-gradient(90deg, #09110d38, transparent 70%);
+  pointer-events: none;
+}
+.ce-intro {
+  position: absolute;
+  left: var(--ce-gutter);
+  top: 145px;
+  opacity: var(--ce-introduction);
+  pointer-events: none;
+}
+.construction-experience .site-label { font-size: 10px; line-height: 1.6; color: #d1dbc7; }
+.construction-experience .ce-intro h1 {
+  font-size: clamp(58px, 7.5vw, 112px);
+  font-weight: 350;
+  line-height: .98;
+  letter-spacing: -.06em;
+  margin: 26px 0 24px;
+}
+.ce-intro > p:last-child { font-size: 14px; line-height: 1.7; color: #dde3d3; margin: 0; }
+.construction-experience .ae-view-options {
+  position: absolute;
+  right: var(--ce-gutter);
+  top: 140px;
+  z-index: 3;
+  display: flex;
+  gap: 26px;
+  align-items: center;
+}
+.construction-experience .ae-view-options button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: #f1f3e7;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.construction-experience .ae-view-options svg { width: 20px; height: 20px; }
+.ce-caption {
+  position: absolute;
+  left: var(--ce-gutter);
+  bottom: 195px;
+  max-width: 480px;
+  opacity: calc(1 - var(--ce-introduction));
+  pointer-events: none;
+}
+.construction-experience .ce-caption h2 {
+  font-size: clamp(36px, 4.5vw, 68px);
+  font-weight: 350;
+  line-height: 1.04;
+  letter-spacing: -.05em;
+  margin: 18px 0 14px;
+}
+.ce-caption > p { max-width: 360px; font-size: 14px; line-height: 1.75; color: #d2ddc8; margin: 0; }
+.ce-film { position: absolute; right: var(--ce-gutter); bottom: 205px; }
+.ce-film .ae-film-link { margin: 0; padding: 11px 20px; background: #142318a6; border-color: #f1f4e36b; font-size: 12px; }
+.ce-disclosure {
+  position: absolute;
+  right: var(--ce-gutter);
+  bottom: 155px;
+  max-width: 300px;
+  color: #c5d0ba;
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: right;
+  margin: 0;
+}
+.ce-brand-reveal {
+  position: absolute;
+  left: var(--ce-gutter);
+  top: 150px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  opacity: var(--ce-reveal);
+  pointer-events: none;
+}
+.ce-brand-reveal > .ce-reveal-wordmark { display: block; width: 190px; height: auto; filter: invert(1); }
+.construction-experience .ae-scroll-controls { position: absolute; left: var(--ce-gutter); right: var(--ce-gutter); bottom: 25px; z-index: 2; }
+.construction-experience .ae-scroll-instruction { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 10px; font-size: 11px; line-height: 1.7; color: #d4dfca; }
+.construction-experience .ae-scroll-instruction > span:first-child > span { font-size: 20px; margin-left: 15px; }
+.construction-experience .ae-scroll-instruction > span:last-child { color: #a4b398; }
+.construction-experience .ae-range-label { display: block; position: relative; height: 28px; }
+.construction-experience .ae-range-label::before { content: ''; position: absolute; left: 0; top: 13px; width: calc(var(--ce-progress) * 100%); height: 1px; background: #edf1df; pointer-events: none; }
+.construction-experience .ae-range-label input { display: block; appearance: none; -webkit-appearance: none; width: 100%; height: 28px; margin: 0; background: transparent; cursor: pointer; }
+.construction-experience .ae-range-label input::-webkit-slider-runnable-track { height: 1px; background: #e6ebd640; }
+.construction-experience .ae-range-label input::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 8px; height: 8px; margin-top: -3.5px; border: 0; border-radius: 50%; background: #edf1df; }
+.construction-experience .ae-range-label input::-moz-range-track { height: 1px; background: #e6ebd640; }
+.construction-experience .ae-range-label input::-moz-range-thumb { width: 8px; height: 8px; border: 0; border-radius: 50%; background: #edf1df; }
+.construction-experience .ae-chapters { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 18px; margin-top: 7px; }
+.construction-experience .ae-chapters button { display: flex; align-items: center; gap: 11px; min-height: 44px; padding: 8px 0; border: 0; background: none; text-align: left; font-size: 12px; line-height: 1.5; color: #a0b092; }
+.construction-experience .ae-chapters button > span:first-child { font-size: 9px; color: #899d79; }
+.construction-experience .ae-chapters button[aria-current="step"] { color: #f1f4e5; }
+.construction-experience .ae-chapters button[aria-current="step"] > span:first-child { color: #d2dfc0; }
+.construction-experience :is(button, a, input):focus-visible { outline: 2px solid #f3f1df; outline-offset: 5px; }
+.construction-experience :is(.ce-editorial, .ce-work, .ce-continue) :is(button, a, input):focus-visible { outline-color: #293126; }
+.construction-experience .ae-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.construction-experience[data-sequence-state="error"] .ce-intro { opacity: 1; }
+.construction-experience[data-sequence-state="error"] .ce-caption { display: none; }
+.ce-intro > p.ce-load-message { display: block; max-width: 290px; font-size: 12px; line-height: 1.7; }
+.construction-experience[data-mode="stills"] .ae-stage { position: relative; height: min(800px, 100svh); }
+.construction-experience[data-mode="stills"] .ce-caption { display: none; }
+.construction-experience[data-mode="stills"] .ce-film { bottom: 85px; }
+.construction-experience[data-mode="stills"] .ce-disclosure { bottom: 40px; }
+.construction-experience .ae-storyboard { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #87917c40; }
+.construction-experience .ae-storyboard figure { margin: 0; min-width: 0; background: #18221a; }
+.construction-experience .ae-storyboard figure > img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; }
+.construction-experience .ae-storyboard figcaption { padding: 28px 32px 36px; }
+.construction-experience .ae-storyboard figcaption > span { font-size: 10px; line-height: 1.7; color: #b2c1a5; }
+.construction-experience .ae-storyboard h2 { font-size: 32px; font-weight: 350; letter-spacing: -.04em; margin: 14px 0 0; }
+.ce-editorial { display: grid; grid-template-columns: 1fr 1fr; gap: 7vw; padding: 100px var(--ce-gutter); background: #f5f3ec; color: #293126; }
+.ce-editorial .site-label, .ce-work .site-label { color: #6d7864; }
+.construction-experience .ce-editorial h2 { font-size: clamp(42px, 5.4vw, 80px); font-weight: 350; line-height: 1.04; letter-spacing: -.055em; margin: 25px 0 0; }
+.ce-editorial > div > p:not(.site-label) { max-width: 470px; margin: 0 0 24px; font-size: 16px; line-height: 1.8; color: #68735f; }
+.ce-editorial > div > p.ce-factual-note { font-size: 12px; line-height: 1.8; color: #7b8474; }
+.ce-editorial .site-link { font-size: 12px; }
+.ce-work { padding: 90px var(--ce-gutter) 105px; background: #eeeee4; color: #293126; }
+.ce-work-heading { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 25px; margin-bottom: 40px; }
+.ce-work-heading > .site-label { grid-column: 1 / -1; }
+.construction-experience .ce-work-heading h2 { font-size: clamp(38px, 4.4vw, 66px); font-weight: 350; letter-spacing: -.05em; line-height: 1.07; margin: 0; }
+.ce-work-heading > a { justify-self: end; }
+.ce-work-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 35px; }
+.ce-work-grid > a { display: block; min-width: 0; }
+.ce-work-grid img { display: block; width: 100%; height: auto; aspect-ratio: 1.5; object-fit: cover; }
+.ce-work-grid span { display: flex; justify-content: space-between; align-items: center; gap: 20px; font-size: 15px; line-height: 1.6; margin-top: 17px; }
+.ce-work-grid svg { width: 20px; height: 20px; }
+.ce-continue { padding: 95px var(--ce-gutter); background: #e2e7d9; color: #293126; }
+.ce-continue > .site-label { color: #65765a; }
+.construction-experience .ce-continue h2 { font-size: clamp(44px, 5.5vw, 82px); font-weight: 350; line-height: 1.05; letter-spacing: -.055em; margin: 25px 0; }
+.ce-continue > p:not(.site-label) { max-width: 470px; font-size: 15px; line-height: 1.8; color: #65725b; }
+.ce-continue > div { display: flex; flex-wrap: wrap; gap: 20px 50px; margin-top: 30px; }
+.ce-continue a { display: flex; align-items: center; gap: 28px; min-height: 48px; border-bottom: 1px solid #75846560; font-size: 13px; }
+.ce-continue svg { width: 22px; height: 22px; }
+@media (max-width: 1000px) {
+  .construction-experience .ae-chapters { gap: 12px; }
+  .construction-experience .ae-chapters button { display: block; font-size: 10px; }
+  .construction-experience .ae-chapters button > span:first-child { display: block; margin-bottom: 4px; }
+  .ce-intro { top: 125px; }
+  .construction-experience .ae-view-options { top: 113px; }
+  .ce-caption { bottom: 210px; max-width: 410px; }
+  .ce-film { bottom: 163px; left: var(--ce-gutter); right: auto; }
+  .ce-disclosure { bottom: 163px; }
+}
+@media (max-width: 600px) {
+  .construction-experience[data-mode="scroll"] .ae-scroll-track { height: 720svh; }
+  .construction-experience .ae-stage { min-height: 0; }
+  .ce-picture { top: 24%; bottom: 30%; }
+  .ce-picture > .ce-poster, .ce-picture > .ae-construction-sequence { object-fit: contain; }
+  .ce-intro { left: 24px; top: 108px; }
+  .construction-experience .ce-intro > .site-label { font-size: 9px; }
+  .construction-experience .ce-intro h1 { font-size: clamp(43px, 12vw, 58px); margin: 35px 0 17px; }
+  .ce-intro > p:last-child { font-size: 12px; }
+  .construction-experience .ae-view-options { right: 24px; top: 100px; gap: 17px; }
+  .construction-experience .ae-view-options button { gap: 5px; font-size: 11px; }
+  .ce-caption { left: 24px; right: 24px; bottom: 195px; max-width: 340px; }
+  .construction-experience .ce-caption > .site-label { font-size: 10px; }
+  .construction-experience .ce-caption h2 { font-size: 34px; margin: 12px 0 10px; }
+  .ce-caption > p { max-width: 300px; font-size: 12px; line-height: 1.65; }
+  .ce-film { left: 24px; bottom: 140px; }
+  .ce-film .ae-film-link { min-height: 44px; padding: 8px 12px; font-size: 10px; gap: 6px; }
+  .ce-film .ae-film-link svg { width: 12px; height: 12px; }
+  .ce-disclosure { right: 24px; bottom: 145px; max-width: 132px; font-size: 10px; line-height: 1.5; }
+  .ce-brand-reveal { top: 160px; left: 24px; gap: 10px; }
+  .ce-brand-reveal > .ce-reveal-wordmark { width: 155px; }
+  .construction-experience .ae-scroll-controls { left: 24px; right: 24px; bottom: 18px; }
+  .construction-experience .ae-scroll-instruction { font-size: 10px; margin-bottom: 8px; gap: 15px; }
+  .construction-experience .ae-scroll-instruction > span:last-child { font-size: 9px; }
+  .construction-experience .ae-chapters { gap: 8px; margin-top: 8px; }
+  .construction-experience .ae-chapters button { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 0; border-top: 1px solid #8da07a40; }
+  .construction-experience .ae-chapters button > span:first-child { font-size: 11px; margin: 0; }
+  .construction-experience .ae-chapters button > .ce-chapter-label { display: none; }
+  .construction-experience .ae-chapters button[aria-current="step"] { border-color: #e9efdc; }
+  .construction-experience[data-mode="stills"] .ce-film { bottom: 75px; }
+  .construction-experience[data-mode="stills"] .ce-disclosure { bottom: 80px; }
+  .construction-experience .ae-storyboard { grid-template-columns: 1fr; }
+  .construction-experience .ae-storyboard figcaption { padding: 24px 24px 32px; }
+  .construction-experience .ae-storyboard h2 { font-size: 30px; }
+  .ce-editorial { grid-template-columns: 1fr; gap: 35px; padding: 65px 24px; }
+  .construction-experience .ce-editorial h2 { font-size: 51px; }
+  .ce-editorial > div > p:not(.site-label) { font-size: 14px; }
+  .ce-editorial > div > p.ce-factual-note { font-size: 11px; }
+  .ce-work { padding: 65px 24px; }
+  .ce-work-heading { display: block; margin-bottom: 30px; }
+  .construction-experience .ce-work-heading h2 { font-size: 43px; margin: 20px 0; }
+  .ce-work-heading > a { margin-top: 5px; }
+  .ce-work-grid { grid-template-columns: 1fr; gap: 32px; }
+  .ce-work-grid span { font-size: 14px; }
+  .ce-continue { padding: 65px 24px; }
+  .construction-experience .ce-continue h2 { font-size: 45px; }
+  .ce-continue > p:not(.site-label) { font-size: 14px; }
+  .ce-continue > div { display: grid; gap: 14px; }
+}
+@media (max-width: 360px) {
+  .ce-film { left: 20px; }
+  .ce-disclosure { right: 20px; max-width: 105px; }
+}
+@media (max-width: 600px) and (max-height: 600px) {
+  .ce-intro { top: 94px; }
+  .construction-experience .ce-intro > .site-label { visibility: hidden; }
+  .construction-experience .ce-intro h1 { font-size: 38px; margin: 18px 0; }
+  .ce-intro > p:last-child { display: none; }
+  .construction-experience .ae-view-options { top: 86px; gap: 14px; }
+  .ce-picture { top: 24%; bottom: 38%; }
+  .ce-caption { bottom: 170px; }
+  .construction-experience .ce-caption h2 { display: none; }
+  .ce-caption > p { display: none; }
+  .ce-film { bottom: 124px; }
+  .ce-disclosure { bottom: 129px; }
+  .ce-brand-reveal { top: 142px; }
+  .construction-experience .ae-scroll-controls { bottom: 10px; }
+  .construction-experience .ae-scroll-instruction { margin-bottom: 2px; }
+  .construction-experience .ae-chapters { margin-top: 2px; }
+}
+@media (max-height: 600px) and (min-width: 601px) {
+  .construction-experience .ae-stage { min-height: 360px; }
+  .ce-intro { top: 102px; }
+  .construction-experience .ce-intro h1 { font-size: 43px; margin: 16px 0; }
+  .ce-intro > p:last-child { display: none; }
+  .construction-experience .ae-view-options { top: 100px; }
+  .ce-caption { bottom: 135px; max-width: 380px; }
+  .construction-experience .ce-caption h2 { font-size: 32px; margin: 10px 0; }
+  .ce-caption > p { font-size: 12px; line-height: 1.6; }
+  .ce-film { bottom: 140px; left: auto; right: var(--ce-gutter); }
+  .ce-disclosure { bottom: 100px; font-size: 9px; }
+  .ce-brand-reveal { top: 108px; }
+  .construction-experience .ae-scroll-controls { bottom: 12px; }
+  .construction-experience .ae-scroll-instruction { margin-bottom: 1px; font-size: 10px; }
+  .construction-experience .ae-chapters { margin-top: 2px; }
+  .construction-experience .ae-chapters button { min-height: 35px; padding: 3px 0; font-size: 10px; }
+}
