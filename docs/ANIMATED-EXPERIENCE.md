@@ -12,6 +12,8 @@ Land → Community → Approach → Interior → Structure → Reassembly → Re
 
 `construction-timeline.js` maps scroll progress linearly across 224 sampled frames. `ConstructionSequence.jsx` draws adjacent-frame blends on one canvas. Fifty-six 2-by-2 WebP sheets per variant supply 960 × 540 desktop tiles and 640 × 360 mobile tiles. Assets live under `/assets/construction/`; its manifest records sampling, dimensions, licenses and file hashes.
 
+After 140 ms without a new pose, the canvas settles onto one nearest authored frame so a stationary house does not retain double contours from frame blending. A new movement resumes interpolation immediately; the single settle timer is cleared on cleanup and does not create an idle animation loop.
+
 Required sheets load lazily with directional prefetch. Decoded and pending image references share a maximum of four, with no more than two pending requests. The renderer retains its last paint during buffering, cancels obsolete loads and clears references on resize, disable and unmount. It has no idle animation loop. Scroll uses ordinary document movement without wheel interception or a smooth-scroll dependency.
 
 Chapter buttons, arrow/Home/End keys and an accessible progress range provide alternatives. Pause freezes the current view; Resume returns to scroll position. Short phone layouts keep controls within the viewport and the full house fits inside the mobile image band.

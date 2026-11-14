@@ -37,9 +37,10 @@ const ConstructionSequence = forwardRef(function ConstructionSequence({
   useImperativeHandle(ref, () => ({
     seek(value) {
       const next = clampConstructionProgress(value);
-      if (next !== progressRef.current) directionRef.current = Math.sign(next - progressRef.current);
+      const changed = next !== progressRef.current;
+      if (changed) directionRef.current = Math.sign(next - progressRef.current);
       progressRef.current = next;
-      refreshRef.current?.();
+      refreshRef.current?.(changed);
     },
   }), []);
 
@@ -57,6 +58,8 @@ const ConstructionSequence = forwardRef(function ConstructionSequence({
   useEffect(() => {
     let alive = true;
     let lastPaint = null;
+    let atRest = true;
+    let restTimer = 0;
     let context;
     const canvas = canvasRef.current;
     const width = variant === 'mobile' ? 640 : 960;
@@ -193,25 +196,30 @@ const ConstructionSequence = forwardRef(function ConstructionSequence({
         return;
       }
       const { pose } = current;
-      if (lastPaint !== pose.progress) {
+      const paintKey = `${pose.progress}:${atRest}`;
+      if (lastPaint !== paintKey) {
         try {
           // Preserve the old visible paint until a full new-variant pose is ready.
           if (canvas.width !== width || canvas.height !== height) {
             canvas.width = width;
             canvas.height = height;
           }
-          drawFrame(pose.frame, 1);
-          if (pose.upperFrame !== pose.frame && pose.blend > 0) drawFrame(pose.upperFrame, pose.blend);
+          // Blending smooths motion, but a paused camera must show one crisp
+          // authored frame rather than two displaced architectural outlines.
+          const displayedFrame = atRest && pose.blend >= .5 ? pose.upperFrame : pose.frame;
+          drawFrame(displayedFrame, 1);
+          if (!atRest && pose.upperFrame !== pose.frame && pose.blend > 0) drawFrame(pose.upperFrame, pose.blend);
           context.globalAlpha = 1;
           canvas.dataset.variant = variant;
-          canvas.dataset.frame = String(pose.frame);
-          canvas.dataset.globalFrame = String(pose.globalFrame);
+          canvas.dataset.frame = String(displayedFrame);
+          canvas.dataset.globalFrame = String(displayedFrame);
           canvas.dataset.stage = pose.stage;
           canvas.dataset.stageIndex = String(pose.stageIndex);
           canvas.dataset.progress = pose.progress.toFixed(5);
           canvas.dataset.clipProgress = pose.localProgress.toFixed(5);
-          canvas.dataset.frameBlend = pose.blend.toFixed(5);
-          lastPaint = pose.progress;
+          canvas.dataset.frameBlend = atRest ? '0' : pose.blend.toFixed(5);
+          canvas.dataset.settled = String(atRest);
+          lastPaint = paintKey;
           if (!paintedRef.current) {
             paintedRef.current = true;
             setPainted(true);
@@ -226,9 +234,24 @@ const ConstructionSequence = forwardRef(function ConstructionSequence({
       stats();
     }
 
+    function seekRefresh(changed) {
+      if (changed) {
+        atRest = false;
+        canvas.dataset.settled = 'false';
+        window.clearTimeout(restTimer);
+        restTimer = window.setTimeout(() => {
+          restTimer = 0;
+          atRest = true;
+          refresh();
+        }, 140);
+      }
+      refresh();
+    }
+
     function cleanup() {
       alive = false;
-      if (refreshRef.current === refresh) refreshRef.current = null;
+      window.clearTimeout(restTimer);
+      if (refreshRef.current === seekRefresh) refreshRef.current = null;
       for (const request of [...pending.values()]) request.cancel();
       pending.clear();
       for (const key of [...cache.keys()]) release(key);
@@ -247,7 +270,7 @@ const ConstructionSequence = forwardRef(function ConstructionSequence({
       report('error');
       return cleanup;
     }
-    refreshRef.current = refresh;
+    refreshRef.current = seekRefresh;
     refresh();
     return cleanup;
   }, [enabled, variant, variantReady]);
@@ -263,6 +286,7 @@ const ConstructionSequence = forwardRef(function ConstructionSequence({
     data-stage-index="0"
     data-decoded-sheets="0"
     data-pending-sheets="0"
+    data-settled="true"
     role="img"
     aria-label="Conceptual architectural journey from an empty development site into one residence and its structure"
     aria-hidden={!enabled || !painted}

@@ -66,6 +66,8 @@ export function assertSequenceCaptures(captures, schema) {
     assert.ok(value, `Missing native-wheel capture: ${name}`);
     assert.ok(Number.isInteger(value.globalFrame) && value.globalFrame >= 0 && value.globalFrame < CONSTRUCTION_FRAME_COUNT, `${name}: construction frame is outside the manifest`);
     assert.equal(value.frame, value.globalFrame, `${name}: global and painted frame metadata must agree`);
+    assert.equal(value.settled, true, `${name}: an idle camera must finish on one authored frame`);
+    assert.equal(value.frameBlend, 0, `${name}: resting architecture must not retain double outlines`);
     assert.equal(value.stageIndex, constructionStages.indexOf(value.stage), `${name}: stage metadata must agree`);
     assert.equal(value.phase, value.stage, `${name}: caption and painted construction stage must agree`);
     assert.ok(Number.isInteger(value.decodedSheets) && value.decodedSheets >= 0);
@@ -205,6 +207,9 @@ async function settlePaint(page) {
 
 async function waitForCanvas(page) {
   await page.locator(`${canvasSelector.split(', ').map(selector => selector + '[data-status="ready"]').join(', ')}`).waitFor({ state: 'visible', timeout: 45000 });
+  if (await page.locator('.ae-construction-sequence').count()) {
+    await page.locator('.ae-construction-sequence[data-status="ready"][data-settled="true"]').waitFor({ state: 'visible', timeout: 45000 });
+  }
   await settlePaint(page);
 }
 
@@ -242,6 +247,8 @@ async function canvasState(page) {
       mode: document.querySelector('.animated-experience').dataset.mode,
       sequenceStatus: canvas.dataset.status, artlistStatus: canvas.dataset.status,
       frame: Number(canvas.dataset.frame),
+      settled: canvas.dataset.settled === 'true',
+      frameBlend: Number(canvas.dataset.frameBlend || 0),
       globalFrame: canvas.dataset.globalFrame === undefined ? null : Number(canvas.dataset.globalFrame),
       scene: canvas.dataset.scene || canvas.dataset.stage || null,
       sceneIndex: canvas.dataset.sceneIndex === undefined ? null : Number(canvas.dataset.sceneIndex),
@@ -351,10 +358,12 @@ async function verifyTarget(target) {
       const track = document.querySelector('.ae-scroll-track');
       return { top: track.getBoundingClientRect().top + scrollY, distance: Math.max(1, track.offsetHeight - innerHeight) };
     });
-    const targetY = progress === 0 ? 0 : geometry.top + geometry.distance * progress;
+    // Reversal compares exact painted frames, so revisit the same attainable
+    // CSS pixel rather than opposite sides of a nearest-frame threshold.
+    const targetY = progress === 0 ? 0 : Math.round(geometry.top + geometry.distance * progress);
     for (let count = 0; count < 120; count++) {
       const current = await page.evaluate(() => scrollY);
-      if (progress === 0 ? current === 0 : Math.abs(targetY - current) <= 2) return;
+      if (progress === 0 ? current === 0 : Math.abs(targetY - current) <= .5) return;
       await wheel(progress === 0 ? -120 : Math.max(-120, Math.min(120, targetY - current)));
     }
     throw new Error(`Native wheel did not reach progress ${progress}`);
