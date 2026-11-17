@@ -1,5 +1,9 @@
 # Asset and project context
 
+## Homepage selection — November 17, 2026 (branch `feature/design-refinement-2026-11-17`)
+
+No asset was added, removed or regenerated. The homepage "Selected work" row now shows `portfolio-prospect.webp` (1171 Prospect Lane), `photo/lee-kitchen-living.webp` (1906 Lee Street) and `portfolio-dexter.webp` (1847 Dexter Lane). It previously showed `portfolio-sedgwick-street.webp` in the third position; that photograph carries a visible "© VHT STUDIOS" mark and stays on its case page and in the portfolio until its licence is confirmed. The hero photograph `photo/residences.webp`, both portraits, the Dexter Acres concept `masterplan/dexter-acres-828082967e9d.webp` with its "Architectural concept" label and the eleven partner marks are unchanged.
+
 This repository contains optimized website assets, not the owner's complete photo/video library or internal project records. Original source files and private research remain off GitHub. The current `feature/final-website-integration` candidate is for [staging review](https://humorous-delight-staging-website.up.railway.app/); production promotion requires Tony's authorization.
 
 | Runtime assets | Source and meaning |

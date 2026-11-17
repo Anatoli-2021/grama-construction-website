@@ -1,5 +1,15 @@
 # Developer team handoff — November 13, 2026
 
+## Design-system refinement under review — November 17, 2026
+
+- Branch `feature/design-refinement-2026-11-17` (Claude Code, for Tony), based on `07d614cf075512f7f9d65ddf5a227f63a74263b7`. Review only: not merged, not deployed, no Railway or DNS change. Summary, boundaries, checks and open questions: [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md).
+- Source state on November 17: `feature/final-website-integration`, `feature/cinematic-development-experience` and `feature/premium-visual-refinement` all point at `07d614c`. Tony's reference for that date names `07d614c` as both production (`feature/final-website-integration`) and staging (`feature/cinematic-development-experience`). The stylesheet and runtime file names served by gramadevelopment.com and the staging address match a local build of that commit; Railway deployment records were not read in this session. The "pinned to `21d8a6f`" statements below describe November 13.
+- What it changes: a readable type and contrast floor, larger tap targets, lighter headline weight, title blocks for confirmed facts, three enquiry choices on Dexter Acres, a phone line in the phone menu, the homepage positioning line and one homepage photograph. All in `src/design-system.css`, `src/components/TitleBlock.jsx` and small edits to `HomePage.jsx`, `App.jsx`, `site-routes.js` and `main.jsx`.
+- For Nail: no Animated Experience file is touched and page-content rules exclude `.animated-route`. `src/App.jsx` is shared; this branch adds a `.nav-phone` link in the menu, `<DexterTitleBlock />` in the Dexter Acres masthead and `<DexterEnquiryCards />` in place of the single enquiry button. Please carry these through any conflict in that file. `scripts/verify-windows-animation.mjs` was not run because it accepts only public HTTPS targets.
+- Development OS: untouched.
+- Checks on this branch: `npm run check` passes (143 tests); `node scripts/verify-design-system.mjs` passes 35 of 35 against the local static host.
+- Waiting on Tony: review of the comparison, the four questions in DESIGN-SYSTEM.md, and any decision to deploy to staging.
+
 ## Final integration under review
 
 - Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Private business records, investor data and source conversations remain excluded.

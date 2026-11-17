@@ -2,7 +2,7 @@ import { projects } from './data/projects.js';
 
 export const previewOrigin = 'https://gramadevelopment.com';
 export const siteRoutes = [
-  { path: '/', title: 'GRAMA — Luxury Real Estate Development', description: 'Luxury homes and residential development in Chicago and Chicagoland. Explore Grama’s completed portfolio, the family behind the company and the proposed Dexter Acres development.', image: 'photo/residences.webp', type: 'home' },
+  { path: '/', title: 'Grama Development — Premium Custom Homes & Residential Development', description: 'Premium custom homes and residential development in Chicago and Chicagoland. Explore Grama Development’s completed portfolio, the family behind the company and the proposed Dexter Acres development.', image: 'photo/residences.webp', type: 'home' },
   { path: '/developments', title: 'Developments — GRAMA', description: 'Explore Dexter Acres, a proposed fourteen-home residential development in Des Plaines, Illinois, with an architectural concept and interactive lot plan.', image: 'masterplan/dexter-acres-828082967e9d.webp', type: 'developments' },
   { path: '/about', title: 'About Grama Development — Tony, Alina & the Company', description: 'Meet Anatoli (Tony) Grama and Alina, the family behind Grama Development. Luxury custom homes, renovation and residential development in Chicago and the Illinois suburbs.', image: 'tony-grama.webp', type: 'about' },
   { path: '/projects', title: 'Portfolio — GRAMA Development', description: 'Explore eight completed Grama Development portfolio projects and the proposed Dexter Acres development. View individual cases, authentic photographs and project details.', image: 'portfolio-prospect.webp', type: 'projects' },
