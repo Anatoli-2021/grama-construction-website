@@ -36,8 +36,9 @@ This applies the handed-over design specification (direction B, "Drawing Set", p
 ## Checks
 
 - `npm run check`: build, 143 tests and the repository policy pass.
-- `node scripts/verify-design-system.mjs http://127.0.0.1:5174` against `node scripts/serve-website.mjs`: 35 of 35 checks pass (routes, blocked paths, homepage desktop and phone, phone menu, portfolio filters, gallery, Dexter Acres record, lot plan to Contact, enquiry context, reduced motion, no console errors). Headless Chrome with device emulation, not physical phones.
+- `node scripts/verify-design-system.mjs http://127.0.0.1:5174` against `node scripts/serve-website.mjs`: 36 of 36 checks pass (routes, blocked paths, homepage desktop and phone, phone menu, portfolio filters, gallery, Dexter Acres record, lot plan to Contact, enquiry context, reduced motion, no console errors). Headless Chrome with device emulation, not physical phones.
 - Legibility audit over eight pages at 1440 and 390 wide, measured on a build of the base commit and on this branch: text below 11px, outside the cinematic sequence and the plan drawing, 151 elements to 0; text below the 4.5:1 contrast minimum 108 elements to 0; tap targets under 40px 124 to 31 (remaining: short footer and breadcrumb words that are 44px high, plan lots, the hidden anti-spam field). The 22 small captions inside the cinematic sequence and plan drawing are unchanged.
+- One low-effort Codex review of the source diff (November 17) found one defect, the record not collapsing to one column under 520px; it is fixed and covered by a check.
 - Not run: `scripts/verify-windows-animation.mjs` accepts only public HTTPS targets and runs in CI; this branch is not deployed.
 
 ## Before and after

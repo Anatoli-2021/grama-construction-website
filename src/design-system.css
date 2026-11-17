@@ -187,10 +187,11 @@
   :root .experience .home-hero .home-hero-top > span:last-child { display: block; }
 }
 @media (max-width: 520px) {
-  .ds-titleblock--record, :root .experience .home-development-record { grid-template-columns: 1fr; }
-  :is(.ds-titleblock--record, .home-development-record) > div,
-  :is(.ds-titleblock--record, .home-development-record) > div:nth-child(even) { padding: 13px 0; border-left: 0; border-top: 1px solid var(--ds-rule, var(--ds-line)); }
-  :is(.ds-titleblock--record, .home-development-record) > div:first-child { border-top: 0; }
+  /* Narrow phones: records read as one column. Selectors out-rank the two-column rule above. */
+  :root .experience :is(.ds-titleblock--record, .home-development-record) { grid-template-columns: 1fr; }
+  :root .experience :is(.ds-titleblock--record, .home-development-record) > div,
+  :root .experience :is(.ds-titleblock--record, .home-development-record) > div:nth-child(even) { padding: 13px 0; border-left: 0; border-top: 1px solid var(--ds-rule, var(--ds-line)); }
+  :root .experience :is(.ds-titleblock--record, .home-development-record) > div:first-child { border-top: 0; }
 }
 
 /* ---------- 6. Enquiry cards ---------- */

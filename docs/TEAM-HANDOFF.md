@@ -7,7 +7,7 @@
 - What it changes: a readable type and contrast floor, larger tap targets, lighter headline weight, title blocks for confirmed facts, three enquiry choices on Dexter Acres, a phone line in the phone menu, the homepage positioning line and one homepage photograph. All in `src/design-system.css`, `src/components/TitleBlock.jsx` and small edits to `HomePage.jsx`, `App.jsx`, `site-routes.js` and `main.jsx`.
 - For Nail: no Animated Experience file is touched and page-content rules exclude `.animated-route`. `src/App.jsx` is shared; this branch adds a `.nav-phone` link in the menu, `<DexterTitleBlock />` in the Dexter Acres masthead and `<DexterEnquiryCards />` in place of the single enquiry button. Please carry these through any conflict in that file. `scripts/verify-windows-animation.mjs` was not run because it accepts only public HTTPS targets.
 - Development OS: untouched.
-- Checks on this branch: `npm run check` passes (143 tests); `node scripts/verify-design-system.mjs` passes 35 of 35 against the local static host.
+- Checks on this branch: `npm run check` passes (143 tests); `node scripts/verify-design-system.mjs` passes 36 of 36 against the local static host.
 - Waiting on Tony: review of the comparison, the four questions in DESIGN-SYSTEM.md, and any decision to deploy to staging.
 
 ## Final integration under review

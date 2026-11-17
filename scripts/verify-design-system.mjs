@@ -74,6 +74,8 @@ v = await js(`const links = [...document.querySelectorAll('.home-hero .ds-titleb
   return { n: links.length, heights: links.map(a => Math.round(a.getBoundingClientRect().height)), overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth };`);
 check('phone: hero shows two destinations with 44px targets', v.n === 2 && v.heights.every(h => h >= 44), v.heights.join(', ') + 'px');
 check('phone: no horizontal overflow on the homepage', v.overflow <= 0, v.overflow + 'px');
+v = await js(`const cols = sel => new Set([...document.querySelectorAll(sel + ' > div')].map(d => Math.round(d.getBoundingClientRect().left))).size; return cols('.home-development-record');`);
+check('phone: homepage Dexter Acres record reads as one column', v === 1, v + ' column(s)');
 await js(`document.querySelector('.menu-button').click();`); await sleep(350);
 v = await js(`const nav = document.querySelector('.main-nav'), phone = nav.querySelector('.nav-phone'), r = phone.getBoundingClientRect();
   return { open: nav.classList.contains('is-open'), items: [...nav.querySelectorAll('a')].filter(a => a.getClientRects().length).map(a => a.getAttribute('href')), tel: phone.getAttribute('href'), visible: r.height >= 44 && r.bottom <= innerHeight, locked: document.body.style.overflow, inert: document.querySelector('main').inert };`);
