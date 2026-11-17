@@ -1,6 +1,6 @@
 # Design-system refinement (November 17, 2026)
 
-Branch `feature/design-refinement-2026-11-17`, based on `07d614cf075512f7f9d65ddf5a227f63a74263b7` (the commit behind production and staging on November 17). Review only: not merged, not deployed.
+Branch `feature/design-refinement-2026-11-17`, [PR #24](https://github.com/Anatoli-2021/grama-construction-website/pull/24) into `feature/final-website-integration`, based on `07d614cf075512f7f9d65ddf5a227f63a74263b7` (the commit behind production and staging on November 17). Review only: not merged, not deployed.
 
 This applies the handed-over design specification (direction B, "Drawing Set", prepared November 12 on local branch `claude/design-directions-2026-11`) to the existing website as refinements. It does not rebuild pages. Photography, portfolio data, galleries, filters, the fourteen-lot plan, enquiry context and the private presentation boundary are unchanged.
 
