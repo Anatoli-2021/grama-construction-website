@@ -629,7 +629,7 @@ async function verifyCandidateFallbacks(target) {
     }));
     assert.ok(result.media.muted && result.media.controls);
     const manifestResponse = await fetch(new URL('/assets/construction/premium-v2/manifest.json', target.url));
-    assert.ok(manifestResponse.ok(), 'The versioned source/render manifest must be served');
+    assert.ok(manifestResponse.ok, 'The versioned source/render manifest must be served');
     const manifest = await manifestResponse.json();
     assert.equal(manifest.frameCount, CONSTRUCTION_FRAME_COUNT);
     assert.equal(manifest.sheets, CONSTRUCTION_SHEET_COUNT);
@@ -892,7 +892,7 @@ async function verifySiteRefinement(target) {
           const imageUrl = new URL(portrait.source, targetPage.url).href;
           if (!portraitResponses.has(imageUrl)) {
             const image = await fetch(imageUrl);
-            assert.ok(image.ok(), 'Original portrait must be served');
+            assert.ok(image.ok, 'Original portrait must be served');
             portraitResponses.set(imageUrl, sha256(Buffer.from(await image.arrayBuffer())));
           }
           assert.equal(portraitResponses.get(imageUrl), originalPortraits[portrait.source], 'Portrait source bytes must remain unchanged; no facial reconstruction');

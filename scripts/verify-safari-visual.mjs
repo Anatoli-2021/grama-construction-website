@@ -159,7 +159,7 @@ async function verifyAnimation(target) {
   try {
     await command('POST', '/window/rect', { x: 0, y: 0, width: 1440, height: 1000 });
     const manifestResponse = await fetch(new URL('/assets/construction/premium-v2/manifest.json', target.url));
-    assert.ok(manifestResponse.ok(), 'Safari target must serve the new versioned construction manifest');
+    assert.ok(manifestResponse.ok, 'Safari target must serve the new versioned construction manifest');
     const manifest = await manifestResponse.json();
     assert.equal(manifest.frameCount, CONSTRUCTION_FRAME_COUNT);
     assert.equal(manifest.sheets, CONSTRUCTION_SHEET_COUNT);
