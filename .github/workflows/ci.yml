@@ -96,7 +96,8 @@ jobs:
 
   macos-safari:
     name: Actual Apple Safari visual and keyboard checks
-    runs-on: macos-26-intel
+    # Use the preinstalled Apple Silicon Safari/driver pair for the native app.
+    runs-on: macos-26
     timeout-minutes: 20
     env:
       CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
