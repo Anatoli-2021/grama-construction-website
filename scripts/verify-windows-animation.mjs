@@ -231,7 +231,15 @@ async function canvasState(page) {
     }
     const overview = document.querySelector('.journey-overview, .ae-aerial');
     const overviewImage = overview?.querySelector('img');
-    const pixels = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+    // Reading the live canvas repeatedly makes Chromium switch its renderer
+    // from GPU to CPU. Inspect a detached readback copy so measurement leaves
+    // the product's rendering backend unchanged throughout the wheel journey.
+    const readback = document.createElement('canvas');
+    readback.width = canvas.width;
+    readback.height = canvas.height;
+    const readbackContext = readback.getContext('2d', { alpha: false, willReadFrequently: true });
+    readbackContext.drawImage(canvas, 0, 0);
+    const pixels = readbackContext.getImageData(0, 0, readback.width, readback.height);
     const digest = await crypto.subtle.digest('SHA-256', pixels.data);
     let sum = 0;
     let squares = 0;
@@ -258,6 +266,7 @@ async function canvasState(page) {
       clipProgress: Number(canvas.dataset.clipProgress), variant: canvas.dataset.variant,
       decodedSheets: Number(canvas.dataset.decodedSheets), pendingSheets: Number(canvas.dataset.pendingSheets),
       canvasSha256: [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join(''),
+      canvasReadback: 'detached copy with willReadFrequently; live canvas is not read',
       canvas: {
         width: canvas.width, height: canvas.height, x: rect.x, y: rect.y,
         cssWidth: rect.width, cssHeight: rect.height, visibility: style.visibility,

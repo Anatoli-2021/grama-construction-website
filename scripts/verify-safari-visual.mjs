@@ -96,7 +96,13 @@ async function canvasState() {
       if (computed.display === 'none' || computed.visibility !== 'visible') effectiveOpacity = 0;
       effectiveOpacity *= Number(computed.opacity);
     }
-    const pixels = canvas.width && canvas.height ? canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data : [];
+    // Sample a detached copy so repeated diagnostic readbacks cannot change
+    // the live scene canvas's GPU/software rendering strategy under test.
+    const diagnostic = document.createElement('canvas');
+    diagnostic.width = canvas.width; diagnostic.height = canvas.height;
+    const diagnosticContext = diagnostic.getContext('2d', { alpha: false, willReadFrequently: true });
+    if (canvas.width && canvas.height) diagnosticContext.drawImage(canvas, 0, 0);
+    const pixels = canvas.width && canvas.height ? diagnosticContext.getImageData(0, 0, canvas.width, canvas.height).data : [];
     let hash = 2166136261;
     let sum = 0;
     let squares = 0;
@@ -112,6 +118,7 @@ async function canvasState() {
       visible: style.visibility === 'visible' && effectiveOpacity > .9 && rect.width > 0 && rect.height > 0,
       effectiveOpacity, visibleHeight: Math.max(0, Math.min(innerHeight, rect.bottom) - Math.max(0, rect.top)),
       width: canvas.width, height: canvas.height, sampledPixelSignature: (hash >>> 0).toString(16),
+      canvasReadback: 'Detached diagnostic canvas; the live scene canvas is never read with getImageData',
       pixelVariance: count ? squares / count - (sum / count) ** 2 : 0,
       scrollY, trackEnd: track.getBoundingClientRect().top + scrollY + track.offsetHeight - innerHeight,
       viewport: { width: innerWidth, height: innerHeight, devicePixelRatio },
