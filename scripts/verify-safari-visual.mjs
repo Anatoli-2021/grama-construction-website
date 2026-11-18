@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict';
 import { openSync, closeSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import os from 'node:os';
 import { join, resolve } from 'node:path';
 import sharp from 'sharp';
@@ -25,7 +25,7 @@ const report = {
   environment: { platform: process.platform, release: os.release(), version: os.version(), architecture: process.arch,
     runnerOS: process.env.RUNNER_OS || null, imageOS: process.env.ImageOS || null, imageVersion: process.env.ImageVersion || null, node: process.version },
   scope: 'Isolated CI desktop Safari, native WebDriver keyboard scrolling without Play, local and public staging; requested narrow native window records its actual viewport and is not an iOS-device test.',
-  targets: [], visualChecks: [], passed: false,
+  targets: [], visualChecks: [], screenshotChecks: [], passed: false,
 };
 let sessionId;
 let driver;
@@ -33,6 +33,11 @@ let server;
 const descriptors = [];
 
 function errorDetails(error) { return { message: error.message, stack: error.stack }; }
+function fixtureCommand(executable, args) {
+  const result = spawnSync(executable, args, { encoding: 'utf8', timeout: 15000 });
+  return { command: [executable, ...args], status: result.status, signal: result.signal,
+    stdout: result.stdout?.trim() || '', stderr: result.stderr?.trim() || '', error: result.error?.message || null };
+}
 async function webdriver(method, path, body, timeout = 45000) {
   const response = await fetch(driverOrigin + path, { method,
     ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }),
@@ -53,11 +58,41 @@ async function until(description, callback, timeout = 45000) {
   }
   throw new Error(`Timed out waiting for ${description}`);
 }
-async function screenshot(name) {
+async function waitForPaint() {
+  return command('POST', '/execute/async', { script: `
+    const done = arguments[arguments.length - 1];
+    let frames = 0, finished = false;
+    const finish = () => { if (!finished) { finished = true; clearTimeout(timer); done({ frames, visibility: document.visibilityState }); } };
+    const timer = setTimeout(finish, 4000);
+    requestAnimationFrame(() => { frames++; requestAnimationFrame(() => { frames++; finish(); }); });
+  `, args: [] });
+}
+async function screenshot(name, { diagnostic = false } = {}) {
+  const paint = await waitForPaint().catch(error => ({ error: error.message }));
   const encoded = await command('GET', '/screenshot');
   const bytes = Buffer.from(encoded, 'base64');
   assert.equal(bytes.subarray(1, 4).toString(), 'PNG', 'Safari must return a real PNG screenshot');
   await writeFile(join(output, name), bytes);
+  const { width, height } = await sharp(bytes).metadata();
+  const roi = { left: Math.floor(width * .1), top: Math.floor(height * .2), width: Math.floor(width * .8), height: Math.floor(height * .53) };
+  const pixels = await sharp(bytes).extract(roi).removeAlpha().toColourspace('srgb').raw().toBuffer();
+  let sum = 0, squares = 0, edges = 0, previous = null, count = 0;
+  for (let i = 0; i < pixels.length; i += 3) {
+    const luma = .2126 * pixels[i] + .7152 * pixels[i + 1] + .0722 * pixels[i + 2];
+    sum += luma; squares += luma * luma; count++;
+    if (previous !== null && Math.abs(luma - previous) > 2) edges++;
+    previous = luma;
+  }
+  const spatialLuminanceVariance = Math.max(0, squares / count - (sum / count) ** 2);
+  const luminanceEdgeFraction = edges / Math.max(1, count - 1);
+  const details = { name, diagnostic, width, height, roi, paint, spatialLuminanceVariance, luminanceEdgeFraction,
+    minimumVariance: 25, minimumEdgeFraction: .005 };
+  report.screenshotChecks.push(details);
+  if (!diagnostic) {
+    assert.equal(paint.frames, 2, 'Native Safari must deliver two paint frames before a verified capture');
+    assert.ok(spatialLuminanceVariance > 25 && luminanceEdgeFraction > .005,
+      `Safari ${name} must show spatial image detail, not a uniform background (luma variance ${spatialLuminanceVariance}, edge fraction ${luminanceEdgeFraction})`);
+  }
   return bytes;
 }
 async function navigate(url) {
@@ -80,6 +115,7 @@ async function pageDiagnostics() {
     };
     return { url: location.href, title: document.title, readyState: document.readyState,
       prefersReducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+      prefersNormalMotion: matchMedia('(prefers-reduced-motion: no-preference)').matches,
       viewport: { width: innerWidth, height: innerHeight }, scrollY,
       experiencePresent: Boolean(experience), experienceMode: experience?.dataset.mode || null,
       experienceState: experience?.dataset.sequenceState || null,
@@ -149,6 +185,55 @@ async function pressKey(name) {
   await command('POST', '/actions', { actions: [{ type: 'key', id: 'native-keyboard', actions: [
     { type: 'keyDown', value }, { type: 'keyUp', value },
   ] }] });
+}
+async function nativeElementState(selector) {
+  return evaluate(selector => {
+    const element = document.querySelector(selector);
+    if (!element) return null;
+    const bounds = element.getBoundingClientRect();
+    const header = document.querySelector('.site-header')?.getBoundingClientRect();
+    const topLimit = Math.max(24, (header?.bottom || 0) + 16);
+    const bottomLimit = innerHeight - 24;
+    let opacity = 1;
+    for (let node = element; node; node = node.parentElement) {
+      const style = getComputedStyle(node);
+      if (style.display === 'none' || style.visibility !== 'visible') opacity = 0;
+      opacity *= Number(style.opacity);
+    }
+    return { selector, x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height, bottom: bounds.bottom,
+      topLimit, bottomLimit, opacity, scrollY, viewport: { width: innerWidth, height: innerHeight },
+      images: [...element.querySelectorAll('img')].map(image => ({ complete: image.complete, width: image.naturalWidth, height: image.naturalHeight })),
+      inViewport: bounds.top >= topLimit - 1 && bounds.bottom <= bottomLimit + 1 && bounds.left >= -1 && bounds.right <= innerWidth + 1 };
+  }, [selector]);
+}
+async function positionWithNativeKeys(selector) {
+  for (let steps = 0; steps < 160; steps++) {
+    const state = await nativeElementState(selector);
+    assert.ok(state && state.width > 0 && state.height > 0, `Safari must lay out ${selector}`);
+    assert.ok(state.height <= state.bottomLimit - state.topLimit + 1,
+      `The actual native Safari viewport must fit ${selector} without stitching or cropping`);
+    if (state.inViewport) {
+      const visible = await until(`${selector} visible and loaded`, async () => {
+        const value = await nativeElementState(selector);
+        return value?.inViewport && value.opacity > .98 && value.images.length > 0
+          && value.images.every(image => image.complete && image.width > 0 && image.height > 0) ? value : false;
+      });
+      return { ...visible, nativeKeySteps: steps, method: 'Native PageDown/ArrowDown/PageUp/ArrowUp only; no JavaScript scrolling' };
+    }
+    const direction = state.bottom > state.bottomLimit ? 1 : -1;
+    const distance = direction > 0 ? state.bottom - state.bottomLimit : state.topLimit - state.y;
+    const key = distance > state.viewport.height ? (direction > 0 ? 'PageDown' : 'PageUp') : (direction > 0 ? 'ArrowDown' : 'ArrowUp');
+    await pressKey(key);
+    await until(`${key} moving toward ${selector}`, () => evaluate(previous => Math.abs(scrollY - previous) > .5, [state.scrollY]), 6000);
+    let previous = null, stable = 0;
+    await until('native portrait scroll to settle', async () => {
+      const value = await evaluate(() => scrollY);
+      stable = previous !== null && Math.abs(value - previous) <= .5 ? stable + 1 : 0;
+      previous = value;
+      return stable >= 2;
+    }, 5000);
+  }
+  throw new Error(`Native Safari keys could not bring ${selector} fully into view within 160 inputs`);
 }
 async function canvasState() {
   return evaluate(() => {
@@ -242,6 +327,8 @@ async function verifyAnimation(target) {
     result.sampleManifest = { browserSamples: manifest.frameCount, sheetsPerVariant: manifest.sheets, nativeFrames: manifest.sourceFrameCount };
     await navigate(target.url);
     result.navigation = await pageDiagnostics();
+    assert.equal(result.navigation.prefersReducedMotion, false, 'The isolated normal-motion Safari fixture must disable OS Reduce Motion');
+    assert.equal(result.navigation.prefersNormalMotion, true, 'Actual Safari must report the native no-preference media query without JavaScript overrides');
     await until('construction scroll mode', () => evaluate(() => document.querySelector('.animated-experience')?.dataset.mode === 'scroll'));
     let state = await readyCanvas();
     assert.equal(state.frame, 0);
@@ -320,7 +407,7 @@ async function verifyAnimation(target) {
   } catch (error) {
     result.error = errorDetails(error);
     result.failureState = await pageDiagnostics().catch(diagnosticError => ({ error: diagnosticError.message }));
-    await screenshot(`${target.name}-failure.png`).catch(() => {});
+    await screenshot(`${target.name}-failure.png`, { diagnostic: true }).catch(() => {});
     result.blankRootDiagnosis = await diagnoseBlankRoot(result.failureState).catch(diagnosticError => ({ error: diagnosticError.message }));
   }
   console.log(JSON.stringify({ target: target.name, browser: 'actual-apple-safari', passed: result.passed, error: result.error?.message }));
@@ -351,13 +438,17 @@ async function verifyLeadership(target, route, layout) {
   try {
     result.window = await command('POST', '/window/rect', layout.window);
     await navigate(url);
-    await until('both leadership portraits loaded', () => evaluate(() => {
-      const portraits = [...document.querySelectorAll('.family-portrait-frame img')];
-      // Trigger lazy image loading as a separate layout inspection. The primary
-      // animation tests above exclusively use native keyboard scrolling.
-      document.querySelector('.family-section')?.scrollIntoView({ block: 'start', behavior: 'instant' });
-      return portraits.length === 2 && portraits.every(image => image.complete && image.naturalWidth > 0);
-    }));
+    result.nativePositioning = [];
+    result.screenshots = [];
+    const portraitCaptures = layout.name === 'narrow'
+      ? [{ selector: '.family-tony', name: `${name}-tony.png` }, { selector: '.family-alina', name: `${name}-alina.png` }]
+      : [{ selector: '.family-portraits', name: `${name}.png` }];
+    for (const capture of portraitCaptures) {
+      result.nativePositioning.push(await positionWithNativeKeys(capture.selector));
+      await screenshot(capture.name);
+      result.screenshots.push(capture.name);
+    }
+    result.screenshot = result.screenshots[0];
     result.measurements = await evaluate(names => {
       const rect = element => { const bounds = element.getBoundingClientRect(); return { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height }; };
       const textStyle = element => { const style = getComputedStyle(element); return { family: style.fontFamily, size: style.fontSize, weight: style.fontWeight, lineHeight: style.lineHeight, color: style.color }; };
@@ -415,13 +506,11 @@ async function verifyLeadership(target, route, layout) {
     assert.ok(result.contrast.every(pair => pair.ratio >= 4.5));
     result.narrowWindow = layout.name === 'narrow' ? { requestedOuterWidth: layout.window.width, measuredInnerWidth: result.measurements.viewport.width,
       requestMet: result.measurements.viewport.width <= layout.window.width, limitation: result.measurements.viewport.width > layout.window.width ? 'Safari/macOS minimum native window width; actual viewport retained in evidence' : null } : null;
-    result.screenshot = `${name}.png`;
-    await evaluate(() => document.querySelector('.family-portraits').scrollIntoView({ block: 'center', behavior: 'instant' }));
-    await screenshot(result.screenshot);
     result.passed = true;
   } catch (error) {
     result.error = errorDetails(error);
-    await screenshot(`${name}-failure.png`).catch(() => {});
+    result.failureState = await pageDiagnostics().catch(diagnosticError => ({ error: diagnosticError.message }));
+    await screenshot(`${name}-failure.png`, { diagnostic: true }).catch(() => {});
   }
   console.log(JSON.stringify({ visual: name, browser: 'actual-apple-safari', passed: result.passed, error: result.error?.message }));
 }
@@ -432,6 +521,19 @@ async function main() {
   assert.equal(process.env.RUNNER_OS, 'macOS');
   await mkdir(output, { recursive: true });
   try {
+    // GitHub's configure-system.sh enables Reduce Motion on hosted macOS.
+    // Configure only this guarded ephemeral CI host for the normal-motion
+    // journey, matching the explicit no-preference fixture in other browsers.
+    // https://github.com/actions/runner-images/blob/main/images/macos/scripts/build/configure-system.sh
+    report.motionFixture = {
+      scope: 'Ephemeral GitHub macOS runner only; product accessibility behavior is unchanged',
+      before: fixtureCommand('/usr/bin/defaults', ['read', 'com.apple.universalaccess', 'reduceMotion']),
+      write: fixtureCommand('/usr/bin/defaults', ['write', 'com.apple.universalaccess', 'reduceMotion', '-bool', 'false']),
+      after: fixtureCommand('/usr/bin/defaults', ['read', 'com.apple.universalaccess', 'reduceMotion']),
+    };
+    assert.equal(report.motionFixture.write.status, 0, 'The isolated Safari normal-motion fixture must be configured successfully');
+    assert.equal(report.motionFixture.after.status, 0);
+    assert.equal(report.motionFixture.after.stdout, '0', 'The hosted runner Reduce Motion setting must be false before Safari launches');
     const serverLog = openSync(join(output, 'local-server.log'), 'w'); descriptors.push(serverLog);
     const driverLog = openSync(join(output, 'safaridriver.log'), 'w'); descriptors.push(driverLog);
     server = spawn(process.execPath, ['scripts/serve-website.mjs'], { env: { ...process.env, PORT: '5193' }, stdio: ['ignore', serverLog, serverLog] });
@@ -451,6 +553,20 @@ async function main() {
     assert.equal(String(session.capabilities.browserName).toLowerCase(), 'safari');
     assert.ok(session.capabilities.browserVersion, 'Actual Safari version must be reported');
     await command('POST', '/timeouts', { implicit: 0, pageLoad: 45000, script: 30000 });
+    const ownedWindow = await command('GET', '/window');
+    report.foregroundActivation = fixtureCommand('/usr/bin/open', ['-a', 'Safari']);
+    assert.equal(report.foregroundActivation.status, 0, 'The CI-owned Safari application must activate for real rendered captures');
+    await command('POST', '/window', { handle: ownedWindow });
+    report.foregroundActivation.ownedWindow = ownedWindow;
+    await until('native Safari normal-motion fixture', async () => {
+      report.motionFixture.actualSafari = await evaluate(() => ({
+        reduce: matchMedia('(prefers-reduced-motion: reduce)').matches,
+        noPreference: matchMedia('(prefers-reduced-motion: no-preference)').matches,
+      }));
+      return !report.motionFixture.actualSafari.reduce && report.motionFixture.actualSafari.noPreference;
+    }, 10000);
+    assert.deepEqual(report.motionFixture.actualSafari, { reduce: false, noPreference: true },
+      'Actual native Safari must observe the normal-motion OS fixture; JavaScript media queries are never patched');
     const targets = [
       { name: 'local-candidate', url: localOrigin + '/animated-experience' },
       { name: 'public-staging', url: resolvePublicAnimationUrl(process.env.PUBLIC_ANIMATION_URL) },
