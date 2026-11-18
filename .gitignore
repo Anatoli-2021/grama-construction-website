@@ -26,3 +26,5 @@ coverage/
 *.xlsx
 *.csv
 *.jsonl
+/public/assets/construction/premium-v2/construction-film.mp4
+/public/assets/construction/premium-v2/.construction-film-*.tmp

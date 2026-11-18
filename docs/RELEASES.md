@@ -1,38 +1,30 @@
-# Review, preview, release and rollback
+# Website release procedure
 
-## Current state
+Use a feature branch and a reviewed pull request. Keep the stable branch and previous release available throughout verification.
 
-The website is live at https://grama-construction-website-production.up.railway.app/. The November 11 branch repair deployed `dcc95a4` from `feature/private-investor-presentation` as deployment `e713d762-3ff5-43bf-9fd5-62c4a21280ef`; CI passed. The source now retains the feature branch without a pin. Application code remains the checked `bc8e81b` implementation, including Nail's multipage work. See `TEAM-HANDOFF.md` and PR #10 for current deployment and push-test evidence. Company domain/DNS remains unchanged. Reconcile the PR stack before merging to stable main.
+## Prepare and verify
 
-The Development OS demonstration remains local and contains only blank templates. No OS production deployment, company data migration or live connector was made.
+1. Inspect repository status, preserve unfinished work and update a clean `main` with a fast-forward pull. Create a focused `feature/*` branch; do not push changes directly to `main` or force-push shared history.
+2. Install the committed dependencies with `npm ci`. Set `SITE_URL` to the intended canonical origin and run `npm run check`. Use the same origin for build and metadata tests. Run the existing API/media verification when relevant.
+3. Review the complete diff and staged files. Include only intended source, portable documentation and optimized runtime assets. Keep credentials, original media libraries, render masters, personal records and working notes outside the public artifact.
+4. Open a pull request. Describe the resulting behavior, tests, screenshots and any remaining verification limits. Obtain maintainer review before merging into the stable branch.
 
-## Workflow and release gate
+## Staging acceptance
 
-1. Link one issue; create a `feature/*` branch and use synthetic records.
-2. Run `npm ci` and `npm run check`; test website API/media with `npm run dev` plus `npm run verify` when relevant. Inspect the staged diff and media for private content.
-3. Push and open a PR. GitHub Actions runs tests/build/data-boundary checks. Tony reviews the result, visible changes and remaining limitations.
-4. Verify the website on the existing Railway review address. OS previews stay local until authentication and access tests are implemented.
-5. Merge stable `main` after owner approval. Branch protection was unavailable when the repository was private; visibility has since changed to public, so recheck current capabilities before claiming an enforced gate. No protection rule is claimed by this handoff. Do not equate a green check with permission to deploy.
-6. Record the release SHA, build result, target, previous version and rollback route. Tony's November 10 standing instruction authorizes deployment of requested, checked website changes to the existing Railway address without another release confirmation. New company-domain targets, spending, access grants and OS publication are separate decisions.
-7. Deploy the approved commit to the approved environment. Verify HTML/media, mobile contact, links, anonymous access and no private artifacts; record deployment ID and SHA.
+Deploy the exact tested commit to the review environment before running browser checks against its public URL. Verify the deployed source revision and artifact; a successful build, branch push or configured source alone does not prove which version is live.
 
-CI checks the code. An environment-scoped staged source repair retained the feature branch and removed only the temporary commit pin. For subsequent pushes, compare the actual Railway deployment SHA with the intended source and GitHub CI; PR #10 records the push-test evidence. Source configuration alone does not prove webhook delivery. Prefer a reviewed environment-scoped diff over replacing the live source, which previously dropped the branch. Preserve PR review for stable `main`; this standing Railway approval does not authorize company DNS cutover. Private investor content must never enter the public static build.
+Check the rendered desktop and mobile layouts, direct page routes, canonical metadata, genuine 404 responses and source/configuration boundaries. Compare served asset hashes with the built artifact. Verify the native video's GET, HEAD and byte-range responses.
 
-The first post-repair push (`4db877f`) passed CI but did not deploy. Railway App is missing from the owner's GitHub installations; repository-only installation is prepared and pending explicit permission approval. The Codex Railway connector can deploy independently of that App, so connector authentication alone does not enable push deployment. Complete the approved App installation and verify another push before describing autodeploy as working. Official requirements: https://docs.railway.com/deployments/github-autodeploys.
+Exercise scrolling without Play, all animation chapters, reverse scrolling, keyboard controls, reduced motion, still-image alternatives, loading failure and native film playback/seeking/focus return. Check equal leadership frames, palette contrast and horizontal overflow. Distinguish installed Safari from WebKit engine tests and label device emulation accurately.
 
-## Domain cutover plan — approval required
+Preserve the retained cinematic media and fourteen-lot map. Exercise the lot-to-Contact path using synthetic data. Hosted automatic Contact delivery remains disabled until its separate provider configuration and delivery verification are complete; unavailable delivery must never report success.
 
-Inventory current registrar/DNS, hosting and mail records read-only. Save a DNS export and prior target. Verify the chosen platform’s exact hostname/certificate instructions on its temporary address. Present Tony the precise DNS record changes, website release SHA, test result and rollback target. Change only approved web records; preserve email records. Verify TLS, www/apex routing and contact flow after cutover. No domain records have been edited in this task.
+## Production verification
 
-## Rollback and backups
+Rebuild with the production canonical origin and complete the required checks. Apply only the authorized website service changes, using the exact accepted commit. Preserve unrelated services and configuration; keep secrets in the hosting environment.
 
-- Code: keep commits/PRs; use a reviewed `git revert` PR for a bad merge. Do not reset/force-push shared `main`.
-- Website: redeploy a known-good approved commit/version, verify media and contact behavior, and record the rollback. On Sites, redeploy the saved previous version; on Vercel use its documented rollback when available. This preparation does not prove an account-specific rollback until it is exercised there.
-- DNS: restore only the previously saved, approved web record if cutover fails. Certificate/cache propagation may take time; check the actual provider behavior.
-- OS: application rollback does not roll back database schema/data. Require reversible migrations or a tested forward fix, encrypted snapshots and a restore drill. Backups must live outside Git and the public website.
+After deployment, confirm the live source revision, health, HTML, asset hashes, native-video ranges, navigation, mobile layouts and scroll experience. Record the deployed revision, target URL and completed verification in the release review. Do not infer automatic deployment from a source setting or a previous successful run.
 
-## Demonstrations in this change
+## Recovery
 
-- Website: existing hosted-contact adjustment is in PR #1 and the functioning public review preview; current website source/layout is preserved.
-- OS: the shared launch tool rejects whitespace/unsafe Project IDs, preserves common/subdivision task counts and dependencies, and exports Draft records. Automated tests cover this behavior and local/public access boundaries.
-- Current Railway verification: public HTML, health and hero media return HTTP 200; private/OS paths return 404; the loaded site has no console errors. Future changes must be checked against their actual deployed commit. A hosted OS demonstration remains deferred until access controls exist.
+Retain the previous validated website version. If recovery is needed, redeploy that version and verify the same public routes, media and Contact behavior. Reconcile any code correction through a reviewed pull request or `git revert`; do not rewrite shared history.

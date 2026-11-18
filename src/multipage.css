@@ -1,19 +1,19 @@
 /* Shared document navigation and dedicated-page rhythm. */
-.site-header--solid { background: #252c24; }
+.site-header--solid { background: var(--site-charcoal); }
 .main-nav a[aria-current="page"]::after, .main-nav a[data-active="true"]::after { width:100%; }
-.main-nav .nav-cta[aria-current="page"] { background:#ffffff17; border-color:#cfbd98; }
+.main-nav .nav-cta[aria-current="page"] { background:rgb(var(--site-white-rgb) / 9.02%); border-color:var(--site-line); }
 #main-content:focus { outline:none; }
 .interior-page { padding-top:88px; }
 .page-masthead { padding-top:68px; padding-bottom:72px; background:var(--paper); }
 .page-masthead h1 { font-family:Georgia,serif; font-weight:400; font-size:clamp(48px,5.8vw,86px); line-height:1.08; letter-spacing:-.045em; margin:28px 0; text-wrap:balance; }
-.page-masthead h1 em { color:#777d66; }
+.page-masthead h1 em { color:var(--site-muted); }
 .page-masthead > p:not(.eyebrow) { max-width:640px; font-size:16px; color:var(--text-secondary); line-height:1.8; }
 .page-masthead > .text-link { margin-top:24px; }
-.breadcrumbs { display:flex; flex-wrap:wrap; gap:10px; align-items:center; font-size:12px; color:#65705c; margin-bottom:38px; line-height:1.6; }
+.breadcrumbs { display:flex; flex-wrap:wrap; gap:10px; align-items:center; font-size:12px; color:var(--site-muted); margin-bottom:38px; line-height:1.6; }
 .breadcrumbs a { text-decoration:underline; text-underline-offset:4px; padding-block:5px; }
-.page-invitation { background:#e8e5d9; padding-block:88px; }
+.page-invitation { background:var(--site-limestone); padding-block:88px; }
 .page-invitation > .display { margin:22px 0; }
-.page-invitation > p:not(.eyebrow) { max-width:560px; font-size:15px; line-height:1.8; color:#58614f; }
+.page-invitation > p:not(.eyebrow) { max-width:560px; font-size:15px; line-height:1.8; color:var(--site-muted); }
 .page-invitation > div { display:flex; flex-wrap:wrap; align-items:center; gap:22px; margin-top:28px; }
 .page-invitation > .button { margin-top:26px; max-width:360px; }
 .page-invitation .button { min-width:270px; font-size:13px; }

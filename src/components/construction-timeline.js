@@ -1,9 +1,14 @@
-export const CONSTRUCTION_FRAME_COUNT = 224;
+export const CONSTRUCTION_FRAME_COUNT = 336;
 export const CONSTRUCTION_SHEET_COLUMNS = 2;
 export const CONSTRUCTION_SHEET_ROWS = 2;
 export const CONSTRUCTION_FRAMES_PER_SHEET = CONSTRUCTION_SHEET_COLUMNS * CONSTRUCTION_SHEET_ROWS;
 export const CONSTRUCTION_SHEET_COUNT = Math.ceil(CONSTRUCTION_FRAME_COUNT / CONSTRUCTION_FRAMES_PER_SHEET);
-export const CONSTRUCTION_ATLAS_BASE = '/assets/construction';
+// Keep the prior package intact for visitors with the earlier page still open.
+export const CONSTRUCTION_ATLAS_BASE = '/assets/construction/premium-v2';
+export const CONSTRUCTION_SIZES = {
+  desktop: { width: 1440, height: 810 },
+  mobile: { width: 768, height: 432 },
+};
 
 export const CONSTRUCTION_CHAPTERS = [
   { id: 'land', label: 'Land', target: 0, title: 'The land.', text: 'Before the first foundation.' },
@@ -39,11 +44,11 @@ export function getConstructionPose(value) {
   };
 }
 
-export function getConstructionFrameRect(value, width = 960, height = 540) {
+export function getConstructionFrameRect(value, width = CONSTRUCTION_SIZES.desktop.width, height = CONSTRUCTION_SIZES.desktop.height) {
   const frame = typeof value === 'number' && Number.isFinite(value)
     ? Math.max(0, Math.min(CONSTRUCTION_FRAME_COUNT - 1, Math.trunc(value))) : 0;
-  const frameWidth = typeof width === 'number' && Number.isFinite(width) && width > 0 ? Math.round(width) : 960;
-  const frameHeight = typeof height === 'number' && Number.isFinite(height) && height > 0 ? Math.round(height) : 540;
+  const frameWidth = typeof width === 'number' && Number.isFinite(width) && width > 0 ? Math.round(width) : CONSTRUCTION_SIZES.desktop.width;
+  const frameHeight = typeof height === 'number' && Number.isFinite(height) && height > 0 ? Math.round(height) : CONSTRUCTION_SIZES.desktop.height;
   const local = frame % CONSTRUCTION_FRAMES_PER_SHEET;
   return {
     sheetIndex: Math.floor(frame / CONSTRUCTION_FRAMES_PER_SHEET),

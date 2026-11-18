@@ -8,11 +8,14 @@ export default function FamilySection({ full = false }) {
       <div><p>A family business in Chicago and Chicagoland. Tony leads the company; Alina is its exclusive realtor.</p>{!full && <a className="site-link" href="/about">Meet the family <span aria-hidden="true">↗</span></a>}</div>
     </div>
     <div className="family-portraits">
-      <figure className="family-tony"><img src="/assets/tony-grama.webp" alt="Anatoli (Tony) Grama beside a company vehicle" width="1280" height="853" loading="lazy" /><figcaption><span>Anatoli (Tony) Grama</span><span>Founder</span></figcaption></figure>
-      <div className="family-alina">
-        <img src={full ? '/assets/photo/alina-realtor.jpg' : '/assets/photo/alina-portrait.jpg'} alt="Alina, Grama Development’s exclusive realtor" width={full ? 786 : 794} height="1128" loading="lazy" />
-        <p className="family-caption"><span>Alina</span><span>Exclusive realtor</span></p>
-      </div>
+      <figure className="family-portrait family-tony">
+        <div className="family-portrait-frame"><img src="/assets/tony-grama.webp" alt="Anatoli (Tony) Grama beside a company vehicle" width="1280" height="853" loading="lazy" /></div>
+        <figcaption className="family-caption"><span>Anatoli (Tony) Grama</span><span>Founder</span></figcaption>
+      </figure>
+      <figure className="family-portrait family-alina">
+        <div className="family-portrait-frame"><img src={full ? '/assets/photo/alina-realtor.jpg' : '/assets/photo/alina-portrait.jpg'} alt="Alina, Grama Development’s exclusive realtor" width={full ? 786 : 794} height="1128" loading="lazy" /></div>
+        <figcaption className="family-caption"><span>Alina</span><span>Exclusive realtor</span></figcaption>
+      </figure>
     </div>
   </section>;
 }

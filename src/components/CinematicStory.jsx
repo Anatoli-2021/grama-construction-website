@@ -90,6 +90,7 @@ export default function CinematicStory({ motion = true }) {
     let width = 1;
     let height = 1;
     let dpr = 1;
+    const background = getComputedStyle(canvas).getPropertyValue('--site-charcoal').trim() || '#242321';
     const frames = new Array(32).fill(null);
     const images = { poster: null, aerial: null, detail: null };
     const pending = new Set();
@@ -116,7 +117,7 @@ export default function CinematicStory({ motion = true }) {
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       context.globalAlpha = 1;
       context.filter = 'none';
-      context.fillStyle = '#22271f';
+      context.fillStyle = background;
       context.fillRect(0, 0, width, height);
 
       if (images.aerial && transition > 0) {

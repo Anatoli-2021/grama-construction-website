@@ -4,6 +4,7 @@ import {
   CONSTRUCTION_SHEET_COLUMNS,
   CONSTRUCTION_SHEET_COUNT,
   CONSTRUCTION_SHEET_ROWS,
+  CONSTRUCTION_SIZES,
   clampConstructionProgress,
   getConstructionFrameRect,
   getConstructionPose,
@@ -62,8 +63,7 @@ const ConstructionSequence = forwardRef(function ConstructionSequence({
     let restTimer = 0;
     let context;
     const canvas = canvasRef.current;
-    const width = variant === 'mobile' ? 640 : 960;
-    const height = variant === 'mobile' ? 360 : 540;
+    const { width, height } = CONSTRUCTION_SIZES[variant];
     const cache = new Map();
     const pending = new Map();
     const failed = new Set();
@@ -277,7 +277,7 @@ const ConstructionSequence = forwardRef(function ConstructionSequence({
 
   return <canvas ref={canvasRef}
     className={`ae-construction-sequence ${className}`}
-    width="960" height="540"
+    width={CONSTRUCTION_SIZES.desktop.width} height={CONSTRUCTION_SIZES.desktop.height}
     data-status={status}
     data-variant="desktop"
     data-frame="0"

@@ -15,3 +15,10 @@
 !presentation/
 !presentation/**
 !scripts/build-pages.mjs
+!scripts/assemble-construction-film.mjs
+!media/
+!media/construction-premium-v2/
+!media/construction-premium-v2/manifest.json
+!media/construction-premium-v2/part-*.bin
+public/assets/construction/premium-v2/construction-film.mp4
+public/assets/construction/premium-v2/.construction-film-*.tmp

@@ -4,16 +4,17 @@ import {
   CONSTRUCTION_CHAPTERS,
   CONSTRUCTION_FRAME_COUNT,
   CONSTRUCTION_SHEET_COUNT,
+  CONSTRUCTION_SIZES,
   getConstructionFrameRect,
   getConstructionPose,
 } from '../../src/components/construction-timeline.js';
 
 test('construction begins on the first movement and reaches the completed final frame', () => {
-  assert.equal(CONSTRUCTION_FRAME_COUNT, 224);
+  assert.equal(CONSTRUCTION_FRAME_COUNT, 336);
   assert.equal(getConstructionPose(0).globalFrame, 0);
   assert.ok(getConstructionPose(0.01).globalFrame > 0);
-  assert.equal(getConstructionPose(1).globalFrame, 223);
-  assert.equal(getConstructionPose(1).upperFrame, 223);
+  assert.equal(getConstructionPose(1).globalFrame, 335);
+  assert.equal(getConstructionPose(1).upperFrame, 335);
   assert.equal(getConstructionPose(1).blend, 0);
   assert.equal(getConstructionPose(1).stage, 'reveal');
   assert.equal(getConstructionPose(1).localProgress, 1);
@@ -46,17 +47,17 @@ test('every sampled construction pose is bounded, continuous and exactly reversi
   for (let index = 2000; index >= 0; index--) {
     const pose = getConstructionPose(index / 2000);
     assert.deepEqual(pose, forward[index]);
-    assert.ok(Number.isInteger(pose.frame) && pose.frame >= 0 && pose.frame <= 223);
-    assert.ok(pose.upperFrame >= pose.frame && pose.upperFrame <= Math.min(223, pose.frame + 1));
+    assert.ok(Number.isInteger(pose.frame) && pose.frame >= 0 && pose.frame <= 335);
+    assert.ok(pose.upperFrame >= pose.frame && pose.upperFrame <= Math.min(335, pose.frame + 1));
     for (const key of ['progress', 'blend', 'localProgress']) assert.ok(pose[key] >= 0 && pose[key] <= 1);
-    assert.ok(Math.abs(pose.frame + pose.blend - pose.progress * 223) < 1e-10);
+    assert.ok(Math.abs(pose.frame + pose.blend - pose.progress * 335) < 1e-10);
     if (index > 0) assert.ok(pose.globalFrame >= forward[index - 1].globalFrame);
   }
 });
 
-test('all 224 frames map to complete 2-by-2 sheets without crossing tile boundaries', () => {
-  assert.equal(CONSTRUCTION_SHEET_COUNT, 56);
-  for (const [width, height] of [[960, 540], [640, 360]]) {
+test('all 336 frames map to complete 2-by-2 sheets without crossing tile boundaries', () => {
+  assert.equal(CONSTRUCTION_SHEET_COUNT, 84);
+  for (const { width, height } of Object.values(CONSTRUCTION_SIZES)) {
     const tiles = new Set();
     for (let frame = 0; frame < CONSTRUCTION_FRAME_COUNT; frame++) {
       const tile = getConstructionFrameRect(frame, width, height);
@@ -65,16 +66,16 @@ test('all 224 frames map to complete 2-by-2 sheets without crossing tile boundar
       assert.ok(tile.sx + width <= width * 2 && tile.sy + height <= height * 2);
       tiles.add(`${tile.sheetIndex}:${tile.sx}:${tile.sy}`);
     }
-    assert.equal(tiles.size, 224);
-    assert.deepEqual(getConstructionFrameRect(223, width, height), {
-      sheetIndex: 55, sx: width, sy: height, width, height,
+    assert.equal(tiles.size, 336);
+    assert.deepEqual(getConstructionFrameRect(335, width, height), {
+      sheetIndex: 83, sx: width, sy: height, width, height,
     });
-    const before = getConstructionPose(3.5 / 223);
+    const before = getConstructionPose(3.5 / 335);
     assert.equal(getConstructionFrameRect(before.frame, width, height).sheetIndex, 0);
     assert.equal(getConstructionFrameRect(before.upperFrame, width, height).sheetIndex, 1);
     assert.equal(before.blend, 0.5);
   }
   assert.deepEqual(getConstructionFrameRect(Infinity), getConstructionFrameRect(0));
   assert.deepEqual(getConstructionFrameRect(-1), getConstructionFrameRect(0));
-  assert.deepEqual(getConstructionFrameRect(999), getConstructionFrameRect(223));
+  assert.deepEqual(getConstructionFrameRect(999), getConstructionFrameRect(335));
 });

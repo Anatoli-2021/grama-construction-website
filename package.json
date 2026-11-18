@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prepare:media": "node scripts/assemble-construction-film.mjs",
+    "predev": "npm run prepare:media",
     "dev": "node server.mjs",
+    "prebuild": "npm run prepare:media",
     "build": "vite build && node scripts/build-pages.mjs",
     "preview": "node server.mjs --production",
     "verify": "node scripts/verify.mjs",

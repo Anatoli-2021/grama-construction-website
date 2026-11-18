@@ -6,8 +6,10 @@ RUN npm ci
 COPY index.html vite.config.js ./
 COPY src ./src
 COPY public ./public
+COPY media/construction-premium-v2 ./media/construction-premium-v2
 COPY presentation ./presentation
 COPY scripts/build-pages.mjs ./scripts/build-pages.mjs
+COPY scripts/assemble-construction-film.mjs ./scripts/assemble-construction-film.mjs
 ARG SITE_URL=https://gramadevelopment.com
 ENV SITE_URL=$SITE_URL
 ARG VITE_CONTACT_EMAIL

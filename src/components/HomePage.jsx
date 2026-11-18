@@ -2,6 +2,7 @@ import { projects } from '../data/projects.js';
 import { enquiryHref } from '../enquiry-context.js';
 import { TrustedPartners } from './BrandSections.jsx';
 import FamilySection from './FamilySection.jsx';
+import { CONSTRUCTION_ATLAS_BASE } from './construction-timeline.js';
 import './HomePage.css';
 
 function Arrow() {
@@ -27,7 +28,7 @@ export default function HomePage() {
     </section>
 
     <section className="home-construction" aria-labelledby="home-construction-title">
-      <img className="home-construction-image" src="/assets/construction/residence.webp" alt="Conceptual gabled residence within the proposed neighborhood" width="1280" height="720" loading="lazy" decoding="async" fetchPriority="low" />
+      <img className="home-construction-image" src={`${CONSTRUCTION_ATLAS_BASE}/residence.webp`} alt="Conceptual gabled residence within the proposed neighborhood" width="1920" height="1080" loading="lazy" decoding="async" fetchPriority="low" />
       <div className="home-construction-shade" aria-hidden="true" />
       <div className="home-construction-copy">
         <p className="site-label">THE GRAMA EXPERIENCE / ARCHITECTURAL CONCEPT</p>

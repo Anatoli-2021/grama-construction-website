@@ -1,4 +1,4 @@
-name: Build and checks
+name: Build and visual checks
 on:
   pull_request:
   push:
@@ -48,7 +48,7 @@ jobs:
           VERIFY_URL=http://localhost:5179 npm run verify
 
   windows-animation:
-    name: Windows scroll animation (${{ matrix.browser }})
+    name: Windows visual and scroll checks (${{ matrix.browser }})
     runs-on: windows-2025
     timeout-minutes: 15
     strategy:
@@ -82,7 +82,7 @@ jobs:
           "PLAYWRIGHT_MODULE_PATH=$modulePath" >> $env:GITHUB_ENV
           $evidencePath = Join-Path $env:RUNNER_TEMP 'grama-windows-animation-${{ matrix.browser }}'
           "ANIMATION_EVIDENCE_DIR=$evidencePath" >> $env:GITHUB_ENV
-      - name: Verify construction, alternatives and emulated mobile controls
+      - name: Verify source-render film, leadership, palette and scroll alternatives
         run: node scripts/verify-windows-animation.mjs
       - name: Upload Windows browser evidence
         if: always()
@@ -94,8 +94,42 @@ jobs:
           retention-days: 7
           compression-level: 0
 
+  macos-safari:
+    name: Actual Apple Safari visual and keyboard checks
+    runs-on: macos-latest
+    timeout-minutes: 20
+    env:
+      CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PUBLIC_ANIMATION_URL: ${{ inputs.public_animation_url || 'https://humorous-delight-staging-website.up.railway.app/animated-experience' }}
+      ANIMATION_EVIDENCE_DIR: ${{ runner.temp }}/grama-actual-safari
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          ref: ${{ env.CANDIDATE_SHA }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Enable Apple's native Safari driver on this ephemeral CI runner
+        # This never enables remote automation on a collaborator's computer.
+        run: sudo /usr/bin/safaridriver --enable
+      - name: Verify actual Safari scrolling, 1080p media, portraits and palette
+        run: node scripts/verify-safari-visual.mjs
+      - name: Upload actual Apple Safari evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: macos-actual-safari
+          path: ${{ runner.temp }}/grama-actual-safari
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+
   macos-animation:
-    name: macOS animation (${{ matrix.engine }})
+    name: macOS visual and animation checks (${{ matrix.engine }})
     runs-on: macos-latest
     timeout-minutes: 20
     strategy:
@@ -135,7 +169,7 @@ jobs:
           fi
           echo "PLAYWRIGHT_MODULE_PATH=$browser_tools/node_modules/playwright/index.mjs" >> "$GITHUB_ENV"
           echo "ANIMATION_EVIDENCE_DIR=$RUNNER_TEMP/grama-macos-animation-$BROWSER_ENGINE" >> "$GITHUB_ENV"
-      - name: Verify construction and browser alternatives
+      - name: Verify source-render film, leadership, palette and browser alternatives
         run: node scripts/verify-windows-animation.mjs
       - name: Upload macOS engine evidence
         if: always()

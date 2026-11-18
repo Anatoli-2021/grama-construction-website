@@ -7,7 +7,7 @@ import { join, resolve } from 'node:path';
 import { spawn } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
-import { CONSTRUCTION_FRAME_COUNT } from '../src/components/construction-timeline.js';
+import { CONSTRUCTION_FRAME_COUNT, CONSTRUCTION_SHEET_COUNT } from '../src/components/construction-timeline.js';
 
 // Runs only in remote CI during agent verification. Browser tools stay under
 // RUNNER_TEMP; they are not website dependencies or public runtime assets.
@@ -18,7 +18,7 @@ const canvasSelector = '.ae-construction-sequence, .ae-artlist-sequence';
 const constructionStages = ['land', 'community', 'approach', 'interior', 'structure', 'reassemble', 'reveal'];
 const constructionCheckpoints = [23, 37, 51, 66, 80, 98];
 const previousCheckpoints = [25, 40, 66, 80, 98];
-const atlasRequest = /\/assets\/(?:construction|film\/(?:arrival|interior)|animated\/artlist-house)\/(?:desktop|mobile)\/sheet-\d+\.webp(?:[?#]|$)/;
+const atlasRequest = /\/assets\/(?:construction(?:\/premium-v2)?|film\/(?:arrival|interior)|animated\/artlist-house)\/(?:desktop|mobile)\/sheet-\d+\.webp(?:[?#]|$)/;
 const defaultPublicUrl = 'https://gramadevelopment.com/animated-experience';
 
 export function resolvePublicAnimationUrl(value = defaultPublicUrl) {
@@ -182,7 +182,7 @@ const report = {
   viewport,
   reducedMotionContext: 'no-preference',
   interaction: 'Primary desktop checks use native mouse wheel only, without Play, chapters, range or scripted scrolling. Separate checks exercise reduced motion, poster failure, deliberate film playback and emulated touch/keyboard controls.',
-  targets: [], candidateChecks: [], mobileChecks: [],
+  targets: [], candidateChecks: [], mobileChecks: [], visualChecks: [],
 };
 const sha256 = value => createHash('sha256').update(value).digest('hex');
 const errorDetails = error => ({ message: error.message, stack: error.stack });
@@ -552,7 +552,7 @@ async function verifyCandidateFallbacks(target) {
 
   await runCandidateCheck(target, report.candidateChecks, 'candidate-atlas-failure', { evidence: { reducedMotion: 'no-preference' } }, async (page, result) => {
     result.abortedAtlases = [];
-    await page.route(/\/assets\/construction\/(?:desktop|mobile)\/sheet-0\.webp(?:[?#]|$)/, route => {
+    await page.route(/\/assets\/construction(?:\/premium-v2)?\/(?:desktop|mobile)\/sheet-0\.webp(?:[?#]|$)/, route => {
       result.abortedAtlases.push(route.request().url());
       return route.abort('failed');
     });
@@ -627,9 +627,28 @@ async function verifyCandidateFallbacks(target) {
       readyState: video.readyState, paused: video.paused, muted: video.muted, controls: video.controls,
       width: video.videoWidth, height: video.videoHeight, duration: video.duration, source: video.currentSrc,
     }));
-    assert.ok(result.media.muted && result.media.controls && result.media.width > 0 && result.media.height > 0);
-    assert.ok(Number.isFinite(result.media.duration) && Math.abs(result.media.duration - 28) < .2, 'Native film must contain the full 28-second construction sequence');
-    assert.match(result.media.source, /\/assets\/construction\/construction-film\.mp4(?:[?#]|$)/);
+    assert.ok(result.media.muted && result.media.controls);
+    const manifestResponse = await fetch(new URL('/assets/construction/premium-v2/manifest.json', target.url));
+    assert.ok(manifestResponse.ok(), 'The versioned source/render manifest must be served');
+    const manifest = await manifestResponse.json();
+    assert.equal(manifest.frameCount, CONSTRUCTION_FRAME_COUNT);
+    assert.equal(manifest.sheets, CONSTRUCTION_SHEET_COUNT);
+    assert.equal(manifest.sourceFrameCount, 672, 'The entire continuous 672-frame source render must be retained');
+    assert.equal(manifest.inputFrames.length, manifest.sourceFrameCount);
+    assert.ok(manifest.inputFrames.every((frame, index) => frame.frame === index + 1
+      && frame.width >= 1920 && frame.height >= 1080 && /^[a-f0-9]{64}$/.test(frame.sha256)),
+    'Every native source frame must be authored at 1080p or higher and individually inventoried');
+    assert.ok(manifest.film.size[0] >= 1920 && manifest.film.size[1] >= 1080, 'The film must be encoded at native 1080p or higher');
+    assert.equal(result.media.width, manifest.film.size[0]);
+    assert.equal(result.media.height, manifest.film.size[1]);
+    assert.ok(Number.isFinite(result.media.duration) && Math.abs(result.media.duration - manifest.film.seconds) < .2,
+      'The decoded native film must match the full source timeline');
+    assert.equal(manifest.film.frames, manifest.sourceFrameCount);
+    assert.ok(Math.abs(manifest.film.frames / manifest.film.fps - manifest.film.seconds) < .01);
+    assert.match(result.media.source, /\/assets\/construction\/premium-v2\/construction-film\.mp4(?:[?#]|$)/);
+    result.sourceRender = { sourceFrames: manifest.sourceFrameCount, size: manifest.film.size,
+      browserSamples: manifest.frameCount, seconds: manifest.film.seconds,
+      nativeFramesInventoried: manifest.inputFrames.length, cacheVersion: 'premium-v2' };
     const seekTarget = await page.locator('.ae-film-dialog video').evaluate(video => {
       const targetTime = Math.min(video.duration - .3, video.duration * .6);
       video.currentTime = targetTime;
@@ -704,7 +723,8 @@ async function verifyMobileContexts(target, devices) {
       await captureMobile('interior');
       const range = page.getByRole('slider', { name: 'Experience progress', exact: true });
       await range.press('End');
-      await page.waitForFunction(() => Number(document.querySelector('.ae-construction-sequence')?.dataset.globalFrame) === 223);
+      await page.waitForFunction(lastFrame => Number(document.querySelector('.ae-construction-sequence')?.dataset.globalFrame) === lastFrame,
+        CONSTRUCTION_FRAME_COUNT - 1);
       await waitForCanvas(page);
       const reveal = await canvasState(page);
       assert.equal(reveal.stage, 'reveal');
@@ -723,6 +743,201 @@ async function verifyMobileContexts(target, devices) {
       result.stills = 7;
       await captureMobile('stills');
     });
+  }
+}
+
+const originalPortraits = {
+  '/assets/tony-grama.webp': '57d296a30dbf5053d38f41e36fe120b0dd4f4d5828d1af70509f9e1538ffe4d4',
+  '/assets/photo/alina-portrait.jpg': 'cdb327d837e267ce7d04567c5c32fb108b11bcd0d95535f379c6647453daeb1c',
+  '/assets/photo/alina-realtor.jpg': '673d19ce4b1b4b0740729f4c9475f27e03c78866fe4a1ed7bc9ad4741bc72883',
+};
+const paletteNames = ['paper', 'white', 'limestone', 'sand', 'ink', 'charcoal', 'muted', 'bronze', 'bronze-light', 'line', 'on-dark', 'on-dark-muted'];
+
+function contrastRatio(first, second) {
+  function luminance(color) {
+    const value = color.trim();
+    let rgb;
+    if (/^#[a-f\d]{6}$/i.test(value)) rgb = [1, 3, 5].map(index => parseInt(value.slice(index, index + 2), 16));
+    else {
+      const match = value.match(/^rgba?\(\s*([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:\s*[,/]\s*([\d.]+))?\s*\)$/);
+      assert.ok(match && (match[4] === undefined || Number(match[4]) === 1), `Contrast requires an opaque sRGB color: ${value}`);
+      rgb = match.slice(1, 4).map(Number);
+    }
+    const linear = rgb.map(channel => {
+      const component = channel / 255;
+      return component <= .04045 ? component / 12.92 : ((component + .055) / 1.055) ** 2.4;
+    });
+    return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
+  }
+  const values = [luminance(first), luminance(second)].sort((a, b) => b - a);
+  return (values[0] + .05) / (values[1] + .05);
+}
+
+async function verifySiteRefinement(target) {
+  const layouts = [
+    { name: 'desktop', viewport: { width: 1440, height: 900 } },
+    { name: 'tablet', viewport: { width: 768, height: 1024 } },
+    { name: 'phone', viewport: { width: 390, height: 844 } },
+    { name: 'compact', viewport: { width: 320, height: 568 } },
+  ];
+  const routes = ['/', '/about', '/developments', '/projects', '/partnerships', '/animated-experience', '/contact', '/projects/dexter-acres'];
+  const portraitResponses = new Map();
+  let referencePalette;
+  report.visualCoverage = {
+    scope: 'Rendered local candidate after refinement only; screenshots are not claimed as before/after pairs or physical-device captures.',
+    leadershipRoutes: ['/', '/about'], layouts, paletteRoutes: routes,
+    paletteLayouts: ['desktop', 'phone'], expectedChecks: 24,
+    portraitToleranceCssPixels: 1, normalTextContrastMinimum: 4.5,
+    portraitImageGeometry: 'visibleImage is the intersection of the transformed image and its overflow-clipped frame; image retains the raw transformed bounds for crop documentation.',
+  };
+  for (const route of ['/', '/about']) {
+    for (const layout of layouts) {
+      const targetPage = { ...target, url: new URL(route, target.url).href };
+      const name = `visual-leadership-${route === '/' ? 'home' : 'about'}-${layout.name}`;
+      await runCandidateCheck(targetPage, report.visualChecks, name, {
+        context: { viewport: layout.viewport, reducedMotion: 'reduce' },
+        evidence: { route, viewport: layout.viewport, comparison: 'Equal side-by-side or stacked portrait frames in the same rendered candidate' },
+      }, async (page, result) => {
+        const response = await page.goto(targetPage.url, { waitUntil: 'networkidle', timeout: 45000 });
+        assert.ok(response?.ok(), 'Leadership page must load');
+        const section = page.locator('.family-section');
+        await section.scrollIntoViewIfNeeded();
+        await page.evaluate(() => document.fonts.ready);
+        await page.waitForFunction(() => {
+          const images = [...document.querySelectorAll('.family-portraits img')];
+          return images.length === 2 && images.every(image => image.complete && image.naturalWidth > 0);
+        });
+        result.measurements = await page.locator('.family-portraits').evaluate(container => {
+          const bounds = element => {
+            const rect = element.getBoundingClientRect();
+            return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+          };
+          const typography = element => {
+            const style = getComputedStyle(element);
+            return { fontFamily: style.fontFamily, fontSize: style.fontSize, fontWeight: style.fontWeight, lineHeight: style.lineHeight, color: style.color };
+          };
+          return {
+            overflow: Math.max(0, document.documentElement.scrollWidth - innerWidth),
+            background: getComputedStyle(container.closest('.family-section')).backgroundColor,
+            portraits: [...container.querySelectorAll(':scope > figure.family-portrait')].map(figure => {
+              const frame = figure.querySelector('.family-portrait-frame');
+              const image = frame?.querySelector('img');
+              const caption = figure.querySelector('.family-caption');
+              if (!frame || !image || !caption || caption.children.length !== 2) return { missingSharedStructure: true };
+              const style = getComputedStyle(image);
+              const frameStyle = getComputedStyle(frame);
+              const frameBounds = bounds(frame);
+              const imageBounds = bounds(image);
+              const visibleX = Math.max(frameBounds.x, imageBounds.x);
+              const visibleY = Math.max(frameBounds.y, imageBounds.y);
+              const visibleImage = { x: visibleX, y: visibleY,
+                width: Math.max(0, Math.min(frameBounds.x + frameBounds.width, imageBounds.x + imageBounds.width) - visibleX),
+                height: Math.max(0, Math.min(frameBounds.y + frameBounds.height, imageBounds.y + imageBounds.height) - visibleY) };
+              return { frame: frameBounds, image: imageBounds, visibleImage, caption: bounds(caption),
+                frameOverflow: { x: frameStyle.overflowX, y: frameStyle.overflowY },
+                source: image.getAttribute('src'), naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight,
+                complete: image.complete, objectFit: style.objectFit, objectPosition: style.objectPosition,
+                transform: style.transform, transformOrigin: style.transformOrigin,
+                visibility: style.visibility, opacity: Number(style.opacity),
+                name: typography(caption.children[0]), role: typography(caption.children[1]) };
+            }),
+          };
+        });
+        const { portraits, overflow } = result.measurements;
+        assert.equal(overflow, 0, 'Leadership layout must not overflow horizontally');
+        assert.equal(portraits.length, 2, 'Both leaders use the same figure structure');
+        assert.ok(portraits.every(item => !item.missingSharedStructure));
+        const [tony, alina] = portraits;
+        for (const dimension of ['width', 'height']) {
+          assert.ok(tony.frame[dimension] > 0 && Math.abs(tony.frame[dimension] - alina.frame[dimension]) <= 1,
+            `Portrait frame ${dimension} must be equal within one CSS pixel`);
+          assert.ok(Math.abs(tony.visibleImage[dimension] - alina.visibleImage[dimension]) <= 1,
+            `Clipped visible image ${dimension} must be equal within one CSS pixel`);
+          assert.ok(portraits.every(item => Math.abs(item.frame[dimension] - item.visibleImage[dimension]) <= 1),
+            'Both visible images must fill their equally sized editorial frames');
+        }
+        for (const portrait of portraits) {
+          assert.ok(['hidden', 'clip'].includes(portrait.frameOverflow.x) && ['hidden', 'clip'].includes(portrait.frameOverflow.y),
+            'The measured editorial frame must actually clip any transformed image overflow');
+          assert.ok(portrait.image.x <= portrait.frame.x + 1 && portrait.image.y <= portrait.frame.y + 1
+            && portrait.image.x + portrait.image.width >= portrait.frame.x + portrait.frame.width - 1
+            && portrait.image.y + portrait.image.height >= portrait.frame.y + portrait.frame.height - 1,
+          'Each original image must cover all four clipping-frame edges without gaps');
+          assert.ok(Math.abs(portrait.visibleImage.x - portrait.frame.x) <= 1 && Math.abs(portrait.visibleImage.y - portrait.frame.y) <= 1,
+            'Each visible image must align with its clipping frame');
+        }
+        assert.ok(Math.abs(tony.frame.width / tony.frame.height - alina.frame.width / alina.frame.height) <= .005);
+        assert.ok(Math.abs(tony.visibleImage.width / tony.visibleImage.height - alina.visibleImage.width / alina.visibleImage.height) <= .005);
+        if (Math.abs(tony.frame.y - alina.frame.y) < tony.frame.height / 2) {
+          assert.ok(Math.abs(tony.frame.y - alina.frame.y) <= 1, 'Side-by-side portraits must align at the top');
+          assert.ok(Math.abs(tony.caption.y - alina.caption.y) <= 1, 'Side-by-side captions must share a baseline area');
+        } else assert.ok(Math.abs(tony.frame.x - alina.frame.x) <= 1, 'Stacked portraits must share the same left alignment');
+        assert.deepEqual(tony.name, alina.name, 'Names must receive identical type treatment');
+        assert.deepEqual(tony.role, alina.role, 'Roles must receive identical type treatment');
+        assert.ok(Math.abs(tony.caption.width - alina.caption.width) <= 1, 'Caption areas must have equal width');
+        result.captionContrast = portraits.map(portrait => ({
+          name: contrastRatio(portrait.name.color, result.measurements.background),
+          role: contrastRatio(portrait.role.color, result.measurements.background),
+        }));
+        assert.ok(result.captionContrast.every(pair => pair.name >= 4.5 && pair.role >= 4.5),
+          'Actual rendered leadership names and roles must meet normal-text AA contrast');
+        assert.equal(tony.source, '/assets/tony-grama.webp');
+        assert.equal(alina.source, route === '/about' ? '/assets/photo/alina-realtor.jpg' : '/assets/photo/alina-portrait.jpg');
+        result.originalSourceHashes = [];
+        for (const portrait of portraits) {
+          assert.ok(portrait.complete && portrait.naturalWidth > 0 && portrait.naturalHeight > 0);
+          assert.equal(portrait.objectFit, 'cover');
+          assert.equal(portrait.visibility, 'visible');
+          assert.equal(portrait.opacity, 1);
+          const imageUrl = new URL(portrait.source, targetPage.url).href;
+          if (!portraitResponses.has(imageUrl)) {
+            const image = await fetch(imageUrl);
+            assert.ok(image.ok(), 'Original portrait must be served');
+            portraitResponses.set(imageUrl, sha256(Buffer.from(await image.arrayBuffer())));
+          }
+          assert.equal(portraitResponses.get(imageUrl), originalPortraits[portrait.source], 'Portrait source bytes must remain unchanged; no facial reconstruction');
+          result.originalSourceHashes.push({ source: portrait.source, sha256: portraitResponses.get(imageUrl) });
+        }
+        result.screenshot = `${name}.png`;
+        await section.screenshot({ path: join(output, result.screenshot), animations: 'disabled' });
+      });
+    }
+  }
+  for (const route of routes) {
+    for (const layout of [layouts[0], layouts[2]]) {
+      const targetPage = { ...target, url: new URL(route, target.url).href };
+      const slug = route === '/' ? 'home' : route.slice(1).replaceAll('/', '-');
+      const name = `visual-palette-${slug}-${layout.name}`;
+      await runCandidateCheck(targetPage, report.visualChecks, name, {
+        context: { viewport: layout.viewport, reducedMotion: 'reduce' },
+        evidence: { route, viewport: layout.viewport, contrastScope: 'Opaque design-token text/surface pairs, not a full automated WCAG audit of text over photography' },
+      }, async (page, result) => {
+        const response = await page.goto(targetPage.url, { waitUntil: 'networkidle', timeout: 45000 });
+        assert.ok(response?.ok(), 'Public page must load');
+        await page.locator('.site-footer').waitFor({ state: 'attached' });
+        await page.evaluate(() => document.fonts.ready);
+        result.rendered = await page.evaluate(names => {
+          const root = getComputedStyle(document.documentElement);
+          return {
+            overflow: Math.max(0, document.documentElement.scrollWidth - innerWidth),
+            tokens: Object.fromEntries(names.map(name => [name, root.getPropertyValue(`--site-${name}`).trim()])),
+            surfaces: [...document.querySelectorAll('body, .site-header, .site-footer, main, .company-page, .ae-stage')].map(element => {
+              const style = getComputedStyle(element);
+              return { selector: element.tagName.toLowerCase() + (element.className ? '.' + String(element.className).trim().split(/\s+/).join('.') : ''), color: style.color, background: style.backgroundColor };
+            }),
+          };
+        }, paletteNames);
+        assert.equal(result.rendered.overflow, 0, `${route}: page must not overflow at ${layout.viewport.width}px`);
+        assert.ok(paletteNames.every(name => result.rendered.tokens[name]), 'Every page must expose the complete shared architectural palette');
+        referencePalette ||= result.rendered.tokens;
+        assert.deepEqual(result.rendered.tokens, referencePalette, 'All public pages and responsive layouts must use the same palette tokens');
+        result.contrast = [['ink', 'paper'], ['muted', 'paper'], ['bronze', 'paper'], ['ink', 'limestone'], ['muted', 'limestone'], ['on-dark', 'charcoal'], ['on-dark-muted', 'charcoal']]
+          .map(([foreground, background]) => ({ foreground, background, ratio: contrastRatio(result.rendered.tokens[foreground], result.rendered.tokens[background]) }));
+        assert.ok(result.contrast.every(pair => pair.ratio >= 4.5), 'Shared normal-text color pairs must meet WCAG AA contrast');
+        result.screenshot = `${name}.png`;
+        await page.screenshot({ path: join(output, result.screenshot), type: 'png', animations: 'disabled' });
+      }, true);
+    }
   }
 }
 
@@ -758,9 +973,11 @@ async function main() {
     await verifyTarget({ name: 'public-domain', url: publicUrl, expectedSchema: publicSchema });
     await verifyCandidateFallbacks(candidate);
     await verifyMobileContexts(candidate, playwright.devices);
+    await verifySiteRefinement(candidate);
     report.passed = report.targets.length === 2 && report.targets.every(target => target.passed)
       && report.candidateChecks.length === 3 && report.candidateChecks.every(check => check.passed)
-      && report.mobileChecks.length === report.mobileCoverage.expectedContexts && report.mobileChecks.every(check => check.passed);
+      && report.mobileChecks.length === report.mobileCoverage.expectedContexts && report.mobileChecks.every(check => check.passed)
+      && report.visualChecks.length === report.visualCoverage.expectedChecks && report.visualChecks.every(check => check.passed);
   } catch (error) {
     report.error = errorDetails(error);
     report.passed = false;

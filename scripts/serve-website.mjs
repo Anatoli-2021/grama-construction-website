@@ -1,5 +1,6 @@
 import http from 'node:http';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, stat, open } from 'node:fs/promises';
+import { pipeline } from 'node:stream';
 import { resolve, sep, extname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createPresentationHandler } from './presentation-access.mjs';
@@ -25,6 +26,30 @@ function videoRange(value, length) {
   const end = match[2] ? BigInt(match[2]) : total - 1n;
   if (start >= total || end < start) return null;
   return { start: Number(start), end: Number(end >= total ? total - 1n : end) };
+}
+
+async function streamVideo(req, res, path, status, headers, range) {
+  // Open before committing headers, preserving the normal 404 if opening fails.
+  // A FileHandle stream reads at most a small buffer instead of copying the
+  // entire film for each playback or byte-range request.
+  const file = await open(path, 'r');
+  let stream;
+  try {
+    if (req.aborted || res.destroyed) return;
+    stream = file.createReadStream({ highWaterMark: 64 * 1024, ...(range || {}) });
+    res.writeHead(status, headers);
+    await new Promise(resolve => {
+      // pipeline handles backpressure, read errors and client disconnects,
+      // destroying both ends. After headers, never try to send another page.
+      pipeline(stream, res, () => resolve());
+    });
+  } catch (error) {
+    if (!res.headersSent && !res.destroyed) throw error;
+    res.destroy();
+  } finally {
+    stream?.destroy();
+    await file.close().catch(() => {});
+  }
 }
 
 export async function serveWebsiteRequest(req, res, { localApi = false, contactHandler = contact } = {}) {
@@ -61,25 +86,31 @@ export async function serveWebsiteRequest(req, res, { localApi = false, contactH
       const entry = await stat(path);
       if (entry.isDirectory()) path = resolve(path, 'index.html');
       else if (!entry.isFile()) return notFound();
-      let content = await readFile(path);
-      if (!localApi && path.endsWith('.html')) content = Buffer.from(content.toString('utf8').replace('name="grama-runtime" content="local-api"', 'name="grama-runtime" content="static-preview"'));
-      const headers = { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600', 'Content-Length': content.length };
       if (extname(path) === '.mp4') {
-        headers['Accept-Ranges'] = 'bytes';
+        const headers = { 'Content-Type': types['.mp4'], 'Cache-Control': 'public, max-age=3600', 'Content-Length': entry.size, 'Accept-Ranges': 'bytes' };
+        let range;
+        let status = 200;
         // Range applies to GET only. Without entity validators, an If-Range
         // request receives the full representation instead of a stale slice.
         if (req.method === 'GET' && req.headers.range !== undefined && req.headers['if-range'] === undefined) {
-          const range = videoRange(req.headers.range, content.length);
+          range = videoRange(req.headers.range, entry.size);
           if (!range) {
-            res.writeHead(416, { ...headers, 'Cache-Control': 'no-store', 'Content-Range': `bytes */${content.length}`, 'Content-Length': 0 });
+            res.writeHead(416, { ...headers, 'Cache-Control': 'no-store', 'Content-Range': `bytes */${entry.size}`, 'Content-Length': 0 });
             return res.end();
           }
-          headers['Content-Range'] = `bytes ${range.start}-${range.end}/${content.length}`;
+          headers['Content-Range'] = `bytes ${range.start}-${range.end}/${entry.size}`;
           headers['Content-Length'] = range.end - range.start + 1;
-          res.writeHead(206, headers);
-          return res.end(content.subarray(range.start, range.end + 1));
+          status = 206;
         }
+        if (req.method === 'HEAD' || entry.size === 0) {
+          res.writeHead(status, headers);
+          return res.end();
+        }
+        return await streamVideo(req, res, path, status, headers, range);
       }
+      let content = await readFile(path);
+      if (!localApi && path.endsWith('.html')) content = Buffer.from(content.toString('utf8').replace('name="grama-runtime" content="local-api"', 'name="grama-runtime" content="static-preview"'));
+      const headers = { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600', 'Content-Length': content.length };
       res.writeHead(path === resolve(dist, '404.html') ? 404 : 200, headers);
       res.end(req.method === 'HEAD' ? undefined : content);
     } catch { return notFound(); }

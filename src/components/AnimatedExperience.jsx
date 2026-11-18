@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { enquiryHref } from '../enquiry-context.js';
-import { CONSTRUCTION_CHAPTERS, clampConstructionProgress, getConstructionPose } from './construction-timeline.js';
+import { CONSTRUCTION_ATLAS_BASE, CONSTRUCTION_CHAPTERS, clampConstructionProgress, getConstructionPose } from './construction-timeline.js';
 import ConstructionSequence from './ConstructionSequence.jsx';
 import HouseAnimationPlayer from './HouseAnimationPlayer.jsx';
 import './AnimatedExperience.css';
 
 const stillDescriptions = ['Unbuilt concept site following the supplied fourteen-lot plan', 'Concept homes taking shape across the proposed neighborhood', 'Approach to one conceptual residence within the neighborhood', 'Conceptual kitchen and living spaces inside the residence', 'Aligned structural cutaway of the same residence', 'The conceptual residence reassembled into its finished form', 'Completed fourteen-home architectural masterplan concept'];
 const stills = CONSTRUCTION_CHAPTERS.map((chapter, index) => ({
-  image: `/assets/construction/${chapter.id}.webp`,
+  image: `${CONSTRUCTION_ATLAS_BASE}/${chapter.id}.webp`,
   title: chapter.title,
   alt: stillDescriptions[index],
 }));
@@ -171,7 +171,7 @@ export default function AnimatedExperience({ motion = true }) {
         </> : <button ref={enableButtonRef} type="button" onClick={enableMotion} disabled={!clientReady}>Enable scroll animation <Arrow /></button>}</div>
         <div className="ce-caption" aria-live="polite" aria-atomic="true"><span className="site-label">{String(chapter + 1).padStart(2, '0')} / {activeChapter.label}</span><h2>{activeChapter.title}</h2><p>{activeChapter.text}</p></div>
         <div className="ce-brand-reveal" aria-hidden="true"><img className="ce-reveal-wordmark" src="/assets/brand/grama-development.svg" alt="" width="780" height="240" /></div>
-        <div className="ce-film"><HouseAnimationPlayer source="/assets/construction/construction-film.mp4" poster="/assets/construction/residence.webp" label="Play film" ariaLabel="Play the architectural film" title="A closer look" description="Continuous architectural concept from a neighborhood into one residence and its structure" loop={false} /></div>
+        <div className="ce-film"><HouseAnimationPlayer source={`${CONSTRUCTION_ATLAS_BASE}/construction-film.mp4`} poster={`${CONSTRUCTION_ATLAS_BASE}/residence.webp`} label="Play film" ariaLabel="Play the architectural film" title="A closer look" description="Continuous architectural concept from a neighborhood into one residence and its structure" loop={false} /></div>
         <p className="ce-disclosure">Architectural concept.<br />Illustrative construction sequence.</p>
         {scrollMode && <div className="ae-scroll-controls">
           <div className="ae-scroll-instruction"><span>Scroll to explore <span aria-hidden="true">↓</span></span><span>Reverse to return</span></div>
