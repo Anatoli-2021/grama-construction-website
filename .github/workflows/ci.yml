@@ -101,7 +101,6 @@ jobs:
     env:
       CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       PUBLIC_ANIMATION_URL: ${{ inputs.public_animation_url || 'https://humorous-delight-staging-website.up.railway.app/animated-experience' }}
-      ANIMATION_EVIDENCE_DIR: ${{ runner.temp }}/grama-actual-safari
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -117,6 +116,8 @@ jobs:
         # This never enables remote automation on a collaborator's computer.
         run: sudo /usr/bin/safaridriver --enable
       - name: Verify actual Safari scrolling, 1080p media, portraits and palette
+        env:
+          ANIMATION_EVIDENCE_DIR: ${{ runner.temp }}/grama-actual-safari
         run: node scripts/verify-safari-visual.mjs
       - name: Upload actual Apple Safari evidence
         if: always()
