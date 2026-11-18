@@ -96,7 +96,7 @@ jobs:
 
   macos-safari:
     name: Actual Apple Safari visual and keyboard checks
-    runs-on: macos-latest
+    runs-on: macos-26-intel
     timeout-minutes: 20
     env:
       CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -131,7 +131,7 @@ jobs:
 
   macos-animation:
     name: macOS visual and animation checks (${{ matrix.engine }})
-    runs-on: macos-latest
+    runs-on: macos-26-intel
     timeout-minutes: 20
     strategy:
       fail-fast: false
