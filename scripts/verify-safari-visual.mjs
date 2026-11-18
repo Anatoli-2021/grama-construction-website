@@ -69,6 +69,74 @@ async function navigate(url) {
     addEventListener('unhandledrejection', event => window.__gramaSafariErrors.push(String(event.reason?.message || event.reason)));
   });
 }
+async function pageDiagnostics() {
+  return evaluate(() => {
+    const root = document.querySelector('#root');
+    const experience = document.querySelector('.animated-experience');
+    const appearance = element => {
+      if (!element) return null;
+      const style = getComputedStyle(element);
+      return { display: style.display, visibility: style.visibility, opacity: style.opacity };
+    };
+    return { url: location.href, title: document.title, readyState: document.readyState,
+      prefersReducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+      viewport: { width: innerWidth, height: innerHeight }, scrollY,
+      experiencePresent: Boolean(experience), experienceMode: experience?.dataset.mode || null,
+      experienceState: experience?.dataset.sequenceState || null,
+      rootHTMLLength: root?.innerHTML.length || 0, rootHTMLExcerpt: root?.innerHTML.slice(0, 3000) || '',
+      bodyText: document.body.innerText.slice(0, 2000), bodyAppearance: appearance(document.body), rootAppearance: appearance(root),
+      scripts: [...document.scripts].map(script => ({ src: script.src, type: script.type })),
+      observedErrorsAfterHydration: window.__gramaSafariErrors || [],
+    };
+  });
+}
+async function diagnoseBlankRoot(failureState) {
+  // Diagnosis happens only after the original failed state and screenshot are
+  // saved. A second module evaluation can reveal an early React error missed
+  // before the page's error hooks were installed; it can never pass a test.
+  if (failureState.experiencePresent || failureState.rootHTMLLength !== 0) return null;
+  const diagnostic = await command('POST', '/execute/async', {
+    script: `return (${function (done) {
+      const entry = [...document.scripts].find(script => script.type === 'module' && script.src);
+      if (!entry) { done({ skipped: 'No existing module entry on the failed page' }); return; }
+      const url = new URL(entry.src);
+      if (url.origin !== location.origin || !/^\/assets\/website-[\w-]+\.js$/.test(url.pathname)) {
+        done({ skipped: 'The existing entry is not the same-origin website bundle' }); return;
+      }
+      url.searchParams.set('gramaSafariDiagnostic', String(Date.now()));
+      const errors = [];
+      const describe = value => {
+        if (value instanceof Error) return value.stack || value.message;
+        try { return typeof value === 'object' ? JSON.stringify(value) : String(value); }
+        catch { return String(value); }
+      };
+      const originalConsoleError = console.error;
+      const consoleError = (...values) => {
+        errors.push({ source: 'console.error', message: values.map(describe).join(' ') });
+        originalConsoleError.apply(console, values);
+      };
+      const windowError = event => errors.push({ source: 'window.error', message: event.message,
+        filename: event.filename, line: event.lineno, column: event.colno, stack: event.error?.stack || null });
+      const rejection = event => errors.push({ source: 'unhandledrejection', message: describe(event.reason) });
+      console.error = consoleError;
+      addEventListener('error', windowError);
+      addEventListener('unhandledrejection', rejection);
+      let moduleStatus = 'pending';
+      import(url.href).then(() => { moduleStatus = 'loaded'; }, error => {
+        moduleStatus = 'rejected'; errors.push({ source: 'module-import', message: describe(error) });
+      });
+      setTimeout(() => {
+        if (console.error === consoleError) console.error = originalConsoleError;
+        removeEventListener('error', windowError);
+        removeEventListener('unhandledrejection', rejection);
+        done({ entry: url.href, settleMilliseconds: 2000, moduleStatus, errors });
+      }, 2000);
+    }.toString()})(arguments[arguments.length - 1]);`,
+    args: [],
+  });
+  return { purpose: 'Diagnostic re-import after a saved failure; never a retry or acceptance path',
+    diagnostic, after: await pageDiagnostics() };
+}
 async function click(selector) {
   const element = await command('POST', '/element', { using: 'css selector', value: selector });
   const id = element['element-6066-11e4-a52e-4f735466cecf'];
@@ -173,6 +241,7 @@ async function verifyAnimation(target) {
     assert.equal(manifest.sourceFrameCount, 672);
     result.sampleManifest = { browserSamples: manifest.frameCount, sheetsPerVariant: manifest.sheets, nativeFrames: manifest.sourceFrameCount };
     await navigate(target.url);
+    result.navigation = await pageDiagnostics();
     await until('construction scroll mode', () => evaluate(() => document.querySelector('.animated-experience')?.dataset.mode === 'scroll'));
     let state = await readyCanvas();
     assert.equal(state.frame, 0);
@@ -250,7 +319,9 @@ async function verifyAnimation(target) {
     result.passed = true;
   } catch (error) {
     result.error = errorDetails(error);
+    result.failureState = await pageDiagnostics().catch(diagnosticError => ({ error: diagnosticError.message }));
     await screenshot(`${target.name}-failure.png`).catch(() => {});
+    result.blankRootDiagnosis = await diagnoseBlankRoot(result.failureState).catch(diagnosticError => ({ error: diagnosticError.message }));
   }
   console.log(JSON.stringify({ target: target.name, browser: 'actual-apple-safari', passed: result.passed, error: result.error?.message }));
 }
