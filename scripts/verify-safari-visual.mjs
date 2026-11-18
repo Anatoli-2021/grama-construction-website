@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import { openSync, closeSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { spawn, spawnSync } from 'node:child_process';
+import { createServer } from 'node:http';
 import os from 'node:os';
 import { join, resolve } from 'node:path';
 import sharp from 'sharp';
@@ -30,6 +31,7 @@ const report = {
 let sessionId;
 let driver;
 let server;
+let fixtureServer;
 const descriptors = [];
 
 function errorDetails(error) { return { message: error.message, stack: error.stack }; }
@@ -235,6 +237,123 @@ async function positionWithNativeKeys(selector) {
   }
   throw new Error(`Native Safari keys could not bring ${selector} fully into view within 160 inputs`);
 }
+const fixtureOrigin = 'http://127.0.0.1:5195';
+const fixturePath = '/__safari-native-preflight';
+const fixtureHTML = `<!doctype html><html lang="en"><meta charset="utf-8"><title>Native Safari diagnostic fixture</title>
+<style>html{background:#faf8f0;color:#102030;font:20px/1.5 system-ui}body{margin:0;min-height:5000px;padding:28px;box-sizing:border-box}#neutral-focus{padding:18px;border:3px solid #102030;width:650px;max-width:80vw;outline-offset:4px}canvas{display:block;width:640px;height:320px;margin:28px 0;border:3px solid #102030}p{margin:20px 0}.marker{margin-top:1200px;padding:60px;background:#14283c;color:#f0dcb4}</style>
+<body tabindex="0"><div id="neutral-focus" tabindex="0">Owned native-browser focus fixture. No application controls.</div>
+<p>Known text and a two-color canvas must appear below.</p><canvas id="fixture-canvas" width="640" height="320"></canvas>
+<p>Left: dark blue. Right: warm ivory. Native keys should scroll this 5000-pixel document.</p><div class="marker">Native scroll marker</div>
+<script>window.__fixtureEvents=[];for(const type of ['keydown','keyup'])document.addEventListener(type,event=>{const record={type,key:event.key,code:event.code,isTrusted:event.isTrusted,defaultPrevented:event.defaultPrevented,target:event.target.tagName+'#'+event.target.id,scrollY};window.__fixtureEvents.push(record);setTimeout(()=>{record.defaultPreventedAfterDispatch=event.defaultPrevented;record.scrollYAfterDispatch=scrollY},0)},true);const context=document.getElementById('fixture-canvas').getContext('2d',{alpha:false});context.fillStyle='#14283c';context.fillRect(0,0,320,320);context.fillStyle='#f0dcb4';context.fillRect(320,0,320,320);window.__fixtureReady=true;</script></body></html>`;
+async function fixtureState() {
+  return evaluate(() => ({ url: location.href, scrollY, documentHeight: document.documentElement.scrollHeight,
+    hasFocus: document.hasFocus(), visibility: document.visibilityState,
+    activeElement: document.activeElement ? { tag: document.activeElement.tagName, id: document.activeElement.id, tabIndex: document.activeElement.tabIndex } : null,
+    events: window.__fixtureEvents || [] }));
+}
+async function fixturePixels() {
+  return evaluate(() => {
+    const canvas = document.querySelector('#fixture-canvas');
+    const read = context => {
+      const pixels = context.getImageData(0, 0, 640, 320).data;
+      const at = (x, y) => [...pixels.slice((y * 640 + x) * 4, (y * 640 + x) * 4 + 4)];
+      let sum = 0, squares = 0, count = 0, hash = 2166136261;
+      for (let index = 0; index < pixels.length; index += 64) {
+        const luma = .2126 * pixels[index] + .7152 * pixels[index + 1] + .0722 * pixels[index + 2];
+        sum += luma; squares += luma * luma; count++;
+        for (let channel = 0; channel < 3; channel++) hash = Math.imul(hash ^ pixels[index + channel], 16777619);
+      }
+      const left = at(160, 160), right = at(480, 160);
+      return { left, right, expectedColorsMatch: left.join() === '20,40,60,255' && right.join() === '240,220,180,255',
+        spatialLuminanceVariance: Math.max(0, squares / count - (sum / count) ** 2), fnv: (hash >>> 0).toString(16) };
+    };
+    const copy = () => {
+      const diagnostic = document.createElement('canvas'); diagnostic.width = 640; diagnostic.height = 320;
+      const context = diagnostic.getContext('2d', { alpha: false, willReadFrequently: true });
+      context.drawImage(canvas, 0, 0);
+      return read(context);
+    };
+    // Only this owned synthetic fixture is read directly. Product canvases
+    // continue to use the unchanged detached diagnostic-copy measurement.
+    const detachedBeforeLiveRead = copy();
+    const live = read(canvas.getContext('2d'));
+    const detachedAfterLiveRead = copy();
+    return { detachedBeforeLiveRead, live, detachedAfterLiveRead };
+  });
+}
+async function fixtureElementScreenshot(name) {
+  try {
+    const element = await command('POST', '/element', { using: 'css selector', value: '#fixture-canvas' });
+    const id = element['element-6066-11e4-a52e-4f735466cecf'];
+    const encoded = await command('GET', `/element/${id}/screenshot`);
+    const bytes = Buffer.from(encoded, 'base64');
+    assert.equal(bytes.subarray(1, 4).toString(), 'PNG');
+    await writeFile(join(output, name), bytes);
+    const { width, height } = await sharp(bytes).metadata();
+    return { supported: true, name, width, height, bytes: bytes.length };
+  } catch (error) { return { supported: false, error: errorDetails(error) }; }
+}
+async function verifyNativePrerequisites() {
+  const result = { scope: 'Owned synthetic loopback fixture only; never product acceptance or a product retry',
+    expectedCanvasColors: { left: [20, 40, 60, 255], right: [240, 220, 180, 255] }, phases: [], inputProbes: [], completed: false };
+  report.preflight = result;
+  fixtureServer = createServer((request, response) => {
+    if (request.method !== 'GET' || new URL(request.url, fixtureOrigin).pathname !== fixturePath) {
+      response.writeHead(404, { 'Content-Type': 'text/plain' }); response.end('Not found'); return;
+    }
+    response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' }); response.end(fixtureHTML);
+  });
+  await new Promise((resolve, reject) => { fixtureServer.once('error', reject); fixtureServer.listen(5195, '127.0.0.1', resolve); });
+  await command('POST', '/window/rect', { x: 0, y: 0, width: 1440, height: 1000 });
+  const freshFixture = async label => {
+    await navigate(`${fixtureOrigin}${fixturePath}?probe=${encodeURIComponent(label)}`);
+    await until('owned native fixture ready', () => evaluate(() => window.__fixtureReady === true), 10000);
+  };
+  const capturePhase = async name => {
+    const phase = { name, state: await fixtureState(), pixels: await fixturePixels() };
+    phase.screenshot = `preflight-${name}.png`;
+    await screenshot(phase.screenshot, { diagnostic: true });
+    phase.captureMetrics = report.screenshotChecks.at(-1);
+    phase.elementScreenshot = await fixtureElementScreenshot(`preflight-${name}-element.png`);
+    result.phases.push(phase);
+  };
+  for (const focus of [false, true]) {
+    const phase = focus ? 'after-native-focus-click' : 'before-native-focus-click';
+    await freshFixture(phase);
+    if (focus) await click('#neutral-focus');
+    await capturePhase(phase);
+    for (const method of ['actions', 'element-send-keys']) for (const key of ['ArrowDown', 'PageDown']) {
+      const probe = { phase, method, key };
+      await freshFixture(`${phase}-${method}-${key}`);
+      if (focus) await click('#neutral-focus');
+      probe.before = await fixtureState();
+      try {
+        if (method === 'actions') await pressKey(key);
+        else {
+          const element = await command('POST', '/element', { using: 'css selector', value: 'body' });
+          const id = element['element-6066-11e4-a52e-4f735466cecf'];
+          await command('POST', `/element/${id}/value`, { text: keyValues[key], value: [keyValues[key]] });
+        }
+        await until('fixture native key scroll', () => evaluate(previous => Math.abs(scrollY - previous) > .5, [probe.before.scrollY]), 1500)
+          .catch(error => { probe.noScrollObserved = error.message; });
+      } catch (error) { probe.commandError = errorDetails(error); }
+      await waitForPaint();
+      probe.after = await fixtureState();
+      probe.scrollDelta = probe.after.scrollY - probe.before.scrollY;
+      result.inputProbes.push(probe);
+    }
+  }
+  if (result.phases.every(phase => phase.captureMetrics.spatialLuminanceVariance <= 25)) {
+    await freshFixture('native-resize-restore');
+    await click('#neutral-focus');
+    const before = await command('GET', '/window/rect');
+    await command('POST', '/window/rect', { ...before, width: before.width + 1 });
+    await command('POST', '/window/rect', before);
+    result.resizeRestore = { before, after: await command('GET', '/window/rect') };
+    await capturePhase('after-native-resize-restore');
+  }
+  result.completed = true;
+}
 async function canvasState() {
   return evaluate(() => {
     const canvas = document.querySelector('.ae-construction-sequence');
@@ -331,6 +450,7 @@ async function verifyAnimation(target) {
     assert.equal(result.navigation.prefersNormalMotion, true, 'Actual Safari must report the native no-preference media query without JavaScript overrides');
     await until('construction scroll mode', () => evaluate(() => document.querySelector('.animated-experience')?.dataset.mode === 'scroll'));
     let state = await readyCanvas();
+    result.initialCanvasState = state;
     assert.equal(state.frame, 0);
     assertCanvas(state);
     const initialPixels = await pixelsForComparison(await screenshot(`${target.name}-initial.png`));
@@ -567,6 +687,7 @@ async function main() {
     }, 10000);
     assert.deepEqual(report.motionFixture.actualSafari, { reduce: false, noPreference: true },
       'Actual native Safari must observe the normal-motion OS fixture; JavaScript media queries are never patched');
+    await verifyNativePrerequisites().catch(error => { report.preflight ||= {}; report.preflight.fatalError = errorDetails(error); });
     const targets = [
       { name: 'local-candidate', url: localOrigin + '/animated-experience' },
       { name: 'public-staging', url: resolvePublicAnimationUrl(process.env.PUBLIC_ANIMATION_URL) },
@@ -575,12 +696,13 @@ async function main() {
     const layouts = [{ name: 'desktop', window: { x: 0, y: 0, width: 1440, height: 1000 } }, { name: 'narrow', window: { x: 0, y: 0, width: 390, height: 1000 } }];
     for (const target of targets) for (const route of ['/', '/about']) for (const layout of layouts) await verifyLeadership(target, route, layout);
     report.passed = report.targets.length === 2 && report.targets.every(target => target.passed)
-      && report.visualChecks.length === 8 && report.visualChecks.every(check => check.passed);
+      && report.visualChecks.length === 8 && report.visualChecks.every(check => check.passed) && !report.preflight?.fatalError;
   } catch (error) {
     report.error = errorDetails(error);
   } finally {
     if (sessionId) await webdriver('DELETE', `/session/${sessionId}`).catch(error => { report.cleanupError = error.message; });
     driver?.kill(); server?.kill();
+    fixtureServer?.closeAllConnections(); fixtureServer?.close();
     descriptors.forEach(descriptor => closeSync(descriptor));
     report.finishedAt = new Date().toISOString();
     await writeFile(join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
