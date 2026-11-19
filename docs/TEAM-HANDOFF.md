@@ -2,7 +2,7 @@
 
 ## Application structure
 
-The public GRAMA Development website uses React, Vite and GSAP. Sixteen prerendered routes cover Home, Developments, About, Portfolio, individual project cases, Dexter Acres, Partnerships, Animated Experience and Contact.
+The public Grama Development website uses React, Vite and GSAP. Seventeen prerendered routes cover Home, Developments, About, Portfolio, individual project cases, Dexter Acres, Partnerships, Animated Experience, Grama Kitchens and Contact.
 
 - `src/site-routes.js`: routes and page metadata.
 - `src/data/projects.js`: project cases, galleries and public source links.
@@ -23,6 +23,12 @@ Animated Experience follows Land → Community → Approach → Interior → Str
 Keep older media URLs available for cached pages. Preserve the retained generated cinematic study and fourteen-lot map on the Dexter Acres case page. Architectural concepts remain distinct from authentic project photography and approved construction documentation. See [animation notes](ANIMATED-EXPERIENCE.md), [visual system](VISUAL-SYSTEM.md) and [asset guidance](ASSETS.md).
 
 Contact navigation carries only the supported topic/path and optional lot context. Personal fields must not fall back to native GET submission. Hosted automatic delivery remains disabled until separately configured and verified; the interface must retain its honest unsent state and available contact alternatives. See [Contact delivery](CONTACT-DELIVERY.md).
+
+### Website intake and indexing
+
+- Set `VITE_SMARTSHEET_ENQUIRY_URL` in Railway before building to use the verified public form URL. The same form serves Contact, Dexter Acres and Grama Kitchens. Only lead category and an optional Dexter lot go in the URL. Keep the underlying sheet private and confirm one synthetic form submission reaches it before release. When the setting is empty, the website uses the existing contact options.
+- Grama Kitchens previews optional JPEG and PNG images locally. Publish an attachment workflow only after the project owner approves access and retention.
+- Set `PUBLIC_INDEXING_ENABLED=true` on the production service to enable the public sitemap and allow indexing on `gramadevelopment.com`. Railway aliases and preview hosts retain `noindex`. Check `/robots.txt`, `/sitemap.xml`, representative public and 404 responses and the private presentation boundary after a release.
 
 ## Setup and checks
 

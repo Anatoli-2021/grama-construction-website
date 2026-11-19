@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import { get } from 'node:http';
 import { createServer } from 'node:net';
 import { once } from 'node:events';
 import { fileURLToPath } from 'node:url';
@@ -64,7 +65,7 @@ test('the prerendered experience exposes a native film link without requiring it
   assert.equal(response.status, 200);
   const html = (await response.text()).replace(/<noscript\b[\s\S]*?<\/noscript>/gi, '');
   const link = [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)]
-    .find(([, attributes]) => /aria-label="Play the architectural film"/.test(attributes));
+    .find(([, attributes]) => /title="Play the architectural film"/.test(attributes));
   assert.ok(link, 'A regular playback anchor must exist even when ES modules cannot execute');
   const href = link[1].match(/\bhref="([^"]+)"/)?.[1];
   assert.match(href || '', /^\/assets\/[^?#]+\.mp4$/);
@@ -80,6 +81,48 @@ test('the prerendered experience exposes a native film link without requiring it
   const bytes = Buffer.from(await initialBytes.arrayBuffer());
   assert.equal(bytes.length, 32);
   assert.equal(bytes.subarray(4, 8).toString(), 'ftyp', 'The link serves an MP4 container, not an HTML fallback');
+});
+
+test('only the production hostname can expose the public sitemap and indexable pages', async t => {
+  const server = createWebsiteServer({ hostedSecurity: true, publicIndexing: true });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const base = 'http://127.0.0.1:' + server.address().port;
+  // Use a native HTTP request because fetch sets its own Host header.
+  const publicGet = path => new Promise((resolve, reject) => {
+    get(base + path, { headers: { Host: 'gramadevelopment.com' } }, async response => {
+      try {
+        const chunks = [];
+        for await (const chunk of response) chunks.push(chunk);
+        resolve(new Response(Buffer.concat(chunks), { status: response.statusCode, headers: response.headers }));
+      } catch (error) { reject(error); }
+    }).on('error', reject);
+  });
+  const page = await publicGet('/kitchens');
+  assert.equal(page.status, 200);
+  assert.equal(page.headers.get('x-robots-tag'), null);
+  assert.match(page.headers.get('content-security-policy'), /frame-ancestors 'none'/);
+  assert.match(page.headers.get('strict-transport-security'), /max-age=31536000/);
+  assert.match(await page.text(), /<meta name="robots" content="index, follow"/);
+  const sitemap = await publicGet('/sitemap.xml');
+  assert.match(sitemap.headers.get('content-type'), /^application\/xml/);
+  const xml = await sitemap.text();
+  for (const { path } of siteRoutes) {
+    assert.ok(xml.includes('<loc>' + new URL(path, process.env.SITE_URL || previewOrigin).href + '</loc>'), path);
+  }
+  assert.doesNotMatch(xml, /presentation|development-os|\/404/);
+  const robots = await publicGet('/robots.txt');
+  assert.match(await robots.text(), /Sitemap: https:\/\/gramadevelopment\.com\/sitemap\.xml/);
+  assert.equal((await fetch(base + '/sitemap.xml')).status, 404);
+  const alias = await fetch(base + '/', { headers: { 'X-Forwarded-Host': 'gramadevelopment.com' } });
+  assert.equal(alias.headers.get('x-robots-tag'), 'noindex, nofollow');
+  assert.equal(alias.headers.get('strict-transport-security'), null);
+  const missing = await publicGet('/missing-page');
+  assert.equal(missing.status, 404);
+  assert.equal(missing.headers.get('x-robots-tag'), 'noindex, nofollow');
+  const deck = await publicGet('/presentation/api/deck');
+  assert.equal(deck.status, 401);
+  assert.match(deck.headers.get('x-robots-tag'), /noindex/);
 });
 
 test('unknown, private and source URLs remain true 404s instead of SPA fallbacks', async t => {

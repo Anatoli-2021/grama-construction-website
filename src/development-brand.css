@@ -235,6 +235,28 @@ html:has(.animated-route) {
 .page-invitation {
   padding: 85px var(--site-gutter);
 }
+.dexter-consultation-choice {
+  max-width: 31rem;
+  margin: 1.5rem auto;
+  text-align: left;
+}
+.dexter-consultation-choice label {
+  display: block;
+  margin-bottom: .55rem;
+}
+.dexter-consultation-choice select {
+  width: 100%;
+  min-height: 44px;
+  padding: .65rem .85rem;
+  border: 1px solid currentColor;
+  border-radius: 0;
+  background: var(--site-paper);
+  color: var(--ink, #24221f);
+  font: inherit;
+}
+.dexter-consultation-choice p {
+  margin-top: .65rem;
+}
 .page-invitation .display {
   font-size: clamp(42px, 5vw, 74px);
   font-weight: 350;

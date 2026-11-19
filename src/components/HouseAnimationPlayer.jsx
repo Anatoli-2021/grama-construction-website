@@ -52,7 +52,7 @@ export default function HouseAnimationPlayer({
   }
 
   return <>
-    <a ref={triggerRef} className="ae-film-link" href={source} onClick={watch} aria-label={ariaLabel}>
+    <a ref={triggerRef} className="ae-film-link" href={source} onClick={watch} title={ariaLabel} aria-haspopup="dialog">
       <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6V4Z" fill="currentColor" /></svg>
       {label}
     </a>

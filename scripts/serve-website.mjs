@@ -7,7 +7,20 @@ import { createPresentationHandler } from './presentation-access.mjs';
 import { createContactHandler } from './contact-delivery.mjs';
 
 const dist = resolve(fileURLToPath(new URL('../dist/', import.meta.url)));
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.mp4': 'video/mp4' };
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.xml': 'application/xml; charset=utf-8', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.mp4': 'video/mp4' };
+const publicDomain = 'gramadevelopment.com';
+const hostedCsp = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "media-src 'self'",
+  "connect-src 'self'",
+].join('; ');
 const presentation = createPresentationHandler({ secureCookies: process.env.NODE_ENV === 'production' || process.argv.includes('--hosted') });
 const contact = createContactHandler();
 
@@ -52,10 +65,20 @@ async function streamVideo(req, res, path, status, headers, range) {
   }
 }
 
-export async function serveWebsiteRequest(req, res, { localApi = false, contactHandler = contact } = {}) {
+export async function serveWebsiteRequest(req, res, {
+  localApi = false, contactHandler = contact, hostedSecurity = false, publicIndexing = false,
+} = {}) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    const mainDomain = req.headers.host?.toLowerCase() === publicDomain;
+    const indexPublicSite = publicIndexing && !localApi && mainDomain;
+    if (hostedSecurity) {
+      res.setHeader('Content-Security-Policy', hostedCsp);
+      res.setHeader('X-Frame-Options', 'DENY');
+      res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+      if (mainDomain) res.setHeader('Strict-Transport-Security', 'max-age=31536000');
+    }
     async function notFound() {
       try {
         const content = await readFile(resolve(dist, '404.html'));
@@ -75,6 +98,14 @@ export async function serveWebsiteRequest(req, res, { localApi = false, contactH
     catch { res.writeHead(500, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); return res.end('{"error":"Unable to load private presentation."}'); }
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405); return res.end('Static preview only.'); }
     if (pathname === '/healthz') { res.writeHead(200); return res.end(req.method === 'HEAD' ? undefined : 'ok'); }
+    if (pathname === '/robots.txt') {
+      // Previews still let crawlers read their noindex response. They never
+      // advertise a sitemap or change the main domain's indexing policy.
+      const content = 'User-agent: *\nAllow: /\n' +
+        (indexPublicSite ? `Sitemap: https://${publicDomain}/sitemap.xml\n` : '');
+      res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache' });
+      return res.end(req.method === 'HEAD' ? undefined : content);
+    }
     // Only the explicit contact and presentation handlers expose server APIs.
     // Repository files and the local enquiry/OS APIs stay unavailable.
     if (pathname.split(/[\\/]/).some(part => part.startsWith('.')) || pathname.startsWith('/api/')) {
@@ -86,6 +117,8 @@ export async function serveWebsiteRequest(req, res, { localApi = false, contactH
       const entry = await stat(path);
       if (entry.isDirectory()) path = resolve(path, 'index.html');
       else if (!entry.isFile()) return notFound();
+      const isSitemap = path === resolve(dist, 'sitemap.xml');
+      if (isSitemap && !indexPublicSite) return notFound();
       if (extname(path) === '.mp4') {
         const headers = { 'Content-Type': types['.mp4'], 'Cache-Control': 'public, max-age=3600', 'Content-Length': entry.size, 'Accept-Ranges': 'bytes' };
         let range;
@@ -109,9 +142,21 @@ export async function serveWebsiteRequest(req, res, { localApi = false, contactH
         return await streamVideo(req, res, path, status, headers, range);
       }
       let content = await readFile(path);
-      if (!localApi && path.endsWith('.html')) content = Buffer.from(content.toString('utf8').replace('name="grama-runtime" content="local-api"', 'name="grama-runtime" content="static-preview"'));
-      const headers = { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': path.endsWith('.html') ? 'no-cache' : 'public, max-age=3600', 'Content-Length': content.length };
-      res.writeHead(path === resolve(dist, '404.html') ? 404 : 200, headers);
+      const html = path.endsWith('.html');
+      const is404 = path === resolve(dist, '404.html');
+      const isPrivate = path.startsWith(resolve(dist, 'presentation') + sep);
+      if (!localApi && html) {
+        let page = content.toString('utf8').replace('name="grama-runtime" content="local-api"', 'name="grama-runtime" content="static-preview"');
+        if (indexPublicSite && !is404 && !isPrivate) {
+          page = page.replace('<meta name="robots" content="noindex, nofollow" />', '<meta name="robots" content="index, follow" />');
+          res.removeHeader('X-Robots-Tag');
+        }
+        content = Buffer.from(page);
+      }
+      if (isSitemap || (indexPublicSite && path.startsWith(resolve(dist, 'assets') + sep) &&
+        ['.webp', '.png', '.jpg', '.jpeg', '.svg'].includes(extname(path)))) res.removeHeader('X-Robots-Tag');
+      const headers = { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': html || isSitemap ? 'no-cache' : 'public, max-age=3600', 'Content-Length': content.length };
+      res.writeHead(is404 ? 404 : 200, headers);
       res.end(req.method === 'HEAD' ? undefined : content);
     } catch { return notFound(); }
 }
@@ -120,8 +165,9 @@ export function createWebsiteServer(options = {}) {
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const port = Number(process.env.PORT || 5174);
-  const host = process.argv.includes('--hosted') ? '0.0.0.0' : '127.0.0.1';
-  const server = createWebsiteServer();
+  const hosted = process.argv.includes('--hosted');
+  const host = hosted ? '0.0.0.0' : '127.0.0.1';
+  const server = createWebsiteServer({ hostedSecurity: hosted, publicIndexing: hosted && process.env.PUBLIC_INDEXING_ENABLED === 'true' });
   server.listen(port, host, () => console.log(`Static website preview on ${host}:${port}`));
   server.on('error', error => { console.error(error.message); process.exitCode = 1; });
   for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, () => server.close());

@@ -544,7 +544,7 @@
   .home-hero .home-hero-copy.hero-copy {
     left: 24px;
     right: 24px;
-    bottom: 155px;
+    bottom: 170px;
   }
   .home-hero-copy h1#hero-title {
     font-size: 23vw;
@@ -566,10 +566,7 @@
   .home-hero-bottom>a {
     font-size: 12px;
     gap: 18px;
-    min-height: 38px;
-  }
-  .home-hero-bottom>a:last-of-type {
-    display: none;
+    min-height: 44px;
   }
   .home-hero-bottom>span {
     margin: 8px 0 0;
