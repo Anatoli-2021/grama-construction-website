@@ -185,8 +185,19 @@ async function pressKey(name) {
   const value = keyValues[name];
   assert.ok(value, 'Only the declared native navigation keys are used');
   await command('POST', '/actions', { actions: [{ type: 'key', id: 'native-keyboard', actions: [
-    { type: 'keyDown', value }, { type: 'keyUp', value },
+    { type: 'keyDown', value }, { type: 'pause', duration: 100 }, { type: 'keyUp', value },
   ] }] });
+}
+// Native Safari scrolls asynchronously after key dispatch. Measure a stable
+// document position before issuing another key or accepting a chapter capture.
+async function settleNativeScroll() {
+  let previous = null, stable = 0;
+  return until('native document scroll to settle', async () => {
+    const value = await evaluate(() => scrollY);
+    stable = previous !== null && Math.abs(value - previous) <= .5 ? stable + 1 : 0;
+    previous = value;
+    return stable >= 3;
+  }, 6000);
 }
 async function nativeElementState(selector) {
   return evaluate(selector => {
@@ -227,13 +238,7 @@ async function positionWithNativeKeys(selector) {
     const key = distance > state.viewport.height ? (direction > 0 ? 'PageDown' : 'PageUp') : (direction > 0 ? 'ArrowDown' : 'ArrowUp');
     await pressKey(key);
     await until(`${key} moving toward ${selector}`, () => evaluate(previous => Math.abs(scrollY - previous) > .5, [state.scrollY]), 6000);
-    let previous = null, stable = 0;
-    await until('native portrait scroll to settle', async () => {
-      const value = await evaluate(() => scrollY);
-      stable = previous !== null && Math.abs(value - previous) <= .5 ? stable + 1 : 0;
-      previous = value;
-      return stable >= 2;
-    }, 5000);
+    await settleNativeScroll();
   }
   throw new Error(`Native Safari keys could not bring ${selector} fully into view within 160 inputs`);
 }
@@ -437,6 +442,7 @@ async function scrollKey(name) {
   const before = await evaluate(() => scrollY);
   await pressKey(name);
   await until(`native ${name} document scroll`, () => evaluate(previous => Math.abs(scrollY - previous) > .5, [before]), 6000);
+  await settleNativeScroll();
   return readyCanvas();
 }
 async function pixelsForComparison(bytes) {
@@ -444,7 +450,7 @@ async function pixelsForComparison(bytes) {
   return sharp(bytes).extract({ left: Math.floor(width * .1), top: Math.floor(height * .2), width: Math.floor(width * .8), height: Math.floor(height * .53) }).removeAlpha().raw().toBuffer();
 }
 async function verifyAnimation(target) {
-  const result = { ...target, captures: [], nativeInput: 'W3C keyboard PageDown/ArrowDown and PageUp/ArrowUp; no JavaScript scrolling or Play activation', passed: false };
+  const result = { ...target, captures: [], nativeInput: 'W3C keyboard PageDown/ArrowDown and PageUp/ArrowUp, 100ms native hold and measured scroll settling; no JavaScript scrolling or Play activation', passed: false };
   report.targets.push(result);
   try {
     await command('POST', '/window/rect', { x: 0, y: 0, width: 1440, height: 1000 });
