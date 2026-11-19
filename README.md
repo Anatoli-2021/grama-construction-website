@@ -1,22 +1,50 @@
-# Grama Construction development workspace
+# GRAMA website development workspace
 
-One private repository for the existing React/Vite/GSAP website and the reusable Development OS launch tool. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
+One shared repository for the existing React/Vite/GSAP website and the reusable Development OS launch tool. The website remains at the repository root to preserve its working paths and hosting configuration. Private dashboards, pilot records and finances stay in their existing operational systems.
 
 Repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). Owner: **Anatoli-2021**.
 
-Public review preview: [Grama / Dexter Acres](https://grama-dexter-acres-preview.anatoli-gram-1564.chatgpt.site). The current company domain remains separate.
+Current refinement branch: `feature/premium-visual-refinement`, building on the deployed `07d614c` website. It retains the existing integration history and proposes the premium visual changes through a focused pull request into `main`. Use the current PR and Railway deployment record for the exact checked source pin; an earlier README snapshot is not proof of the live deployment.
+
+The main website is [gramadevelopment.com](https://gramadevelopment.com/); the existing review environment is [GRAMA Railway staging](https://humorous-delight-staging-website.up.railway.app/). Requested production releases use an explicitly authorized, checked commit pin after staging/browser verification. Main still requires owner review before merging; a website deployment does not authorize DNS changes, OS publication or mail-provider activation.
+
+The design presents **GRAMA / Luxury Real Estate Development**, retaining Concept A with a minimal wordmark-only header and footer. Home introduces authentic project photography, selected completed work, Tony and Alina, the proposed Dexter Acres development and partnerships. Both original Alina photographs are retained across Home and About. Tony and Alina use identical 4:5 portrait frames, equal grid columns and matching caption typography at desktop, tablet and phone widths. Warm ivory, limestone, charcoal, taupe and restrained bronze tokens are shared across the public website. All eleven existing partner marks use transparent assets. The original Dexter Acres cinematic sequence and fourteen-lot map remain on its project page.
+
+Hosted automatic Contact delivery remains disabled. The retained server-only Resend integration requires approved sender, recipient, origin and secret configuration plus explicit enablement. With an approved public `VITE_CONTACT_EMAIL`, visitors can review an email and deliberately open their own email app; the website clearly states that nothing has been sent. Phone contact and a browser-only draft remain available. Localhost retains its consented local-save workflow. See [contact delivery setup and verification](docs/CONTACT-DELIVERY.md). Sold-home totals, closing values and company revenue remain omitted without approved records.
+
+## Public website
+
+The integration contains sixteen prerendered public pages. Build with `npm run build` to emit each page's HTML, title, description, canonical and sharing metadata. Normal document links and direct URL refreshes work; unknown URLs return a real 404. Preview indexing remains disabled.
+
+| Page | Route |
+| --- | --- |
+| Home and selected work | `/` |
+| Proposed developments | `/developments` |
+| About and family | `/about` |
+| Portfolio and status filters | `/projects` |
+| Eight individual completed cases | `/projects/<project-slug>` |
+| Dexter Acres cinematic and 14-lot plan | `/projects/dexter-acres` |
+| Development partnerships and process | `/partnerships` |
+| Continuous neighborhood-to-residence experience | `/animated-experience` |
+| Contact and contextual enquiry | `/contact` |
+
+The Animated Experience follows one controlled 3D world through land, community, approach, interior, structure, reassembly and final reveal. Scroll drives 336 premium canvas samples without clicking Play, averaging twelve sampled poses per timeline second; required desktop/mobile atlases load lazily with a bounded cache. Each variant uses 84 two-by-two sheets, with at most four decoded/pending references shared across the renderer. Seven stills, reduced-motion behavior and a separate native 28-second film remain available. The premium media package is versioned independently under `construction/premium-v2`; its 336 samples come from the same 672 native source frames at 24 fps, with 1440 × 810 desktop and 768 × 432 mobile tiles. The retained legacy `construction/` package keeps its original 224-sample delivery. The Artlist-refined Dexter masterplan is a separate illustrative still. These visualizations do not establish approved architecture, project specifications or actual construction footage. See [animation implementation and review](docs/ANIMATED-EXPERIENCE.md).
+
+Project links come from `src/data/projects.js`; the public page registry is `src/site-routes.js`. Runtime hosting serves `dist` plus the explicit contact-delivery and individually authorized presentation APIs; repository files, the OS and local enquiry API remain unavailable. Contact links carry only an allowed topic/path and optional Dexter lot; personal fields are entered on Contact. Prerendered form controls remain disabled until JavaScript is ready so they cannot fall back to native GET submission. Missing delivery configuration cannot report a successful submission.
 
 ## Two products, separate boundaries
 
 | Product | Source | Start locally | Data / hosting status |
 | --- | --- | --- | --- |
-| Public website | Root `src/`, `public/`, `server.mjs` | `npm run dev` → port 5173 | Public static preview; hosted enquiry delivery not connected |
+| Public website | Root `src/`, `public/`, `server.mjs` | `npm run dev` → port 5173 | Hosted contact delivery is disabled until configured; local development saves synthetic enquiries locally |
 | Development OS | `apps/development-os/` | `npm run dev:os` → port 5180 | Loopback-only blank launch tool; no live data or authentication |
 | Shared utility | `packages/shared/` | Used by OS / Node tests | Project ID validation; no company records |
 
-For the prepared OS work, check out `feature/unified-development` until its PR is approved and merged. For the existing web preview work, see PR #1. `main` remains the stable starting version.
+Earlier showcase, multipage, private-presentation and Windows fixes are reconciled in `feature/final-website-integration`. Review this final integration as one candidate; do not deploy an older feature branch over it. The final PR and team handoff must record the actual preview SHA and completed checks.
 
 Read the [team handoff and deployment status](docs/TEAM-HANDOFF.md), [source inventory](docs/SOURCE-INVENTORY.md), [onboarding](docs/ONBOARDING.md), [hosting decision](docs/HOSTING.md), [security boundary](docs/SECURITY.md) and [release procedure](docs/RELEASES.md). These documents replace reliance on chat history for developer setup.
+
+The [ordered implementation queue](docs/IMPLEMENTATION-QUEUE.md) records all current requests. The [investor content brief](docs/INVESTOR-CONTENT-BRIEF.md) supplies portable context for Nail's agent. `/presentation` is a separate login shell with server-enforced individual deck access; actual figures and account records stay outside Git and the static build. See [private presentation setup](docs/INVESTOR-PRESENTATION.md). A local private review runs with `npm run dev:presentation` at port 5190 after building and supplying the approved local data. Hosted access remains closed until actual recipients are approved and provisioned.
 
 ## Start on another computer
 
@@ -78,24 +106,30 @@ Visit the same localhost URL. Rebuild after source edits before restarting produ
 
 | Path | Purpose |
 | --- | --- |
-| src/App.jsx | Navigation, hero, section assembly, lot enquiry and project dialogs |
-| src/components/BrandSections.jsx | About, properties, capabilities and partnerships |
+| src/App.jsx, src/site-routes.js | Navigation, public route assembly and metadata registry |
+| src/components/HomePage.jsx | Photography-led homepage and selected work |
+| src/components/FamilySection.jsx, src/components/CompanyPages.jsx | Tony and Alina, About, Developments, Partnerships and Contact |
+| src/components/ProjectPages.jsx, src/data/projects.js | Eight completed cases and the proposed Dexter Acres page |
+| src/components/BrandSections.jsx | Retained official partner-logo section |
 | src/components/DevelopmentProcess.jsx | Seven-step development experience |
 | src/components/Consultation.jsx | Homeowner and development-partner forms |
+| src/components/AnimatedExperience.jsx, src/components/ConstructionSequence.jsx | Continuous construction journey, lazy canvas atlases and static alternative |
+| src/components/construction-timeline.js, src/components/HouseAnimationPlayer.jsx | Seven-stage timing and independent native film fallback |
 | src/components/CinematicStory.jsx | Residence → detail → neighborhood scroll sequence |
 | src/components/SitePlan.jsx | Fourteen C5-derived lots and drawing-reported areas |
 | src/styles.css, src/refinement.css, component CSS | Desktop/mobile styling |
 | server.mjs | Local server, API validation and local enquiry storage |
+| scripts/contact-delivery.mjs | Hosted enquiry validation, limits, deduplication and server-only email delivery |
 | public/assets/ | Optimized runtime photographs, concepts, logos, font and sequence |
 | package-lock.json | Reproducible npm dependency installation |
 
 ## Local data and excluded files
 
-On hosted preview addresses, the consultation section provides Grama's direct telephone link and clearly states that online enquiry delivery is not connected. Personal-information forms appear only on localhost/loopback, where the local API can save them. Publishing the static preview does not copy local enquiry records or connect email/CRM delivery.
+Hosted forms check delivery availability before enabling submission. A configured server sends a plain-text notification only to its approved recipient; visitor email addresses are used as validated Reply-To values. A successful response means the provider accepted that notification, not guaranteed inbox delivery or a reservation. No enquiry records are stored in the website filesystem and no automatic messages are sent to visitors. If delivery is unavailable, an approved public email can enable a visitor-controlled review and email-app handoff, with an explicit unsent state and manual copy fallback. Phone contact and a browser-only draft remain available. Localhost/loopback retains its consented local-save API. Deployment never copies local enquiry records.
 
-The consented enquiry forms append to **.data/interest.jsonl on the developer's computer**. There is no email/CRM delivery, reservation, allocation or production lead service. Client and development-partner enquiries have separate types; lots are accepted only for Dexter Acres home enquiries.
+On localhost only, consented enquiry forms append to **.data/interest.jsonl on the developer's computer** without email or CRM delivery. Client and development-partner enquiries have separate types; lots are accepted only for Dexter Acres home enquiries. The staging review does not enable live delivery or reserve a property.
 
-.gitignore excludes enquiry records, .env files, credentials/certificates, node_modules/, dist/, local research/screenshots/raw media in evidence/, and the owner's local handoff. These files stay on their original computer. Do not force-add them. The optimized 2.8 MB runtime film is included because the current hero uses it; its large original master is excluded.
+.gitignore excludes enquiry records, .env files, credentials/certificates, node_modules/, dist/, local research/screenshots/raw media in evidence/, and the owner's local handoff. These files stay on their original computer. Do not force-add them. Optimized runtime films and atlases are included; large original generation masters remain excluded.
 
 ## Content and asset context
 

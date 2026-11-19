@@ -1,46 +1,39 @@
-# Developer team handoff — November 10, 2026
+# Website developer guide
 
-## Start here
+## Application structure
 
-- Repository: https://github.com/Anatoli-2021/grama-construction-website (private).
-- Working setup branch: `feature/unified-development`.
-- Website preview source: PR #1. Unified deployment/tooling: PR #2, based on PR #1. Review and merge #1 first; then retarget #2 to `main` for review. Neither is automatically merged.
-- Setup: Node 24, `npm ci`, `npm run check`. Website: `npm run dev` (5173). OS: `npm run dev:os` (5180).
-- Full developer steps and permissions: [ONBOARDING.md](ONBOARDING.md).
+The public GRAMA Development website uses React, Vite and GSAP. Sixteen prerendered routes cover Home, Developments, About, Portfolio, individual project cases, Dexter Acres, Partnerships, Animated Experience and Contact.
 
-## What is ready
+- `src/site-routes.js`: routes and page metadata.
+- `src/data/projects.js`: project cases, galleries and public source links.
+- `src/components/FamilySection.jsx`: shared equal leadership frames and captions.
+- `src/development-brand.css`: common architectural palette tokens.
+- `src/components/AnimatedExperience.jsx` and `construction-timeline.js`: scroll chapters and media delivery.
+- `scripts/serve-website.mjs`: built-site hosting, explicit website API routing and streamed native video.
+- `public/assets/`: optimized runtime images, artwork, fonts and media.
 
-The original website and assets remain intact. A website-only Dockerfile and static host are ready for Railway; the runtime excludes the OS and local enquiry records. Existing source paths are unchanged. The reusable blank OS launch tool is shared and tested, including common/subdivision tasks, stable IDs, Draft status and access boundaries.
+The hosted application serves the built website and its explicit handlers. Source files, private records and configuration must not be exposed through static routing. Keep credentials in environment configuration and use synthetic data for tests.
 
-GitHub Actions ran successfully on the clean Linux runner after correcting build-before-test order. Local checks also passed, including the existing nine website API/media checks. The browser downloaded a real synthetic 29-task Draft export without console errors. Desktop source HTML and JSON hashes remained unchanged.
+## Visual and media contracts
 
-## Existing Railway target
+Both leadership photographs use identical 4:5 clipping frames, matching layout and caption typography. Responsive CSS cropping may adjust framing; original photograph bytes and facial features remain unchanged. Public surfaces share the ivory, limestone, charcoal, taupe and bronze palette.
 
-- Project: `earnest-wisdom`, ID `ffb7baed-e751-41be-9874-c4eb4c4ae290`.
-- Service: `grama-construction-website`, ID `875425ae-8bb5-4d47-a026-49a9df71dc22`.
-- Environment: Railway labels it `production`, ID `15058afa-2401-4d42-83a7-5e807d7d1258`; its intended use here is a temporary website preview, not replacement of the company site.
-- Observed state before configuration: online initial GitHub deployment, `main` source, no public domain, private `*.railway.internal` endpoint. GitHub branch loading reported an error.
-- Existing Railway trial shows 30 days / $5 credit remaining at inspection; no paid upgrade was purchased. This is a point-in-time UI observation, not a permanent hosting allowance.
-- A project invitation already existed. Verify the recipient and acceptance in Railway before creating another invitation. Do not publish invite links, auth codes or tokens in GitHub.
+Animated Experience follows Land → Community → Approach → Interior → Structure → Reassembly → Reveal. The versioned premium package uses 336 browser samples, 84 two-by-two sheets per variant, 1440 × 810 desktop tiles and 768 × 432 mobile tiles. Decoded and pending images share a four-reference cap. The separate silent native film contains 672 frames at 1920 × 1080, 24 fps and 28 seconds.
 
-## Immediate deployment work
+Keep older media URLs available for cached pages. Preserve the retained generated cinematic study and fourteen-lot map on the Dexter Acres case page. Architectural concepts remain distinct from authentic project photography and approved construction documentation. See [animation notes](ANIMATED-EXPERIENCE.md), [visual system](VISUAL-SYSTEM.md) and [asset guidance](ASSETS.md).
 
-Tony authorized this temporary Railway website deployment and keeping the company domain unchanged. Browser connectivity stopped before settings/domain changes could be applied. Restore the existing browser connection or authorize the Railway connector, then:
+Contact navigation carries only the supported topic/path and optional lot context. Personal fields must not fall back to native GET submission. Hosted automatic delivery remains disabled until separately configured and verified; the interface must retain its honest unsent state and available contact alternatives. See [Contact delivery](CONTACT-DELIVERY.md).
 
-1. Confirm this exact project/service; do not create another repository or service.
-2. Select the reviewed deployment commit/branch without replacing stable `main`. Refresh/repair the GitHub repository integration if branches cannot load.
-3. Use the root Dockerfile, service PORT and `/healthz`; remove conflicting old build/start overrides. See [Railway settings](../infra/website/README.md).
-4. Generate a temporary Railway HTTPS domain. Do not edit company DNS or add a custom company domain.
-5. Wait for the deployment, record its source SHA and deployment ID, then verify anonymous HTTP 200, actual images/video, mobile contact, console errors and blocked private/OS/API paths.
-6. Update this handoff with the verified URL and result. A running container or private internal hostname alone is not public deployment completion.
+## Setup and checks
 
-The working Sites review URL remains available: https://grama-dexter-acres-preview.anatoli-gram-1564.chatgpt.site.
+Use Node.js 24 and the committed lockfile. Run `npm ci`, then `npm run dev` for the local website on port 5173. `npm run check` builds the site and runs shared tests and repository/artifact policy checks. Use `npm run verify` with the documented local server when checking API and media behavior. Match `SITE_URL` between the build and canonical-metadata tests.
 
-## Remaining gates and owners
+Inspect desktop, tablet and phone layouts, original image loading, portrait equality, palette contrast, direct routes and horizontal overflow. Verify scroll without Play, forward/reverse chapters, native playback/seeking, stills, reduced motion and failure recovery. Preserve the lot-to-Contact flow.
 
-- Tony: review PRs, confirm Railway team invitation recipient/acceptance, approve future paid hosting or GitHub plan changes, and approve any eventual company-domain release.
-- Developers: complete/verify Railway preview after connection restoration; keep all OS records private. Issues #3 and #4 track OS authentication and enforceable owner review.
-- OS: no hosted service, database, live connector or company-data migration exists. Follow [SECURITY.md](SECURITY.md) before connecting private records.
-- GitHub: `main` is unprotected under the current plan. CI and documented owner review exist; enforced review/production gates require further setup.
+CI includes Windows Chrome/Edge, installed macOS Chrome, WebKit/Firefox engines and a separate installed Apple Safari job. Safari's isolated runner uses native keyboard scrolling. Record actual browser/OS versions and viewports; engine and emulated-device tests must not be described as physical-device tests.
 
-Source details: [SOURCE-INVENTORY.md](SOURCE-INVENTORY.md). Platform decision: [HOSTING.md](HOSTING.md). Approval and rollback: [RELEASES.md](RELEASES.md).
+## Collaboration and release
+
+Work on a focused feature branch and open a pull request into `main`. Review the intended diff, meaningful checks and visual evidence before merging; preserve shared history and existing work.
+
+Use staging first, pin the tested commit and verify its public artifact before production. Follow [the release procedure](RELEASES.md) for exact-revision deployment, post-deployment checks and recovery. Store current release results with the review rather than embedding deployment history in this guide.

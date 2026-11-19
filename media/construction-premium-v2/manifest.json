@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "file": "construction-film.mp4",
+  "bytes": 24710177,
+  "sha256": "1b7d3631d28d902dae441a1f15a3202d0917d268e4afd5ac561cb1a8ef18c326",
+  "parts": [
+    {
+      "file": "part-000.bin",
+      "bytes": 2097152,
+      "sha256": "4d44f450741263b1208cb0a183c54d86251689ea9dc924a3a9004176234fe98c"
+    },
+    {
+      "file": "part-001.bin",
+      "bytes": 2097152,
+      "sha256": "a26062ef91aa299784bf59d52fc87164ce0ee99fbb232f276c393d294fc549a3"
+    },
+    {
+      "file": "part-002.bin",
+      "bytes": 2097152,
+      "sha256": "6b82ead6668f3ec2888c5ad250188605bf04c73e13d4162aeab9d55c2405de9b"
+    },
+    {
+      "file": "part-003.bin",
+      "bytes": 2097152,
+      "sha256": "fe214a4b5bca69974efd6ab51c64cd8cbde50db23df4fa39df8d0f59ce93e355"
+    },
+    {
+      "file": "part-004.bin",
+      "bytes": 2097152,
+      "sha256": "19c6e223577dfb4be3f9902f084687e668c61efd6c66f017af31754450330d17"
+    },
+    {
+      "file": "part-005.bin",
+      "bytes": 2097152,
+      "sha256": "52ad53c8233c1b21d4c88ef201b2e9cfb04804bdfb93a733bad47cb9416576e5"
+    },
+    {
+      "file": "part-006.bin",
+      "bytes": 2097152,
+      "sha256": "60d66b9b4dbcf6d2d15c6f624adc782a94750728c126f4786a84dabf1f7089fc"
+    },
+    {
+      "file": "part-007.bin",
+      "bytes": 2097152,
+      "sha256": "97c92f339a4b627e214813d2daac3947d582ae19eb7693d18644cb6b1e5481f0"
+    },
+    {
+      "file": "part-008.bin",
+      "bytes": 2097152,
+      "sha256": "dfbd2bd5d23b3d6d280925ec1ef312c0f7f171b0cbad335c0bc81218f96713f0"
+    },
+    {
+      "file": "part-009.bin",
+      "bytes": 2097152,
+      "sha256": "1abf85013b48a98dc7d9eb55182f6f40d832b756aa220ec0405ef3933a94c268"
+    },
+    {
+      "file": "part-010.bin",
+      "bytes": 2097152,
+      "sha256": "8030509fe00aaf1d0c50a6a7212dcd49a211b5a6ebb0cb239c90461f3a3836d7"
+    },
+    {
+      "file": "part-011.bin",
+      "bytes": 1641505,
+      "sha256": "55328e514df279bb840154f5836c310f580056bc854f4a272d1f60aa6bed4b77"
+    }
+  ]
+}

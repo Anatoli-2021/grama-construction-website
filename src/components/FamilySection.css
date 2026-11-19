@@ -1,0 +1,124 @@
+.family-section {
+  padding: 110px var(--site-gutter,6vw);
+  background: var(--site-paper);
+  color: var(--site-ink);
+}
+.family-section-heading {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr;
+  gap: 36px;
+  align-items: start;
+  max-width: 1184px;
+  margin: 0 auto 54px;
+}
+.family-section-heading h2 {
+  font-size: clamp(48px,5.6vw,82px);
+  font-weight: 350;
+  line-height: 1;
+  letter-spacing: -.055em;
+  margin: 0;
+}
+.family-section-heading>div>p {
+  font-size: 15px;
+  line-height: 1.75;
+  max-width: 330px;
+  margin: 0 0 22px;
+  color: var(--site-muted);
+}
+.family-portraits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+  max-width: 1184px;
+  margin-inline: auto;
+}
+.family-portraits figure {
+  margin: 0;
+  min-width: 0;
+}
+.family-portrait-frame {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--site-limestone);
+}
+.family-portrait-frame>img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.family-tony .family-portrait-frame>img {
+  object-position: 32% center;
+}
+.family-section:not(.family-section--full) .family-tony .family-portrait-frame>img {
+  transform: scale(1.2);
+  transform-origin: 32% 100%;
+}
+.family-alina .family-portrait-frame>img {
+  object-position: 50% top;
+}
+.family-portraits figcaption,.family-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 18px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.family-portraits figcaption>span:last-child,.family-caption>span:last-child {
+  color: var(--site-muted);
+}
+@media (max-width:900px) {
+  .family-section {
+    padding-block: 80px;
+  }
+  .family-section-heading {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+  }
+  .family-section-heading>.site-label {
+    grid-column: 1/-1;
+  }
+  .family-portraits {
+    gap: 30px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .family-portraits figcaption,.family-caption {
+    font-size: 11px;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+@media (max-width:600px) {
+  .family-section {
+    padding: 66px 24px;
+  }
+  .family-section-heading {
+    display: block;
+    margin-bottom: 34px;
+  }
+  .family-section-heading h2 {
+    font-size: 54px;
+    margin: 22px 0;
+  }
+  .family-section-heading>div>p {
+    font-size: 14px;
+    max-width: 340px;
+  }
+  .family-portraits {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  .family-portraits figcaption,.family-caption {
+    flex-direction: row;
+    margin-top: 12px;
+  }
+  .family-caption {
+    font-size: 12px;
+  }
+  .family-section--full {
+    padding-top: 40px;
+  }
+}

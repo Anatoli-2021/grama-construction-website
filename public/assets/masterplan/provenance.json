@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "asset": {
+    "path": "/assets/masterplan/dexter-acres-828082967e9d.webp",
+    "mediaType": "image/webp",
+    "width": 2048,
+    "height": 1152,
+    "bytes": 633504,
+    "sha256": "828082967e9d565b8097f4b50c7dc8aba794745ea4344d21afacca74b351405b"
+  },
+  "title": "Dexter Acres — illustrative masterplan concept",
+  "classification": "AI-refined architectural concept, separate static image",
+  "visibleCaption": "Illustrative masterplan concept. Home designs and landscaping are conceptual.",
+  "workflow": {
+    "base": "Controlled 3D community informed by the supplied C5 lot organization",
+    "refinement": "Artlist image refinement followed by one targeted restoration",
+    "selectedSourceSha256": "e9070a6483c7c7bf0bb09aa7b6c2e154bcb0ce5733f47e6b4c0a35d5a823fb26",
+    "geometryFidelity": "Not a material-only or exact-geometry refinement; interpreted openings, facade/roof details, curb edges and landscaping remain conceptual"
+  },
+  "layoutBasis": {
+    "sourceAsset": "/assets/site-plan-original.png",
+    "sourceSha256": "87eb024a2b34e88ae73338a5a9bb0dc497c3c2082ff488ff5ea09dcc4a17da7e",
+    "authority": "Supplied C5 drawing and existing interactive lot trace; approval/current revision unverified",
+    "visibleHomeCount": 14,
+    "broadHouseGroupCounts": [
+      4,
+      4,
+      1,
+      3,
+      2
+    ],
+    "visualTopology": [
+      "One internal connection to Dexter Lane",
+      "Dead-end turning bulb; no planted island or through-connection to Webster Lane",
+      "East reserve shown unbuilt"
+    ],
+    "scope": "Visual organization check only; not surveyed coordinates or verified parcel/house-pad geometry"
+  },
+  "limits": [
+    "Home designs, openings, placements and landscaping are illustrative",
+    "Not actual project photography or evidence of a completed neighborhood",
+    "Not approved building pads, construction documents or verified site engineering",
+    "Generated boundary-like lines are not authoritative lot boundaries",
+    "No availability, pricing, approval, sales-performance or investment claim is established"
+  ],
+  "relationshipToAnimation": {
+    "usage": "Separate masterplan presentation only",
+    "usedInControlledFilmFrames": false,
+    "usedInScrollAtlasFrames": false,
+    "continuityClaim": "No exact camera or architecture match to the controlled film is asserted",
+    "controlledSequence": "Native film and scroll frames use the controlled v10 model rather than this AI-refined still"
+  }
+}

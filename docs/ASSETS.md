@@ -1,28 +1,40 @@
-# Asset and project context
+# Website assets
 
-This repository contains optimized website assets, not the owner's complete photo/video library or internal project records. Original source files and private research remain off GitHub.
+`public/assets/` contains the website’s optimized photographs, brand artwork and architectural concept media. Editable scenes, native render masters, original media libraries and working notes stay outside the public application.
 
-| Runtime assets | Source and meaning |
+| Asset group | Use |
 | --- | --- |
-| residence.webp, residence-angle.webp, residence-garden.webp | Owner-supplied Lot 10/12 architectural concepts; not completed Dexter Acres homes |
-| community.webp | Garage-aligned v3 neighborhood concept; AI visualization, not a measured or approved engineering plan |
-| site-plan-original.png | Supplied C5 plan; basis for interactive numbering and drawing-reported areas; approval/current revision unverified |
-| portfolio-dexter.webp | Actual 1847 Dexter Lane photograph from the official Grama completed portfolio |
-| portfolio-lee.webp | Actual 1906 Lee Street photograph from the official Grama completed portfolio |
-| portfolio-prospect.webp | Actual 1171 Prospect Lane photograph from the official Grama completed portfolio |
-| portfolio-prospect-interior.webp, portfolio-lee-bath.webp | Authentic photographs from the corresponding original project photo folders |
-| portfolio-1914-entry.webp | Authentic 1914 Lee entry photograph; labeled project photography, without a listing-status claim |
-| logo-dark.png, logo-light.png, general-sans.ttf | Existing Grama brand assets |
-| residence-film.mp4, sequence/* | Existing five-second Higgsfield AI concept animation; optimized film, 32 WebP frames and a higher-resolution detail still; not construction footage |
+| `photo/*`, `portfolio-*` and existing leadership photographs | Authentic company and project photography. Preserve original faces, image proportions, visible photographer marks and source attribution. Responsive cropping is applied in CSS; the original portrait files remain unchanged. |
+| `brand/*` and the favicon | GRAMA wordmark and G symbol. Use the supplied vector artwork. |
+| `partners/*` | Third-party brand artwork. Preserve its original colors and proportions; do not infer new endorsements or commercial relationships from artwork alone. |
+| `site-plan-original.png` and `masterplan/*` | Site-plan reference and separately labelled illustrative architectural concepts. Keep the interactive lot map distinct from concept imagery. |
+| `sequence/*` and `residence-film.mp4` | Retained generated concept study; not recorded construction footage. |
+| `construction/*` | Retained earlier animation package for compatibility with cached pages. |
+| `construction/premium-v2/*` | Current versioned architectural animation described below. |
+| `animated/*` and `film/*` | Retained earlier architectural studies and playback alternatives. Keep their concept labels. |
 
-Official project sources:
+## Current animation delivery
 
-- [1847 Dexter Lane](https://www.gramaconstruction.com/projects/1847-dexter-des-plaines)
-- [1906 Lee Street](https://www.gramaconstruction.com/projects/1906-lee-st-des-plaines-il)
-- [1171 Prospect Lane](https://www.gramaconstruction.com/projects/prospect-ln-des-plaines-il-60018)
+The premium package follows one continuous architectural concept through land, community, approach, interior, structure, reassembly and reveal.
 
-The company portfolio is the source for completed-project attribution, not current sale availability. No currently available home was verified during the November 5, 2026 content pass. Dexter Acres is the owner's planned 14-home Des Plaines development. Prices, schedules, approvals, final designs, infrastructure specifications and availability require current owner/project confirmation.
+- Native film: 1920 × 1080, 672 frames, 24 fps, 28 seconds, silent H.264 with progressive-download metadata.
+- Scroll delivery: 336 sampled poses using `round(1 + browserFrameIndex * 671 / 335)`.
+- Atlas layout: 84 two-column, two-row sheets per variant, 168 sheets total.
+- Desktop tiles: 1440 × 810. Mobile tiles: 768 × 432.
+- Eight posters include the seven chapters and a finished-residence alias.
+- Decoded and pending images share a four-reference cache limit. Native video loads after deliberate activation.
+- `construction/premium-v2/manifest.json` lists the packaged files, dimensions, byte hashes and third-party licenses.
 
-The [Noah About](https://www.noahchicago.com/about) and [Custom Build](https://www.noahchicago.com/custombuild) pages informed information hierarchy only. The [Royal Pop reference](https://royal-pop-website.vercel.app/) informed scroll-sequenced storytelling. No reference-site marketing copy, images or code were imported.
+The native film is stored as lossless binary parts under `media/construction-premium-v2/`. `npm run prepare:media`, also run before development and builds, verifies every part and reconstructs the exact ignored public MP4 with its original SHA256. Parts stay outside the public runtime; assembly does not encode or alter the film. Existing concept labels and asset licenses still apply.
 
-Preserve distinctions between concepts and actual photography. The existing materials are for Grama's website development; inclusion in this private repository does not grant a separate license to reuse them for other clients or publish them elsewhere. Obtain owner approval for new public-facing people, roles and claims.
+Keep asset URLs versioned when changing media. Retain the earlier root `construction/` package for existing cached pages. Its 224-pose / 56-sheet-per-variant delivery is a separate compatibility package.
+
+Architectural visualizations are illustrative concepts, not completed-project photography, measured plans or approved construction documentation. Retain this distinction in captions and alternative text.
+
+## Attribution and asset care
+
+Authentic project photography comes from the company’s [published portfolio](https://www.gramaconstruction.com/completed-projects). Individual public source links remain in [the project data](../src/data/projects.js) and the corresponding case pages. Preserve visible photographer credits. Company photography and third-party artwork must not be repurposed for unrelated projects.
+
+The controlled visualization uses Poly Haven’s `meadow`, `grass_ground`, `brown_mud`, `shrub_04` and `tree_small_02` resources, recorded under [CC0-1.0](https://polyhaven.com/license). Exact resource URLs and retained attribution are listed in the runtime manifest’s `licenses` section. Keep those records with any derivative package.
+
+Retain applicable font and other third-party notices. Review format, dimensions, source preservation, loading behavior, still-image alternatives and native byte-range playback when changing assets.

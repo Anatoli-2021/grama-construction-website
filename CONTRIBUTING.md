@@ -1,6 +1,6 @@
 # Contributing
 
-Private repository: [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). **Anatoli-2021 is the owner.** Keep `main` stable; propose changes through `feature/*` branches and reviewed pull requests. Public hosting and live-domain changes require separate owner authorization.
+Shared repository (currently public): [Anatoli-2021/grama-construction-website](https://github.com/Anatoli-2021/grama-construction-website). **Anatoli-2021 is the owner.** Keep `main` stable; propose changes through `feature/*` branches and reviewed pull requests. Requested website changes are authorized through checked commit, push and deployment to the existing Railway address under Tony's November 10 standing instruction; see [release steps](docs/RELEASES.md). Company-domain/DNS changes, new spending and private OS publication require separate authorization.
 
 ## Owner: invite approved collaborators
 
@@ -12,7 +12,7 @@ Invite only exact GitHub accounts approved by the owner. For Nail or any additio
 4. Search the approved username, verify the matching profile, select it, and click **Add NAME to REPOSITORY**.
 5. Each person signs in to their own invited account and accepts the repository invitation from GitHub's invitation email. Access begins after acceptance. Check the Collaborators list to confirm acceptance; an unanswered invitation is not active access.[^invite]
 
-A personal repository has two access levels: owner and collaborator. In this **private personal repository**, collaborators receive read/write access; there is no read-only collaborator option or organization-style role picker. Collaborators can push changes and merge PRs, so our review convention matters. Only the owner manages invitations and repository ownership/settings reserved to the owner.[^permissions]
+A personal repository has two access levels: owner and collaborator. In this personal repository, collaborators receive read/write access; there is no read-only collaborator option or organization-style role picker. Collaborators can push changes and merge PRs, so our review convention matters. Only the owner manages invitations and repository ownership/settings reserved to the owner.[^permissions]
 
 ## Contributor: authenticate and run locally
 
