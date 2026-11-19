@@ -184,7 +184,7 @@ async function click(selector) {
 async function pressKey(name) {
   const value = keyValues[name];
   assert.ok(value, 'Only the declared native navigation keys are used');
-  const holdMilliseconds = name.startsWith('Arrow') ? 20 : 100;
+  const holdMilliseconds = name.startsWith('Arrow') ? 50 : 100;
   await command('POST', '/actions', { actions: [{ type: 'key', id: 'native-keyboard', actions: [
     { type: 'keyDown', value }, { type: 'pause', duration: holdMilliseconds }, { type: 'keyUp', value },
   ] }] });
@@ -199,6 +199,32 @@ async function settleNativeScroll() {
     previous = value;
     return stable >= 3;
   }, 6000);
+}
+// Safari can deliver trusted arrow events without a document scroll (also
+// observed on the owned preflight page). Repeating a native key is bounded;
+// scene, visibility, chapter order and pixel assertions are never retried.
+async function moveWithNativeKey(name) {
+  const before = await evaluate(() => scrollY);
+  const limit = name.startsWith('Arrow') ? 3 : 1;
+  const input = { name, before, attempts: [], passed: false };
+  (report.nativeScrollInputs ||= []).push(input);
+  for (let attempt = 1; attempt <= limit; attempt++) {
+    await pressKey(name);
+    const probe = { attempt };
+    input.attempts.push(probe);
+    try {
+      await until(`native ${name} document scroll`, () => evaluate(previous => Math.abs(scrollY - previous) > .5, [before]), 1800);
+    } catch (error) {
+      probe.error = errorDetails(error);
+      if (attempt === limit) throw error;
+      continue;
+    }
+    await settleNativeScroll();
+    input.after = await evaluate(() => scrollY);
+    input.delta = input.after - before;
+    input.passed = true;
+    return;
+  }
 }
 async function nativeElementState(selector) {
   return evaluate(selector => {
@@ -237,9 +263,7 @@ async function positionWithNativeKeys(selector) {
     const direction = state.bottom > state.bottomLimit ? 1 : -1;
     const distance = direction > 0 ? state.bottom - state.bottomLimit : state.topLimit - state.y;
     const key = distance > state.viewport.height ? (direction > 0 ? 'PageDown' : 'PageUp') : (direction > 0 ? 'ArrowDown' : 'ArrowUp');
-    await pressKey(key);
-    await until(`${key} moving toward ${selector}`, () => evaluate(previous => Math.abs(scrollY - previous) > .5, [state.scrollY]), 6000);
-    await settleNativeScroll();
+    await moveWithNativeKey(key);
   }
   throw new Error(`Native Safari keys could not bring ${selector} fully into view within 160 inputs`);
 }
@@ -440,10 +464,7 @@ function assertCanvas(state) {
   assert.deepEqual(state.observedErrorsAfterHydration, []);
 }
 async function scrollKey(name) {
-  const before = await evaluate(() => scrollY);
-  await pressKey(name);
-  await until(`native ${name} document scroll`, () => evaluate(previous => Math.abs(scrollY - previous) > .5, [before]), 6000);
-  await settleNativeScroll();
+  await moveWithNativeKey(name);
   return readyCanvas();
 }
 async function pixelsForComparison(bytes) {
@@ -451,7 +472,7 @@ async function pixelsForComparison(bytes) {
   return sharp(bytes).extract({ left: Math.floor(width * .1), top: Math.floor(height * .2), width: Math.floor(width * .8), height: Math.floor(height * .53) }).removeAlpha().raw().toBuffer();
 }
 async function verifyAnimation(target) {
-  const result = { ...target, captures: [], nativeInput: 'W3C keyboard PageDown/ArrowDown and PageUp/ArrowUp, 20ms arrow / 100ms page-key hold and measured scroll settling; no JavaScript scrolling or Play activation', passed: false };
+  const result = { ...target, captures: [], nativeInput: 'W3C keyboard PageDown/ArrowDown and PageUp/ArrowUp, 50ms arrow / 100ms page-key hold, up to three native arrow presses until measured movement, and measured scroll settling; no JavaScript scrolling or Play activation', passed: false };
   report.targets.push(result);
   try {
     await command('POST', '/window/rect', { x: 0, y: 0, width: 1440, height: 1000 });
