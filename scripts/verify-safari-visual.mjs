@@ -275,10 +275,17 @@ async function fixturePixels() {
     };
     // Only this owned synthetic fixture is read directly. Product canvases
     // continue to use the unchanged detached diagnostic-copy measurement.
-    const detachedBeforeLiveRead = copy();
-    const live = read(canvas.getContext('2d'));
-    const detachedAfterLiveRead = copy();
-    return { detachedBeforeLiveRead, live, detachedAfterLiveRead };
+    const attempt = (api, callback) => {
+      try { return { api, ...callback() }; }
+      catch (error) { return { api, error: { name: error.name, message: error.message, stack: error.stack || null } }; }
+    };
+    const detachedBeforeLiveRead = attempt('Detached drawImage/getImageData before live read', copy);
+    const live = attempt('Owned fixture live getImageData', () => read(canvas.getContext('2d')));
+    const detachedAfterLiveRead = attempt('Detached drawImage/getImageData after live read', copy);
+    const bounds = canvas.getBoundingClientRect();
+    return { source: { width: canvas.width, height: canvas.height, connected: canvas.isConnected,
+      rect: { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height } },
+      detachedBeforeLiveRead, live, detachedAfterLiveRead };
   });
 }
 async function fixtureElementScreenshot(name) {
@@ -310,12 +317,16 @@ async function verifyNativePrerequisites() {
     await until('owned native fixture ready', () => evaluate(() => window.__fixtureReady === true), 10000);
   };
   const capturePhase = async name => {
-    const phase = { name, state: await fixtureState(), pixels: await fixturePixels() };
-    phase.screenshot = `preflight-${name}.png`;
-    await screenshot(phase.screenshot, { diagnostic: true });
-    phase.captureMetrics = report.screenshotChecks.at(-1);
-    phase.elementScreenshot = await fixtureElementScreenshot(`preflight-${name}-element.png`);
+    const phase = { name };
     result.phases.push(phase);
+    phase.state = await fixtureState();
+    phase.pixels = await fixturePixels().catch(error => ({ scriptError: errorDetails(error) }));
+    phase.screenshot = `preflight-${name}.png`;
+    try {
+      await screenshot(phase.screenshot, { diagnostic: true });
+      phase.captureMetrics = report.screenshotChecks.at(-1);
+    } catch (error) { phase.viewportCaptureError = errorDetails(error); }
+    phase.elementScreenshot = await fixtureElementScreenshot(`preflight-${name}-element.png`);
   };
   for (const focus of [false, true]) {
     const phase = focus ? 'after-native-focus-click' : 'before-native-focus-click';
@@ -343,7 +354,7 @@ async function verifyNativePrerequisites() {
       result.inputProbes.push(probe);
     }
   }
-  if (result.phases.every(phase => phase.captureMetrics.spatialLuminanceVariance <= 25)) {
+  if (result.phases.every(phase => !phase.captureMetrics || phase.captureMetrics.spatialLuminanceVariance <= 25)) {
     await freshFixture('native-resize-restore');
     await click('#neutral-focus');
     const before = await command('GET', '/window/rect');
