@@ -161,11 +161,11 @@ export function ContactPage({ request, motion, intakeUrl }) {
         <a className="company-contact-phone" href="tel:+17738499634"><span className="company-label">CALL GRAMA DEVELOPMENT</span><span>+1 773 849 9634 <Arrow /></span></a>
       </GenericPageIntro>
       {intakeUrl ? (
-        <section className="page-invitation section-pad" aria-labelledby="contact-intake-title">
+        <section className="page-invitation section-pad" id="interest" aria-labelledby="contact-intake-title">
           <h2 className="display" id="contact-intake-title">Discuss your project.</h2>
           <p>{request?.lot ? `Your enquiry will reference Dexter Acres, lot ${request.lot} on the concept plan.` : 'Share your project details and the best way to reach you.'}</p>
           <a className="button button-dark" href={intakeUrl}>Open the project enquiry form <Arrow /></a>
-          <p>The form is hosted by Smartsheet and sends your enquiry to Grama Development.</p>
+          <p>Continue to Smartsheet, which hosts Grama Development’s enquiry form.</p>
         </section>
       ) : <Consultation request={request} motion={motion} />}
       <nav className="company-contact-links company-page-section" aria-label="Explore Grama Development"><a className="text-link" href="/partnerships">Partnerships <Arrow /></a><a className="text-link" href="/projects">Portfolio <Arrow /></a><a className="text-link" href="/about">Meet the family <Arrow /></a></nav>

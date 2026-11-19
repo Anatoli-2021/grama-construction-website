@@ -250,7 +250,7 @@ html:has(.animated-route) {
   padding: .65rem .85rem;
   border: 1px solid currentColor;
   border-radius: 0;
-  background: var(--ivory, #f6f3ed);
+  background: var(--site-paper);
   color: var(--ink, #24221f);
   font: inherit;
 }
