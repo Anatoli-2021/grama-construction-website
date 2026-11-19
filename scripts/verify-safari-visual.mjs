@@ -18,7 +18,7 @@ const stages = ['land', 'community', 'approach', 'interior', 'structure', 'reass
 const output = resolve(process.env.ANIMATION_EVIDENCE_DIR || join(os.tmpdir(), 'grama-actual-safari'));
 const localOrigin = 'http://127.0.0.1:5193';
 const driverOrigin = 'http://127.0.0.1:5194';
-const keyValues = { PageDown: '\uE00F', PageUp: '\uE00E', ArrowDown: '\uE015', ArrowUp: '\uE013', Escape: '\uE00C' };
+const keyValues = { Home: '\uE011', PageDown: '\uE00F', PageUp: '\uE00E', ArrowDown: '\uE015', ArrowUp: '\uE013', Escape: '\uE00C' };
 const paletteNames = ['paper', 'limestone', 'ink', 'charcoal', 'muted', 'bronze', 'on-dark', 'on-dark-muted'];
 const report = {
   startedAt: new Date().toISOString(), commit: process.env.CANDIDATE_SHA || null,
@@ -472,7 +472,7 @@ async function pixelsForComparison(bytes) {
   return sharp(bytes).extract({ left: Math.floor(width * .1), top: Math.floor(height * .2), width: Math.floor(width * .8), height: Math.floor(height * .53) }).removeAlpha().raw().toBuffer();
 }
 async function verifyAnimation(target) {
-  const result = { ...target, captures: [], nativeInput: 'W3C keyboard PageDown/ArrowDown and PageUp/ArrowUp, 50ms arrow / 100ms page-key hold, up to three native arrow presses until measured movement, and measured scroll settling; no JavaScript scrolling or Play activation', passed: false };
+  const result = { ...target, captures: [], nativeInput: 'W3C keyboard PageDown/ArrowDown and PageUp/ArrowUp, 50ms arrow / 100ms page-key hold, up to three native arrow presses until measured movement, and measured scroll settling; native Home only for elastic top-boundary recovery; no JavaScript scrolling or Play activation', passed: false };
   report.targets.push(result);
   try {
     await command('POST', '/window/rect', { x: 0, y: 0, width: 1440, height: 1000 });
@@ -524,6 +524,18 @@ async function verifyAnimation(target) {
         await screenshot(name);
         result.captures.push({ name: `reverse-${state.stage}`, ...state, screenshot: name });
       }
+    }
+    // Safari may report a negative elastic offset after reversing through
+    // frame zero. A native Home key settles that boundary; the exact scroll,
+    // frame and pixel-equality assertions below remain unchanged.
+    if (state.scrollY < 0) {
+      result.elasticTopBoundary = { observedScrollY: state.scrollY, recovery: 'Native Home key only; no JavaScript scrolling' };
+      await pressKey('Home');
+      await until('native Home returning the elastic boundary to zero', () => evaluate(() => scrollY === 0), 6000);
+      await settleNativeScroll();
+      state = await readyCanvas();
+      assertCanvas(state);
+      result.elasticTopBoundary.restoredScrollY = state.scrollY;
     }
     assert.equal(state.scrollY, 0);
     assert.equal(state.frame, 0);
