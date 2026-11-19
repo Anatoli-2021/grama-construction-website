@@ -184,8 +184,9 @@ async function click(selector) {
 async function pressKey(name) {
   const value = keyValues[name];
   assert.ok(value, 'Only the declared native navigation keys are used');
+  const holdMilliseconds = name.startsWith('Arrow') ? 20 : 100;
   await command('POST', '/actions', { actions: [{ type: 'key', id: 'native-keyboard', actions: [
-    { type: 'keyDown', value }, { type: 'pause', duration: 100 }, { type: 'keyUp', value },
+    { type: 'keyDown', value }, { type: 'pause', duration: holdMilliseconds }, { type: 'keyUp', value },
   ] }] });
 }
 // Native Safari scrolls asynchronously after key dispatch. Measure a stable
@@ -450,7 +451,7 @@ async function pixelsForComparison(bytes) {
   return sharp(bytes).extract({ left: Math.floor(width * .1), top: Math.floor(height * .2), width: Math.floor(width * .8), height: Math.floor(height * .53) }).removeAlpha().raw().toBuffer();
 }
 async function verifyAnimation(target) {
-  const result = { ...target, captures: [], nativeInput: 'W3C keyboard PageDown/ArrowDown and PageUp/ArrowUp, 100ms native hold and measured scroll settling; no JavaScript scrolling or Play activation', passed: false };
+  const result = { ...target, captures: [], nativeInput: 'W3C keyboard PageDown/ArrowDown and PageUp/ArrowUp, 20ms arrow / 100ms page-key hold and measured scroll settling; no JavaScript scrolling or Play activation', passed: false };
   report.targets.push(result);
   try {
     await command('POST', '/window/rect', { x: 0, y: 0, width: 1440, height: 1000 });
@@ -476,6 +477,7 @@ async function verifyAnimation(target) {
     for (let count = 0; state.frame < CONSTRUCTION_FRAME_COUNT - 1 && count < 100; count++) {
       const previous = state;
       state = await scrollKey(state.progress >= .85 ? 'ArrowDown' : 'PageDown');
+      result.lastCanvasState = state;
       assertCanvas(state);
       assert.ok(state.frame >= previous.frame, 'Forward native keys must not reverse the scene');
       if (!forward.has(state.stage)) {
@@ -492,6 +494,7 @@ async function verifyAnimation(target) {
     for (let count = 0; state.scrollY > 0 && count < 120; count++) {
       const previous = state;
       state = await scrollKey(state.progress < .15 ? 'ArrowUp' : 'PageUp');
+      result.lastCanvasState = state;
       assertCanvas(state);
       assert.ok(state.frame <= previous.frame, 'Reverse native keys must not advance the scene');
       if (!reverse.has(state.stage)) {
