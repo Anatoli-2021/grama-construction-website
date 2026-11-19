@@ -70,6 +70,8 @@ try {
     await mkdir(dirname(destination), { recursive: true });
     await writeFile(destination, renderDocument(route, markup));
   }
+  const sitemap = siteRoutes.map(({ path }) => `  <url><loc>${escapeHtml(new URL(path, origin).href)}</loc></url>`).join('\n');
+  await writeFile(resolve(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemap}\n</urlset>\n`);
   console.log(`Prerendered ${siteRoutes.length} public pages and a separate 404 page.`);
 } finally {
   await vite.close();

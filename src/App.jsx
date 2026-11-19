@@ -2,20 +2,23 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import DexterExperience from './components/DexterExperience.jsx';
+import DexterConsultation from './components/DexterConsultation.jsx';
 import AnimatedExperience from './components/AnimatedExperience.jsx';
 import { AboutPage, PartnershipsPage, ContactPage, DevelopmentsPage } from './components/CompanyPages.jsx';
 import { ProjectsPage, ProjectCase } from './components/ProjectPages.jsx';
 import { getRoute, notFoundRoute } from './site-routes.js';
 import { readEnquiryContext, enquiryHref } from './enquiry-context.js';
 import HomePage from './components/HomePage.jsx';
+import KitchensPage from './components/KitchensPage.jsx';
 import { isLocalPreview } from './preview-mode.js';
+import { websiteIntakeUrl } from './website-intake.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const assets = '/assets/';
 const enquiryPreviewNote = isLocalPreview
   ? 'Local enquiries are saved only on this computer; no email or CRM delivery is connected.'
-  : 'The Contact page shows whether online submission is available. Submitted enquiries are sent through Grama Development’s configured email service. Browser-only drafts are not sent.';
+  : 'The Contact page lists the current ways to reach Grama Development.';
 
 function Arrow({ diagonal = false, reverse = false, ...props }) {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props} style={{ transform: reverse ? 'rotate(180deg)' : undefined }}><path d={diagonal ? 'M5 19 19 5M5 5h14v14' : 'M3 12h17m-6-6 6 6-6 6'} stroke="currentColor" strokeWidth="1.3" /></svg>;
@@ -179,6 +182,7 @@ function App({ initialPath } = {}) {
           <a href="/about" aria-current={current('/about')} onClick={navigate}>About</a>
           <a href="/projects" aria-current={current('/projects')} data-active={route.type === 'project' ? 'true' : undefined} onClick={navigate}>Portfolio</a>
           <a href="/partnerships" aria-current={current('/partnerships')} onClick={navigate}>Partnerships</a>
+          <a href="/kitchens" aria-current={current('/kitchens')} onClick={navigate}>Kitchens</a>
           <a href="/animated-experience" aria-current={current('/animated-experience')} onClick={navigate}>Experience</a>
           <a className="nav-cta" href="/contact" aria-current={current('/contact')} onClick={navigate}>Contact <Arrow diagonal /></a>
         </nav>
@@ -193,16 +197,17 @@ function App({ initialPath } = {}) {
         {route.type === 'projects' && <ProjectsPage />}
         {route.type === 'project' && <ProjectCase project={route.project} onView={setModal} />}
         {route.type === 'partnerships' && <PartnershipsPage onExplore={openConsultation} />}
-        {route.type === 'contact' && <ContactPage request={consultationRequest} motion={motion} />}
+        {route.type === 'contact' && <ContactPage request={consultationRequest} motion={motion} intakeUrl={websiteIntakeUrl(consultationRequest?.topic === 'Dexter Acres' ? 'Dexter Acres' : 'General Contact', consultationRequest?.lot)} />}
+        {route.type === 'kitchens' && <KitchensPage intakeUrl={websiteIntakeUrl('Grama Kitchens')} />}
         {route.type === 'dexter' && <>
           <header className="page-masthead section-pad"><nav className="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects">Projects</a><span aria-hidden="true">/</span><span>Dexter Acres</span></nav><p className="eyebrow">DES PLAINES / PROPOSED DEVELOPMENT</p><h1>Dexter Acres.<br /><em>14 planned homes.</em></h1><p>Explore the architectural concept and supplied lot plan for the proposed neighborhood at Webster and Dexter Lanes.</p><div className="page-masthead-actions"><a className="text-link" href="#community">Explore the lot plan <Arrow diagonal /></a><button className="text-link" aria-label={motion ? 'Pause motion' : 'Enable motion'} onClick={() => setMotion(!motion)}><MotionIcon paused={!motion} />{motion ? 'Pause motion' : 'Enable motion'}</button></div></header>
           <DexterExperience motion={motion} onView={setModal} onConsultation={openConsultation} />
-          <section className="page-invitation section-pad"><p className="eyebrow">DEXTER ACRES ENQUIRIES</p><h2 className="display">Discuss the project<br /><em>with Grama Development.</em></h2><p>For development partnerships, project details or interest in a home, speak with our team.</p><a className="button button-dark" href={enquiryHref({path:'home',topic:'Dexter Acres'})}>Enquire about Dexter Acres <Arrow diagonal /></a></section>
+          <DexterConsultation />
         </>}
         {route.type === 'not-found' && <section className="page-masthead not-found-page section-pad"><p className="eyebrow">404 / PAGE NOT FOUND</p><h1>This page<br /><em>could not be found.</em></h1><p>Explore Grama Development’s work or contact us about your project.</p><div><a className="button button-dark" href="/projects">Explore projects <Arrow diagonal /></a><a className="text-link" href="/">Return home <Arrow /></a></div></section>}
       </main>
 
-      <footer className="site-footer"><div className="footer-navigation"><a href="/developments">Developments</a><a href="/projects">Portfolio</a><a href="/about">About</a><a href="/partnerships">Development partnerships</a><a href="/animated-experience">Animated Experience</a><a href="/contact">Contact</a></div><div className="footer-main"><a className="footer-brand development-lockup" href="/" aria-label="Grama Development — home"><img className="development-wordmark" src="/assets/brand/grama-development.svg" alt="Grama Development" width="780" height="240" /></a><p>Luxury homes and residential development.<br />Chicago & Chicagoland.</p><a className="footer-phone" href="tel:+17738499634">+1 773 849 9634 <Arrow diagonal /></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Grama Development</span><span>Chicago & the surrounding Illinois suburbs</span><button onClick={() => setModal({ title: 'About this preview', text: 'Dexter Acres is an upcoming, owner-described 14-home development. Architectural images are illustrative concepts, not completed-project photography. Home designs, placements and landscaping are conceptual. The interactive map follows the supplied C5 drawing for lot organization and numbering. Project approval status, infrastructure specifications, dates, final designs, pricing and availability have not been confirmed. Completed-project photographs are separately identified and sourced from Grama Development’s official website. This preview sends no marketing emails and does not reserve a property. ' + enquiryPreviewNote })}>Project & image notes</button></div></footer>
+      <footer className="site-footer"><div className="footer-navigation"><a href="/developments">Developments</a><a href="/projects">Portfolio</a><a href="/about">About</a><a href="/partnerships">Development partnerships</a><a href="/kitchens">Grama Kitchens</a><a href="/animated-experience">Animated Experience</a><a href="/contact">Contact</a></div><div className="footer-main"><a className="footer-brand development-lockup" href="/" aria-label="Grama Development — home"><img className="development-wordmark" src="/assets/brand/grama-development.svg" alt="Grama Development" width="780" height="240" /></a><p>Luxury homes and residential development.<br />Chicago & Chicagoland.</p><a className="footer-phone" href="tel:+17738499634">+1 773 849 9634 <Arrow diagonal /></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Grama Development</span><span>Chicago & the surrounding Illinois suburbs</span><button onClick={() => setModal({ title: 'Project & image notes', text: 'Dexter Acres is an upcoming, owner-described 14-home development. Architectural images are illustrative concepts, not completed-project photography. Home designs, placements and landscaping are conceptual. The interactive map follows the supplied C5 drawing for lot organization and numbering. Project approval status, infrastructure specifications, dates, final designs, pricing and availability have not been confirmed. Completed-project photographs are separately identified and sourced from Grama Development’s official website. An enquiry does not reserve a property. ' + enquiryPreviewNote })}>Project & image notes</button></div></footer>
       {modal && <dialog ref={dialog} aria-labelledby="preview-dialog-title" className={modal.image ? 'media-dialog' : 'notes-dialog'} onKeyDown={onGalleryKeyDown} onCancel={() => setModal(null)} onClick={event => { if (event.target === event.currentTarget) setModal(null); }}>
         <div className="dialog-sticky-toolbar"><button type="button" className="dialog-close" autoFocus aria-label="Close preview" onClick={() => setModal(null)}>×</button></div>
         {modal.image && <>

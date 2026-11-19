@@ -9,8 +9,14 @@ function Arrow() {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" strokeWidth="1.2" /></svg>;
 }
 
-const featured = ['1171-prospect-lane', '1906-lee-street', 'sedgwick-street']
-  .map(slug => projects.find(project => project.slug === slug)).filter(Boolean);
+const featured = [
+  { slug: '1171-prospect-lane', width: 1500, height: 1000 },
+  { slug: '1906-lee-street', width: 2000, height: 1334 },
+  { slug: 'sedgwick-street', width: 1536, height: 1025 },
+].map(({ slug, width, height }) => {
+  const project = projects.find(item => item.slug === slug);
+  return project && { ...project, width, height };
+}).filter(Boolean);
 const opportunities = [
   { label: 'Landowners', action: 'Discuss your land', topic: 'Landowner opportunity' },
   { label: 'Developers', action: 'Discuss a project', topic: 'Development partnership' },
@@ -48,7 +54,7 @@ export default function HomePage() {
     <section className="home-work" aria-labelledby="home-work-title">
       <div className="home-section-heading"><div><p className="site-label">CHICAGO & THE SURROUNDING SUBURBS</p><h2 id="home-work-title">Selected work.</h2></div><a className="site-link" href="/projects">View the portfolio <Arrow /></a></div>
       <div className="home-projects">{featured.map((project, index) => <article key={project.slug} className={'home-project home-project--' + index}>
-        <a href={'/projects/' + project.slug} aria-label={'Explore ' + project.name}><div className="home-project-photo"><img src={'/assets/' + project.image} alt={project.alt} width="1600" height="1067" loading="lazy" /><span aria-hidden="true"><Arrow /></span></div><div className="home-project-caption"><div><span>{project.location}</span><h3>{project.name}</h3></div><span>Completed</span></div></a>
+        <a href={'/projects/' + project.slug} aria-labelledby={'home-project-' + project.slug}><div className="home-project-photo"><img src={'/assets/' + project.image} alt={project.alt} width={project.width} height={project.height} loading="lazy" decoding="async" fetchPriority="low" /><span aria-hidden="true"><Arrow /></span></div><div className="home-project-caption" id={'home-project-' + project.slug}><div><span>{project.location}</span><h3>{project.name}</h3></div><span>Completed</span></div></a>
       </article>)}</div>
     </section>
 
@@ -56,7 +62,7 @@ export default function HomePage() {
 
     <section className="home-development" aria-labelledby="home-development-title">
       <div className="home-development-heading"><p className="site-label">PROPOSED DEVELOPMENT / DES PLAINES</p><h2 id="home-development-title">Dexter Acres.</h2><div><p>Fourteen planned homes.<br />Webster and Dexter Lanes.</p><a className="site-link" href="/projects/dexter-acres">Explore the development <Arrow /></a></div></div>
-      <a className="home-development-image" href="/projects/dexter-acres"><img src="/assets/masterplan/dexter-acres-828082967e9d.webp" alt="Architectural concept of the proposed fourteen-home Dexter Acres neighborhood" width="2048" height="1152" loading="lazy" /><span>Architectural concept</span></a>
+      <a className="home-development-image" href="/projects/dexter-acres"><img src="/assets/masterplan/dexter-acres-828082967e9d.webp" alt="Architectural concept of the proposed fourteen-home Dexter Acres neighborhood" width="2048" height="1152" loading="lazy" decoding="async" fetchPriority="low" /><span>Architectural concept</span></a>
       <div className="home-development-links"><span>DES PLAINES, ILLINOIS</span><a href="/projects/dexter-acres#community">Explore the fourteen-lot plan <Arrow /></a></div>
     </section>
 
