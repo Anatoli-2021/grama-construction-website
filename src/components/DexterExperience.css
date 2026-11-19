@@ -1,0 +1,140 @@
+.experience .dexter-masthead,
+.experience .dexter-overview {
+  padding-inline: var(--site-gutter);
+}
+
+.experience .dexter-masthead {
+  padding-top: clamp(36px, 5vw, 72px);
+  padding-bottom: clamp(24px, 4vw, 48px);
+}
+
+.dexter-masthead-inner,
+.dexter-overview-inner {
+  max-width: 1568px;
+  margin-inline: auto;
+}
+
+.dexter-masthead .breadcrumbs {
+  margin-bottom: clamp(24px, 3vw, 38px);
+}
+
+.experience .dexter-masthead h1 {
+  font-size: clamp(46px, 7.2vw, 104px);
+  margin: 12px 0 16px;
+}
+
+.dexter-masthead .page-masthead-actions {
+  gap: 0 28px;
+  margin-top: 8px;
+}
+
+.experience .dexter-overview {
+  padding-block: 0 clamp(40px, 7vw, 96px);
+  background: var(--site-paper);
+}
+
+.dexter-masterplan {
+  margin: 0;
+}
+
+.dexter-masterplan > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--site-limestone);
+}
+
+.dexter-masterplan > figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px 24px;
+  padding: 10px 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--site-muted);
+}
+
+.dexter-masterplan button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font: inherit;
+  color: var(--site-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.dexter-masterplan button svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.dexter-masterplan button:focus-visible {
+  outline: 2px solid var(--site-bronze);
+  outline-offset: 4px;
+}
+
+.dexter-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 12px 0 0;
+  border-block: 1px solid var(--site-line);
+}
+
+.dexter-facts > div {
+  padding: 22px clamp(16px, 3vw, 40px);
+}
+
+.dexter-facts > div:first-child {
+  padding-inline-start: 0;
+}
+
+.dexter-facts > div + div {
+  border-inline-start: 1px solid var(--site-line);
+}
+
+.dexter-facts dt {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--site-muted);
+}
+
+.dexter-facts dd {
+  margin: 8px 0 0;
+  font-size: clamp(16px, 1.8vw, 24px);
+  line-height: 1.3;
+  color: var(--site-ink);
+}
+
+@media (max-width: 600px) {
+  .dexter-masterplan > figcaption {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .dexter-facts {
+    grid-template-columns: 1fr;
+    margin-top: 4px;
+  }
+
+  .dexter-facts > div {
+    display: grid;
+    grid-template-columns: minmax(0, .75fr) minmax(0, 1fr);
+    align-items: baseline;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .dexter-facts > div + div {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--site-line);
+  }
+
+  .dexter-facts dd {
+    margin: 0;
+  }
+}

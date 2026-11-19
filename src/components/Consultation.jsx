@@ -137,7 +137,7 @@ export default function Consultation({ request, motion }) {
         const response = await fetch('/api/interest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'The enquiry could not be saved locally. Please try again.');
-        setStatus({ state: 'success', kind: 'local', message: 'Your enquiry has been saved on this computer for Tony’s review. This local preview does not send email.' });
+        setStatus({ state: 'success', kind: 'local', message: 'Your enquiry has been saved on this computer for Anatoly Grama’s review. This local preview does not send email.' });
       } else {
         const prepared = submission.current.prepare(payload);
         const reference = await sendContactSubmission(prepared);

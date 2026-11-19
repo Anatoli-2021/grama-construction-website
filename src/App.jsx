@@ -195,7 +195,18 @@ function App({ initialPath } = {}) {
         {route.type === 'partnerships' && <PartnershipsPage onExplore={openConsultation} />}
         {route.type === 'contact' && <ContactPage request={consultationRequest} motion={motion} />}
         {route.type === 'dexter' && <>
-          <header className="page-masthead section-pad"><nav className="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects">Projects</a><span aria-hidden="true">/</span><span>Dexter Acres</span></nav><p className="eyebrow">DES PLAINES / PROPOSED DEVELOPMENT</p><h1>Dexter Acres.<br /><em>14 planned homes.</em></h1><p>Explore the architectural concept and supplied lot plan for the proposed neighborhood at Webster and Dexter Lanes.</p><div className="page-masthead-actions"><a className="text-link" href="#community">Explore the lot plan <Arrow diagonal /></a><button className="text-link" aria-label={motion ? 'Pause motion' : 'Enable motion'} onClick={() => setMotion(!motion)}><MotionIcon paused={!motion} />{motion ? 'Pause motion' : 'Enable motion'}</button></div></header>
+          <header className="page-masthead dexter-masthead section-pad">
+            <div className="dexter-masthead-inner">
+              <nav className="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects">Projects</a><span aria-hidden="true">/</span><span aria-current="page">Dexter Acres</span></nav>
+              <p className="eyebrow">DES PLAINES, ILLINOIS</p>
+              <h1>Dexter Acres</h1>
+              <div className="page-masthead-actions">
+                <a className="text-link" href="#community">Explore the lot plan <Arrow diagonal /></a>
+                <a className="text-link" href="/animated-experience">Animated Experience <Arrow diagonal /></a>
+                <button className="text-link" aria-label={motion ? 'Pause motion' : 'Enable motion'} onClick={() => setMotion(!motion)}><MotionIcon paused={!motion} />{motion ? 'Pause motion' : 'Enable motion'}</button>
+              </div>
+            </div>
+          </header>
           <DexterExperience motion={motion} onView={setModal} onConsultation={openConsultation} />
           <section className="page-invitation section-pad"><p className="eyebrow">DEXTER ACRES ENQUIRIES</p><h2 className="display">Discuss the project<br /><em>with Grama Development.</em></h2><p>For development partnerships, project details or interest in a home, speak with our team.</p><a className="button button-dark" href={enquiryHref({path:'home',topic:'Dexter Acres'})}>Enquire about Dexter Acres <Arrow diagonal /></a></section>
         </>}

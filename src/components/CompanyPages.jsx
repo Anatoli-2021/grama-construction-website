@@ -41,7 +41,7 @@ export function AboutPage({ onConsultation }) {
         current="About"
         eyebrow="A FAMILY BUSINESS / CHICAGOLAND"
         title={<>Grama<br /><em>Development.</em></>}
-        description="A family business building luxury custom homes and residential projects in Chicago and Chicagoland. Led by Anatoli (Tony) Grama, with Alina as the company’s exclusive realtor."
+        description="A family business building luxury custom homes and residential projects in Chicago and Chicagoland. Led by Anatoly Grama, with Alina Grama as the company’s exclusive realtor."
       >
         <ContactLink onContact={onConsultation}>Discuss a project</ContactLink>
         <a className="text-link" href="/projects">View the portfolio <Arrow /></a>

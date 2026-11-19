@@ -31,19 +31,19 @@ export function AboutGrama({ onConsultation }) {
         <div className="about-statement reveal">
           <h2 className="display" id="about-title">A family business.<br /><em>Building in Chicago.</em></h2>
           <p className="about-lead">Luxury custom homes.<br />Residential development.</p>
-          <p>Anatoli (Tony) Grama and his wife Alina are the people behind Grama Development, a family business serving Chicago and the surrounding Illinois suburbs.</p>
+          <p>Anatoly Grama and his wife Alina Grama are the people behind Grama Development, a family business serving Chicago and the surrounding Illinois suburbs.</p>
           <p>We work with property owners, developers and investment partners on custom homes, renovation and residential development, coordinating the people and decisions from early planning through construction.</p>
-          <div className="about-founder"><span>ANATOLI GRAMA</span><p>Known as Tony.<br />Founder, Grama Development.</p></div>
+          <div className="about-founder"><span>Anatoly Grama</span><p>Founder, Grama Development.</p></div>
           <button className="text-link" onClick={onConsultation}>Discuss a project with Grama Development <Arrow /></button>
         </div>
         <div className="about-people reveal">
           <figure className="about-photograph">
-            <img src="/assets/tony-grama.webp" alt="Anatoli (Tony) Grama beside a company vehicle" width="1280" height="853" loading="lazy" />
-            <figcaption><span>ANATOLI (TONY) GRAMA</span><span>FOUNDER</span></figcaption>
+            <img src="/assets/tony-grama.webp" alt="Anatoly Grama beside a company vehicle" width="1280" height="853" loading="lazy" />
+            <figcaption><span>Anatoly Grama</span><span>FOUNDER</span></figcaption>
           </figure>
           <figure className="about-realtor">
-            <img src="/assets/grama-realtor.webp" alt="Alina, Grama Development’s exclusive realtor and Tony’s wife" width="600" height="852" loading="lazy" />
-            <figcaption>ALINA / REAL ESTATE</figcaption>
+            <img src="/assets/grama-realtor.webp" alt="Alina Grama, Grama Development’s exclusive realtor" width="600" height="852" loading="lazy" />
+            <figcaption>Alina Grama / REAL ESTATE</figcaption>
           </figure>
         </div>
       </div>
